@@ -1,0 +1,26 @@
+.chat {
+    height: 70vh;
+    width: 18vw;
+    /* margin-right: 8%; */
+}
+
+.livestream-wrapper {
+    padding-left: 5%;
+    padding-right: 5%;
+    display: flex;
+    justify-content: space-between;
+    flex-flow: wrap;
+}
+
+.refresh:hover {
+    cursor: pointer;
+}
+
+.refresh {
+    text-decoration: underline;
+}
+
+.video-error-refresh-text {
+    opacity: 50%;
+    margin-top: 2%;
+}

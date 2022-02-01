@@ -1,0 +1,10 @@
+.disclaimer {
+    text-align: center;
+    border-top: 2px solid white;
+    margin-top: 10vh;
+}
+.disclaimer-text {
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+}

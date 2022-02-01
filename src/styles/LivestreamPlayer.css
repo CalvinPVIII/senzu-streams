@@ -1,0 +1,69 @@
+.controls-wrapper {
+}
+#stream-volume-slider {
+}
+
+.dub-player-wrapper {
+}
+
+.livestream-player {
+    position: relative;
+}
+
+.player {
+}
+
+.overlay {
+    position: absolute;
+
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    background-color: rgba(0, 0, 0, 0.85);
+    text-align: center;
+}
+
+.controls {
+    display: flex;
+    justify-content: center;
+    /* flex-direction: row; */
+    overflow: auto;
+}
+
+.control-icon {
+    margin-left: 5%;
+}
+
+.fullscreen-controls {
+    position: fixed;
+    display: block;
+    z-index: 2;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    margin-top: -2%;
+}
+
+.fullscreen-controls:hover {
+    opacity: 50%;
+}
+
+.video-files-wrapper {
+    display: flex;
+    flex-flow: row;
+    justify-content: space-around;
+}
+
+.video-files-header {
+    text-align: left;
+    opacity: 50%;
+}
+.video-files-header:hover {
+    cursor: pointer;
+}
+
+.video-file:hover {
+    cursor: pointer;
+}

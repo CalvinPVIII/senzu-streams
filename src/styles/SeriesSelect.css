@@ -1,0 +1,11 @@
+.series-image {
+}
+
+.series-select {
+    display: flex;
+    flex-flow: row wrap;
+}
+
+.series-card {
+    margin: 5%;
+}

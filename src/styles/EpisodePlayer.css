@@ -1,0 +1,24 @@
+.fullscreen-controls {
+    position: fixed;
+    display: block;
+    z-index: 2;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    margin-top: -2%;
+}
+
+.fullscreen-controls:hover {
+    opacity: 50%;
+}
+
+.seek-slider {
+    width: 50%;
+    opacity: 0;
+    z-index: 1;
+    position: absolute;
+}
+
+.video-quality-option:hover {
+    cursor: pointer;
+}
