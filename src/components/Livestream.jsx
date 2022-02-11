@@ -1,10 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import LivestreamPlayer from "./LivestreamPlayer";
 import "../styles/Livestream.css";
 
 function Livestream(props) {
     const [sourceErrorMessage, setSourceErrorMessage] = useState("");
-
     const theaterModeOption = {
         NORMAL: "75%",
         EXPANDED: "100%",
@@ -43,6 +42,7 @@ function Livestream(props) {
                 <LivestreamPlayer
                     onTheaterModeClick={onTheaterModeClick}
                     setSourceErrorMessage={setSourceErrorMessage}
+                    fetchLink={"http://localhost:3001/streaminfo"}
                 />
 
                 <p className="source-error-message">{sourceErrorMessage}</p>

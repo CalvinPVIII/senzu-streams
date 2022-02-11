@@ -9,12 +9,14 @@ function LivestreamPlayer(props) {
     let storage = window.sessionStorage;
     let subPlayer = useRef(null);
     let dubPlayer = useRef(null);
+    const [apiError, setApiError] = useState(false);
     const [isDubOver, setIsDubOver] = useState(false);
     const [isSubOver, setIsSubOver] = useState(false);
     const [subReady, setSubReady] = useState(false);
     const [dubReady, setDubReady] = useState(false);
-    const [dubFiles, setDubFiles] = useState();
-    const [subFiles, setSubFiles] = useState();
+    const [subSources, setSubSources] = useState();
+    const [dubSources, setDubSources] = useState();
+    const [videoSources, setVideoSources] = useState();
     const [videoFileSegmentDisplay, setVideoFileSegmentDisplay] =
         useState("none");
     const [seriesInfo, setSeriesInfo] = useState();
@@ -41,60 +43,135 @@ function LivestreamPlayer(props) {
     let unMuteIcon = <i class="volume up icon" />;
     const [currentMutedIcon, setCurrentMutedIcon] = useState(muteIcon);
 
+    const setVideoQuality = (language, sourceName, fileIndex) => {
+        console.log(language, sourceName, fileIndex);
+        if (language === "en") {
+            storage.dubSource = sourceName;
+            storage.dubQuality = fileIndex;
+        } else if (language === "jp") {
+            storage.subSource = sourceName;
+            storage.subQuality = fileIndex;
+        }
+        window.location.reload();
+    };
+
     const setVideoInfo = () => {
         setIsVideoLoading(true);
-        fetch("http://10.0.0.6:3001/allinfo")
+        fetch(props.fetchLink)
             .then(function (response) {
                 return response.json();
             })
             .then(function (data) {
-                if (data.streamStatus.isInitialized) {
+                if (data.isInitialized) {
                     setIsVideoLoading(false);
 
                     setOverlayVisibility("none");
                     setSeriesInfo({
-                        seriesName: data.streamStatus.currentSeries,
-                        seriesEpisode: data.streamStatus.currentEpisodeInSeries,
+                        seriesName: data.currentSeries,
+                        seriesEpisode: data.currentEpisodeInSeries,
                     });
 
+                    let dubSource = data.currentDubFiles[0];
+                    data.currentDubFiles.forEach((source) => {
+                        if (source.source === storage.dubSource) {
+                            dubSource = source;
+                            console.log(dubSource);
+                        }
+                    });
+                    let dubLink;
                     if (
-                        data.streamStatus.currentDubFiles[storage.videoQuality]
+                        storage.dubQuality &&
+                        dubSource.files[storage.dubQuality]
                     ) {
-                        setDubVideoLink(
-                            data.streamStatus.currentDubFiles[
-                                storage.videoQuality
-                            ].file
-                        );
-                        setSubVideoLink(
-                            data.streamStatus.currentSubFiles[
-                                storage.videoQuality
-                            ].file
-                        );
-                    } else if (
-                        data.streamStatus.currentDubFiles[
-                            storage.videoQuality
-                        ] === undefined
-                    ) {
-                        setDubVideoLink(
-                            data.streamStatus.currentDubFiles[0].file
-                        );
-                        setSubVideoLink(
-                            data.streamStatus.currentSubFiles[0].file
-                        );
+                        dubLink = dubSource.files[storage.dubQuality].file;
+                    } else {
+                        dubLink = dubSource.files.file;
                     }
 
-                    setDubFiles(data.streamStatus.currentDubFiles);
-                    setSubFiles(data.streamStatus.currentDubFiles);
+                    let subSource = data.currentSubFiles[0];
+                    data.currentSubFiles.forEach((source) => {
+                        if (source.source === storage.subSource) {
+                            subSource = source;
+                        }
+                    });
+                    let subLink;
+                    if (
+                        storage.subQuality &&
+                        subSource.files[storage.subQuality]
+                    ) {
+                        subLink = subSource.files[storage.subQuality].file;
+                    } else {
+                        subLink = subSource.files.file;
+                    }
+
+                    setDubVideoLink(dubLink);
+                    setSubVideoLink(subLink);
+
+                    let dubSourceJSX = (
+                        <>
+                            {data.currentDubFiles.map((source) => (
+                                <>
+                                    <p>{source.source}</p>
+
+                                    {Object.values(source.files).map((file) => (
+                                        <p
+                                            onClick={() => {
+                                                setVideoQuality(
+                                                    "en",
+                                                    source.source,
+                                                    source.files.indexOf(file)
+                                                );
+                                            }}
+                                        >
+                                            {file.file}
+                                        </p>
+                                    ))}
+                                </>
+                            ))}
+                        </>
+                    );
+
+                    let subSourceJSX = (
+                        <>
+                            {data.currentSubFiles.map((source) => (
+                                <>
+                                    <p>{source.source}</p>
+
+                                    {Object.values(source.files).map((file) => (
+                                        <p
+                                            onClick={() => {
+                                                setVideoQuality(
+                                                    "jp",
+                                                    source.source,
+                                                    source.files.indexOf(file)
+                                                );
+                                            }}
+                                        >
+                                            {file.file}
+                                        </p>
+                                    ))}
+                                </>
+                            ))}
+                        </>
+                    );
+                    setDubSources(dubSourceJSX);
+                    setSubSources(subSourceJSX);
+
+                    if (activePlayer === subPlayer) {
+                        setVideoSources(subSourceJSX);
+                    } else if (activePlayer === dubPlayer) {
+                        setVideoSources(dubSourceJSX);
+                    }
 
                     setIsDubOver(false);
                     setIsSubOver(false);
-                    setEpisodeDuration(data.streamStatus.episodeDuration);
+                    setEpisodeDuration(data.episodeDuration);
 
-                    if (data.streamStatus.dubLoadError) {
+                    if (data.dubLoadError) {
                         props.setSourceErrorMessage(
                             "There was an error loading the dub, the sub is only available for this episode"
                         );
-                    } else if (data.streamStatus.subLoadError) {
+                    } else if (data.subLoadError) {
                         props.setSourceErrorMessage(
                             "There was an error loading the sub, the dub is only available for this episode"
                         );
@@ -103,37 +180,25 @@ function LivestreamPlayer(props) {
                     }
 
                     // the current duration has passed the end of the dub episode (i.e the sub is longer)
-                    if (
-                        data.streamStatus.currentTime >=
-                        data.streamStatus.dubDuration
-                    ) {
+                    if (data.currentTime >= data.dubDuration) {
                         // set the dubPlayer to the end of the video
-                        dubPlayer.current.seekTo(
-                            data.streamStatus.dubDuration - 0.1
-                        );
+                        dubPlayer.current.seekTo(data.dubDuration - 0.1);
                         // set the subPlayer to the current time
-                        subPlayer.current.seekTo(data.streamStatus.currentTime);
+                        subPlayer.current.seekTo(data.currentTime);
                     }
                     // the current duration has passed the end of the sub episode (i.e the dub is longer)
-                    if (
-                        data.streamStatus.currentTime >=
-                        data.streamStatus.subDuration
-                    ) {
+                    if (data.currentTime >= data.subDuration) {
                         // set the subPlayer to the end of the video
-                        subPlayer.current.seekTo(
-                            data.streamStatus.subDuration - 0.1
-                        );
+                        subPlayer.current.seekTo(data.subDuration - 0.1);
                         // set the dubPlayer to the current time
-                        dubPlayer.current.seekTo(data.streamStatus.currentTime);
+                        dubPlayer.current.seekTo(data.currentTime);
                     }
                     if (
-                        data.streamStatus.currentTime <
-                            data.streamStatus.dubDuration &&
-                        data.streamStatus.currentTime <
-                            data.streamStatus.subDuration
+                        data.currentTime < data.dubDuration &&
+                        data.currentTime < data.subDuration
                     ) {
-                        dubPlayer.current.seekTo(data.streamStatus.currentTime);
-                        subPlayer.current.seekTo(data.streamStatus.currentTime);
+                        dubPlayer.current.seekTo(data.currentTime);
+                        subPlayer.current.seekTo(data.currentTime);
                     }
                 } else {
                     setTimeout(() => {
@@ -219,6 +284,7 @@ function LivestreamPlayer(props) {
     const onControlsFlagClick = (flag) => {
         if (flag === "us" && activePlayer !== dubPlayer) {
             setActivePlayer(dubPlayer);
+            setVideoSources(dubSources);
             storage.currentLanguage = "en";
             if (isDubOver) {
                 setOverlayVisibility("inline");
@@ -230,6 +296,7 @@ function LivestreamPlayer(props) {
         }
         if (flag === "jp" && activePlayer !== subPlayer) {
             setActivePlayer(subPlayer);
+            setVideoSources(subSources);
             storage.currentLanguage = "jp";
             if (isSubOver) {
                 setOverlayVisibility("inline");
@@ -368,37 +435,20 @@ function LivestreamPlayer(props) {
         window.location.reload();
     };
 
-    let videoFiles;
-    if (dubFiles || subFiles) {
-        videoFiles = (
-            <div>
-                <Segment inverted className="video-file-segment">
-                    <div className="video-files-wrapper">
-                        {dubFiles.map((file) => (
-                            <p
-                                className="video-file"
-                                onClick={() => {
-                                    onFileClick(
-                                        file.file,
-                                        dubFiles.indexOf(file)
-                                    );
-                                }}
-                            >
-                                Source {dubFiles.indexOf(file)} {file.label}
-                            </p>
-                        ))}
-                    </div>
-                </Segment>
-            </div>
-        );
-    }
     let playerTitle;
     if (seriesInfo) {
         playerTitle = seriesInfo;
     } else {
         playerTitle = <></>;
     }
-    if (isVideoLoading) {
+
+    if (apiError) {
+        return (
+            <p className="api-error-message">
+                Sensu Streams is currently down. Please come back later
+            </p>
+        );
+    } else if (isVideoLoading) {
         console.log("Video is loading");
         return <WaitingForPlayer />;
     } else {
@@ -546,7 +596,7 @@ function LivestreamPlayer(props) {
                 >
                     Switch Sources
                 </p>
-                <div>{videoFiles}</div>
+                <div>{videoSources}</div>
                 <style jsx>
                     {`
                         .sub-player-wrapper {

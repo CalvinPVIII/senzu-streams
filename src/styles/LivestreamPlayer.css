@@ -67,3 +67,8 @@
 .video-file:hover {
     cursor: pointer;
 }
+
+.api-error-message {
+    text-align: center;
+    font-size: large;
+}
