@@ -30,6 +30,7 @@ function LivestreamPlayer(props) {
     const [activePlayer, setActivePlayer] = useState(
         storage.currentLanguage === "en" ? dubPlayer : subPlayer
     );
+
     const [progressPercent, setProgressPercent] = useState(0);
     const [episodeDuration, setEpisodeDuration] = useState();
     const [muteButtonText, setMuteButtonText] = useState("Mute");
@@ -85,7 +86,7 @@ function LivestreamPlayer(props) {
                     ) {
                         dubLink = dubSource.files[storage.dubQuality].file;
                     } else {
-                        dubLink = dubSource.files.file;
+                        dubLink = dubSource.files[0].file;
                     }
 
                     let subSource = data.currentSubFiles[0];
@@ -101,7 +102,7 @@ function LivestreamPlayer(props) {
                     ) {
                         subLink = subSource.files[storage.subQuality].file;
                     } else {
-                        subLink = subSource.files.file;
+                        subLink = subSource.files[0].file;
                     }
 
                     setDubVideoLink(dubLink);
@@ -285,6 +286,7 @@ function LivestreamPlayer(props) {
         if (flag === "us" && activePlayer !== dubPlayer) {
             setActivePlayer(dubPlayer);
             setVideoSources(dubSources);
+
             storage.currentLanguage = "en";
             if (isDubOver) {
                 setOverlayVisibility("inline");
@@ -297,6 +299,7 @@ function LivestreamPlayer(props) {
         if (flag === "jp" && activePlayer !== subPlayer) {
             setActivePlayer(subPlayer);
             setVideoSources(subSources);
+
             storage.currentLanguage = "jp";
             if (isSubOver) {
                 setOverlayVisibility("inline");
@@ -349,8 +352,10 @@ function LivestreamPlayer(props) {
         setVolume(e.target.value / 100);
     };
 
-    const onVideoProgress = (progress) => {
-        setProgressPercent((progress.playedSeconds / episodeDuration) * 100);
+    const onVideoProgress = () => {
+        setProgressPercent(
+            (activePlayer.current.getCurrentTime() / episodeDuration) * 100
+        );
     };
 
     const handleOnPlayerReady = (player) => {
@@ -468,7 +473,9 @@ function LivestreamPlayer(props) {
                         height={playerHeight}
                         onBuffer={() => setIsDubBuffering(true)}
                         onBufferEnd={() => setIsDubBuffering(false)}
-                        onProgress={(progress) => onVideoProgress(progress)}
+                        onProgress={(progress) =>
+                            onVideoProgress(progress, "en")
+                        }
                         className="player"
                         onEnded={() => onDubVideoEnd()}
                         onReady={() => handleOnPlayerReady("dub")}
@@ -494,6 +501,9 @@ function LivestreamPlayer(props) {
                         height={playerHeight}
                         onBuffer={() => setIsSubBuffering(true)}
                         onBufferEnd={() => setIsSubBuffering(false)}
+                        onProgress={(progress) =>
+                            onVideoProgress(progress, "jp")
+                        }
                         className="player"
                         onEnded={() => onSubVideoEnd()}
                         onReady={() => handleOnPlayerReady("sub")}
