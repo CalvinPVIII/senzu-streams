@@ -14,6 +14,8 @@ function LivestreamPlayer(props) {
     const [isSubOver, setIsSubOver] = useState(false);
     const [subReady, setSubReady] = useState(false);
     const [dubReady, setDubReady] = useState(false);
+    const [subPlaying, setSubPlaying] = useState(false);
+    const [dubPlaying, setDubPlaying] = useState(false);
     const [subSources, setSubSources] = useState();
     const [dubSources, setDubSources] = useState();
     const [videoSources, setVideoSources] = useState();
@@ -24,6 +26,8 @@ function LivestreamPlayer(props) {
     const [subVideoLink, setSubVideoLink] = useState();
     const [playerWidth, setPlayerWidth] = useState("70%");
     const [playerHeight, setPlayerHeight] = useState("70%");
+    const [playerOpacity, setPlayerOpacity] = useState(1);
+    const [secondsTillNextVideo, setSecondsTillNextVideo] = useState();
     const [dubMuted, setDubMuted] = useState(true);
     const [volume, setVolume] = useState();
     const [subMuted, setSubMuted] = useState(true);
@@ -35,6 +39,7 @@ function LivestreamPlayer(props) {
     const [episodeDuration, setEpisodeDuration] = useState();
     const [muteButtonText, setMuteButtonText] = useState("Mute");
     const [overlayVisibilty, setOverlayVisibility] = useState("none");
+    const [overlayHeight, setOverlayHeight] = useState("33%");
     const [isVideoLoading, setIsVideoLoading] = useState(true);
     const [isSubBuffering, setIsSubBuffering] = useState("");
     const [isDubBuffering, setIsDubBuffering] = useState("");
@@ -67,6 +72,7 @@ function LivestreamPlayer(props) {
                     setIsVideoLoading(false);
 
                     setOverlayVisibility("none");
+                    setPlayerOpacity(1);
                     setSeriesInfo({
                         seriesName: data.currentSeries,
                         seriesEpisode: data.currentEpisodeInSeries,
@@ -217,6 +223,29 @@ function LivestreamPlayer(props) {
         setVideoInfo();
     }, []);
 
+    const onVideoEnd = () => {
+        if (secondsTillNextVideo !== undefined) {
+            return;
+        } else {
+            if (!activePlayer.current.player.isPlaying) {
+                setOverlayVisibility("inline");
+            }
+            const episodeDurationDifference =
+                Math.round(episodeDuration - dubPlayer.current.getDuration()) +
+                3;
+
+            setSecondsTillNextVideo(episodeDurationDifference);
+            let seconds = episodeDurationDifference;
+            const timer = setInterval(() => {
+                seconds--;
+                setSecondsTillNextVideo(seconds);
+                if (seconds <= 0) {
+                    clearInterval(timer);
+                    onBothVideosEnd();
+                }
+            }, 1000);
+        }
+    };
     const onDubVideoEnd = () => {
         setIsDubOver(true);
 
@@ -352,6 +381,15 @@ function LivestreamPlayer(props) {
         setVolume(e.target.value / 100);
     };
 
+    const onTheaterModeClick = () => {
+        props.onTheaterModeClick();
+        if (overlayHeight === "33%") {
+            setOverlayHeight("43%");
+        } else if (overlayHeight === "43%") {
+            setOverlayHeight("33%");
+        }
+    };
+
     const onVideoProgress = () => {
         setProgressPercent(
             (activePlayer.current.getCurrentTime() / episodeDuration) * 100
@@ -360,9 +398,11 @@ function LivestreamPlayer(props) {
 
     const handleOnPlayerReady = (player) => {
         if (player === "sub") {
+            console.log("sub");
             setSubReady(true);
         }
         if (player === "dub") {
+            console.log("dub");
             setDubReady(true);
         }
     };
@@ -382,6 +422,7 @@ function LivestreamPlayer(props) {
         jpFlagOpacity = "50%";
         usFlagOpacity = "100%";
     }
+
     let muteButton = (
         <span
             className="mute-button-wrapper control-icon"
@@ -459,9 +500,18 @@ function LivestreamPlayer(props) {
     } else {
         return (
             <div className="livestream-player">
+                <div className="overlay">
+                    <h2>
+                        {" "}
+                        Please Wait {secondsTillNextVideo} Seconds For the Next
+                        Video
+                    </h2>
+                </div>
+
                 <p className="episode-title">
                     {playerTitle.seriesName} Episode {playerTitle.seriesEpisode}
                 </p>
+
                 <div className="dub-player-wrapper ">
                     <ReactPlayer
                         ref={dubPlayer}
@@ -477,7 +527,7 @@ function LivestreamPlayer(props) {
                             onVideoProgress(progress, "en")
                         }
                         className="player"
-                        onEnded={() => onDubVideoEnd()}
+                        onEnded={() => onVideoEnd()}
                         onReady={() => handleOnPlayerReady("dub")}
                         config={{
                             file: {
@@ -505,7 +555,7 @@ function LivestreamPlayer(props) {
                             onVideoProgress(progress, "jp")
                         }
                         className="player"
-                        onEnded={() => onSubVideoEnd()}
+                        onEnded={() => onVideoEnd()}
                         onReady={() => handleOnPlayerReady("sub")}
                         config={{
                             file: {
@@ -516,9 +566,6 @@ function LivestreamPlayer(props) {
                         }}
                     />
                     {fullScreenControls}
-                </div>
-                <div className="overlay">
-                    <h2> Please Wait</h2>
                 </div>
 
                 <Progress
@@ -570,7 +617,7 @@ function LivestreamPlayer(props) {
                         {volumeSlider}
                         <span
                             className="theater-mode-icon-wrapper control-icon"
-                            onClick={() => props.onTheaterModeClick()}
+                            onClick={() => onTheaterModeClick()}
                         >
                             <Popup
                                 trigger={<i className="expand icon" />}
@@ -640,6 +687,9 @@ function LivestreamPlayer(props) {
 
                         .video-file-segment {
                             display: ${videoFileSegmentDisplay};
+                        }
+                        .player {
+                            opacity: ${playerOpacity};
                         }
                     `}
                 </style>

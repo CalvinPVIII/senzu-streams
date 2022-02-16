@@ -47,6 +47,7 @@ function Livestream(props) {
 
                 <p className="source-error-message">{sourceErrorMessage}</p>
             </div>
+
             <div className="chat-wrapper">
                 <iframe
                     title="chat"
