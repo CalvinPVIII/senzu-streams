@@ -21,7 +21,7 @@ function LivestreamPlayer(props) {
     const [videoSources, setVideoSources] = useState();
     const [videoFileSegmentDisplay, setVideoFileSegmentDisplay] =
         useState("none");
-    const [seriesInfo, setSeriesInfo] = useState();
+    const [episodeInfo, setEpisodeInfo] = useState();
     const [dubVideoLink, setDubVideoLink] = useState();
     const [subVideoLink, setSubVideoLink] = useState();
     const [playerWidth, setPlayerWidth] = useState("70%");
@@ -73,13 +73,13 @@ function LivestreamPlayer(props) {
 
                     setOverlayVisibility("none");
                     setPlayerOpacity(1);
-                    setSeriesInfo({
-                        seriesName: data.currentSeries,
-                        seriesEpisode: data.currentEpisodeInSeries,
-                    });
-
+                    setEpisodeInfo(data.episodeInfo);
+                    // this gets the source. If no source has already been set in storage, it will look for Gogo, if there is no Gogo it will pick the first option
                     let dubSource = data.currentDubFiles[0];
                     data.currentDubFiles.forEach((source) => {
+                        if (source.source === "Gogoanime") {
+                            dubSource = source;
+                        }
                         if (source.source === storage.dubSource) {
                             dubSource = source;
                             console.log(dubSource);
@@ -97,6 +97,9 @@ function LivestreamPlayer(props) {
 
                     let subSource = data.currentSubFiles[0];
                     data.currentSubFiles.forEach((source) => {
+                        if (source.source === "Gogoanime") {
+                            subSource = source;
+                        }
                         if (source.source === storage.subSource) {
                             subSource = source;
                         }
@@ -482,8 +485,8 @@ function LivestreamPlayer(props) {
     };
 
     let playerTitle;
-    if (seriesInfo) {
-        playerTitle = seriesInfo;
+    if (episodeInfo) {
+        playerTitle = episodeInfo;
     } else {
         playerTitle = <></>;
     }
@@ -508,9 +511,7 @@ function LivestreamPlayer(props) {
                     </h2>
                 </div>
 
-                <p className="episode-title">
-                    {playerTitle.seriesName} Episode {playerTitle.seriesEpisode}
-                </p>
+                <p className="episode-title">{playerTitle}</p>
 
                 <div className="dub-player-wrapper ">
                     <ReactPlayer
