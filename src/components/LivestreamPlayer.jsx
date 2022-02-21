@@ -3,6 +3,7 @@ import React, { useState, useRef, useEffect } from "react";
 import "semantic-ui-css/semantic.min.css";
 import { Segment, Flag, Progress, Popup } from "semantic-ui-react";
 import WaitingForPlayer from "./WaitingForPlayer";
+import QualitySelector from "./QualitySelector";
 import "../styles/LivestreamPlayer.css";
 
 function LivestreamPlayer(props) {
@@ -16,9 +17,7 @@ function LivestreamPlayer(props) {
     const [dubReady, setDubReady] = useState(false);
     const [subPlaying, setSubPlaying] = useState(false);
     const [dubPlaying, setDubPlaying] = useState(false);
-    const [subSources, setSubSources] = useState();
-    const [dubSources, setDubSources] = useState();
-    const [videoSources, setVideoSources] = useState();
+
     const [videoFileSegmentDisplay, setVideoFileSegmentDisplay] =
         useState("none");
     const [episodeInfo, setEpisodeInfo] = useState();
@@ -34,7 +33,8 @@ function LivestreamPlayer(props) {
     const [activePlayer, setActivePlayer] = useState(
         storage.currentLanguage === "en" ? dubPlayer : subPlayer
     );
-
+    const [subFiles, setSubFiles] = useState();
+    const [dubFiles, setDubFiles] = useState();
     const [progressPercent, setProgressPercent] = useState(0);
     const [episodeDuration, setEpisodeDuration] = useState();
     const [currentTime, setCurrentTime] = useState();
@@ -124,61 +124,8 @@ function LivestreamPlayer(props) {
                     setDubVideoLink(dubLink);
                     setSubVideoLink(subLink);
 
-                    let dubSourceJSX = (
-                        <>
-                            {data.currentDubFiles.map((source) => (
-                                <>
-                                    <p>{source.source}</p>
-
-                                    {Object.values(source.files).map((file) => (
-                                        <p
-                                            onClick={() => {
-                                                setVideoQuality(
-                                                    "en",
-                                                    source.source,
-                                                    source.files.indexOf(file)
-                                                );
-                                            }}
-                                        >
-                                            {file.file}
-                                        </p>
-                                    ))}
-                                </>
-                            ))}
-                        </>
-                    );
-
-                    let subSourceJSX = (
-                        <>
-                            {data.currentSubFiles.map((source) => (
-                                <>
-                                    <p>{source.source}</p>
-
-                                    {Object.values(source.files).map((file) => (
-                                        <p
-                                            onClick={() => {
-                                                setVideoQuality(
-                                                    "jp",
-                                                    source.source,
-                                                    source.files.indexOf(file)
-                                                );
-                                            }}
-                                        >
-                                            {file.file}
-                                        </p>
-                                    ))}
-                                </>
-                            ))}
-                        </>
-                    );
-                    setDubSources(dubSourceJSX);
-                    setSubSources(subSourceJSX);
-
-                    if (activePlayer === subPlayer) {
-                        setVideoSources(subSourceJSX);
-                    } else if (activePlayer === dubPlayer) {
-                        setVideoSources(dubSourceJSX);
-                    }
+                    setSubFiles(data.currentSubFiles);
+                    setDubFiles(data.currentDubFiles);
 
                     setIsDubOver(false);
                     setIsSubOver(false);
@@ -340,7 +287,6 @@ function LivestreamPlayer(props) {
     const onControlsFlagClick = (flag) => {
         if (flag === "us" && activePlayer !== dubPlayer) {
             setActivePlayer(dubPlayer);
-            setVideoSources(dubSources);
 
             storage.currentLanguage = "en";
             if (isDubOver) {
@@ -354,7 +300,6 @@ function LivestreamPlayer(props) {
         }
         if (flag === "jp" && activePlayer !== subPlayer) {
             setActivePlayer(subPlayer);
-            setVideoSources(subSources);
 
             storage.currentLanguage = "jp";
             if (isSubOver) {
@@ -637,9 +582,15 @@ function LivestreamPlayer(props) {
                                 size="mini"
                             />
                         </span>
+                        <QualitySelector
+                            dubFiles={dubFiles}
+                            subFiles={subFiles}
+                            selector={setVideoQuality}
+                        />
                         {muteButton}
 
                         {volumeSlider}
+
                         <span
                             className="theater-mode-icon-wrapper control-icon"
                             onClick={() => onTheaterModeClick()}
@@ -668,17 +619,6 @@ function LivestreamPlayer(props) {
                     to refresh, or try a different source.
                 </p>
 
-                <p
-                    className="video-files-header"
-                    onClick={() => {
-                        videoFileSegmentDisplay === "none"
-                            ? setVideoFileSegmentDisplay("")
-                            : setVideoFileSegmentDisplay("none");
-                    }}
-                >
-                    Switch Sources
-                </p>
-                <div>{videoSources}</div>
                 <style jsx>
                     {`
                         .sub-player-wrapper {
