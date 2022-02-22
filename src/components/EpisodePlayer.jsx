@@ -3,6 +3,7 @@ import ReactPlayer from "react-player";
 import "semantic-ui-css/semantic.min.css";
 import { Segment, Flag, Popup, Progress } from "semantic-ui-react";
 import "../styles/EpisodePlayer.css";
+import QualitySelector from "./QualitySelector";
 import WaitingForPlayer from "./WaitingForPlayer";
 
 function EpisodePlayer(props) {
@@ -21,8 +22,6 @@ function EpisodePlayer(props) {
     const [jpFlagOpacity, setJpFlagOpacity] = useState("100%");
     const [playedSeconds, setPlayedSeconds] = useState(0);
     const [currentPlayedTime, setCurrentPlayedTime] = useState(0);
-    const [videoFile, setVideoFile] = useState();
-    const [currentVideoQuality, setCurrentVideoQuality] = useState("360 P");
 
     let muteIcon = <i class="volume off icon" />;
     let unMuteIcon = <i class="volume up icon" />;
@@ -35,38 +34,45 @@ function EpisodePlayer(props) {
 
     const [isVideoLoading, setIsVideoLoading] = useState(true);
 
-    const setVideoInfo = (videoObject, language) => {
+    let defaultSource = "Anime Owl";
+
+    const setVideoInfo = (language, sourceName, fileIndex) => {
+        const episodes = JSON.parse(storage.videoData);
         let videoLink;
         if (language === "en") {
-            for (let i = 0; i < videoObject.dub.files.length; i++) {
-                if (videoObject.dub.files[i].label === currentVideoQuality) {
-                    videoLink = videoObject.dub.files[i].file;
+            setUsFlagOpacity("50%");
+            setJpFlagOpacity("100%");
+            storage.currentDubSourceName = sourceName;
+            storage.currentDubFileIndex = fileIndex;
+            for (let i = 0; i < episodes.dub.length; i++) {
+                if (episodes.dub[i].source === sourceName) {
+                    videoLink = episodes.dub[i].files[fileIndex].file;
+
                     break;
-                } else {
                 }
             }
-
-            setCurrentUrl(videoLink);
-            setCurrentTotalDuration(videoObject.dub.episodeLength);
         }
+
         if (language === "jp") {
-            for (let i = 0; i < videoObject.sub.files.length; i++) {
-                if (videoObject.sub.files[i].label === currentVideoQuality) {
-                    videoLink = videoObject.sub.files[i].file;
+            setUsFlagOpacity("100%");
+            setJpFlagOpacity("50%");
+            storage.currentSubSourceName = sourceName;
+            storage.currentSubFileIndex = fileIndex;
+            for (let i = 0; i < episodes.dub.length; i++) {
+                if (episodes.sub[i].source === sourceName) {
+                    videoLink = episodes.sub[i].files[fileIndex].file;
                     break;
-                } else {
                 }
             }
-            setCurrentUrl(videoLink);
-            setCurrentTotalDuration(videoObject.sub.episodeLength);
         }
-        setVideoFile(videoObject);
-
+        setCurrentUrl(videoLink);
         setIsVideoLoading(false);
     };
 
     const getVideoInfo = async () => {
         setIsVideoLoading(true);
+        storage.currentVideoTime = 0;
+
         console.log("Getting video info");
         fetch(`http://localhost:3001/${props.series}/${props.episode}`)
             .then(function (response) {
@@ -74,7 +80,8 @@ function EpisodePlayer(props) {
             })
             .then(function (data) {
                 storage.setItem("videoData", JSON.stringify(data));
-                setVideoInfo(data, "en");
+
+                setVideoInfo("en", defaultSource, 0);
             })
             .catch((error) => {
                 console.log(error);
@@ -91,13 +98,7 @@ function EpisodePlayer(props) {
 
         if (storage.currentLink === window.location.href) {
             if (storage.videoData) {
-                setVideoInfo(
-                    JSON.parse(storage.videoData),
-                    "en",
-                    JSON.parse(storage.videoData).dub.files[
-                        JSON.parse(storage.videoData).dub.files.length - 1
-                    ]
-                );
+                setVideoInfo("en", defaultSource, 0);
             } else {
                 getVideoInfo();
             }
@@ -140,19 +141,32 @@ function EpisodePlayer(props) {
             seconds = videoPlayer.current.getCurrentTime();
             storage.setItem("currentVideoTime", seconds);
 
-            if (flag === "us") {
+            if (flag === "us" && jpFlagOpacity === "50%") {
                 setUsFlagOpacity("50%");
                 setJpFlagOpacity("100%");
+                let sourceName = storage.currentDubSourceName
+                    ? storage.currentDubSourceName
+                    : JSON.parse(storage.videoData).dub[0].source;
+                let fileIndex = storage.currentDubFileIndex
+                    ? storage.currentDubFileIndex
+                    : 0;
 
-                setVideoInfo(videoFile, "en");
-                videoPlayer.current.seekTo(storage.currentVideoTime, "seconds");
+                setVideoInfo("en", sourceName, fileIndex);
+                // need to seek to in another place
+                // videoPlayer.current.seekTo(storage.currentVideoTime, "seconds");
             }
-            if (flag === "jp") {
+            if (flag === "jp" && usFlagOpacity === "50%") {
                 setUsFlagOpacity("100%");
                 setJpFlagOpacity("50%");
 
-                setVideoInfo(videoFile, "jp");
-                videoPlayer.current.seekTo(storage.currentVideoTime, "seconds");
+                let sourceName = storage.currentSubSourceName
+                    ? storage.currentSubSourceName
+                    : JSON.parse(storage.videoData).sub[0].source;
+                let fileIndex = storage.currentSubFileIndex
+                    ? storage.currentSubFileIndex
+                    : 0;
+
+                setVideoInfo("jp", sourceName, fileIndex);
             }
         };
 
@@ -231,52 +245,6 @@ function EpisodePlayer(props) {
             setCurrentPlayedTime(time);
             storage.setItem("currentVideoTime", playedSeconds);
         };
-        const onVideoQualityOptionClick = (file, language) => {
-            setCurrentVideoQuality(file.label);
-            setVideoInfo(videoFile, language);
-        };
-        let videoSettingsMenu;
-        if (usFlagOpacity === "50%") {
-            videoSettingsMenu = (
-                <>
-                    <p>Settings</p>
-                    {videoFile.dub.files.map((qualityOption) => (
-                        <p
-                            key={qualityOption.label}
-                            className={`video-quality-option ${qualityOption.label.substring(
-                                0,
-                                qualityOption.label.indexOf(" ")
-                            )}`}
-                            onClick={() => {
-                                onVideoQualityOptionClick(qualityOption, "en");
-                            }}
-                        >
-                            {qualityOption.label}
-                        </p>
-                    ))}
-                </>
-            );
-        } else if (jpFlagOpacity === "50%") {
-            videoSettingsMenu = (
-                <>
-                    <p>Settings</p>
-                    {videoFile.sub.files.map((qualityOption) => (
-                        <p
-                            key={qualityOption.label}
-                            className={`video-quality-option ${qualityOption.label.substring(
-                                0,
-                                qualityOption.label.indexOf(" ")
-                            )}`}
-                            onClick={() => {
-                                onVideoQualityOptionClick(qualityOption, "jp");
-                            }}
-                        >
-                            {qualityOption.label}
-                        </p>
-                    ))}
-                </>
-            );
-        }
 
         return (
             <div className="episode-player" id="player">
@@ -286,6 +254,14 @@ function EpisodePlayer(props) {
                     muted={muted}
                     playing={playing}
                     volume={volume}
+                    onReady={() => {
+                        setCurrentTotalDuration(
+                            videoPlayer.current.getDuration()
+                        );
+                    }}
+                    onStart={() => {
+                        videoPlayer.current.seekTo(storage.currentVideoTime);
+                    }}
                     onProgress={(progress) => onVideoProgress(progress)}
                     width={playerWidth}
                     height={playerHeight}
@@ -397,15 +373,10 @@ function EpisodePlayer(props) {
                             />
                         </span>
                         <span className="fullscreen-icon-wrapper control-icon">
-                            <Popup
-                                trigger={<i className="cog alternate icon" />}
-                                inverted
-                                basic
-                                position="top center"
-                                size="mini"
-                                content={videoSettingsMenu}
-                                on="click"
-                                pinned
+                            <QualitySelector
+                                dubFiles={JSON.parse(storage.videoData).dub}
+                                subFiles={JSON.parse(storage.videoData).sub}
+                                selector={setVideoInfo}
                             />
                         </span>
                         <span

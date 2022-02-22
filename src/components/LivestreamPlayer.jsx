@@ -78,15 +78,14 @@ function LivestreamPlayer(props) {
                     // this gets the source. If no source has already been set in storage, it will look for Gogo, if there is no Gogo it will pick the first option
                     let dubSource = data.currentDubFiles[0];
                     data.currentDubFiles.forEach((source) => {
-                        if (
-                            source.source === "Gogoanime" &&
-                            !storage.dubSource
-                        ) {
-                            dubSource = source;
-                        }
+                        // if (
+                        //     source.source === "Gogoanime" &&
+                        //     !storage.dubSource
+                        // ) {
+                        //     dubSource = source;
+                        // }
                         if (source.source === storage.dubSource) {
                             dubSource = source;
-                            console.log(dubSource);
                         }
                     });
                     let dubLink;
@@ -101,12 +100,12 @@ function LivestreamPlayer(props) {
 
                     let subSource = data.currentSubFiles[0];
                     data.currentSubFiles.forEach((source) => {
-                        if (
-                            source.source === "Gogoanime" &&
-                            !storage.subSource
-                        ) {
-                            subSource = source;
-                        }
+                        // if (
+                        //     source.source === "Gogoanime" &&
+                        //     !storage.subSource
+                        // ) {
+                        //     subSource = source;
+                        // }
                         if (source.source === storage.subSource) {
                             subSource = source;
                         }
@@ -146,7 +145,6 @@ function LivestreamPlayer(props) {
 
                     // the current duration has passed the end of the dub episode (i.e the sub is longer)
                     if (data.currentTime >= data.dubDuration) {
-                        console.log("yes");
                         // set the dubPlayer to the end of the video
                         dubPlayer.current.seekTo(data.dubDuration - 0.1);
                         // set the subPlayer to the current time
@@ -219,45 +217,6 @@ function LivestreamPlayer(props) {
             }, 1000);
         }
     };
-    // const onDubVideoEnd = () => {
-    //     setIsDubOver(true);
-
-    //     if (isSubOver === true) {
-    //         onBothVideosEnd();
-    //     }
-
-    //     if (
-    //         subPlayer.current === null ||
-    //         subPlayer.current.getCurrentTime() <
-    //             subPlayer.current.getDuration() / 2
-    //     ) {
-    //         console.log("Sub frozen, moving to next episode");
-    //         onBothVideosEnd();
-    //     }
-
-    //     if (!isSubOver) {
-    //         setOverlayVisibility("inline");
-    //     }
-    // };
-
-    // const onSubVideoEnd = () => {
-    //     setIsSubOver(true);
-
-    //     if (isDubOver === true) {
-    //         onBothVideosEnd();
-    //     }
-    //     if (
-    //         dubPlayer.current === null ||
-    //         dubPlayer.current.getCurrentTime() <
-    //             dubPlayer.current.getDuration() / 2
-    //     ) {
-    //         console.log("Dub frozen, moving to next episode");
-    //         onBothVideosEnd();
-    //     }
-    //     if (!isDubOver) {
-    //         setOverlayVisibility("inline");
-    //     }
-    // };
 
     const onBothVideosEnd = () => {
         setOverlayVisibility("none");
@@ -290,7 +249,6 @@ function LivestreamPlayer(props) {
 
             storage.currentLanguage = "en";
             if (isDubOver) {
-                console.log("yes");
                 setOverlayVisibility("inline");
             } else if (!isDubOver) {
                 setOverlayVisibility("none");
