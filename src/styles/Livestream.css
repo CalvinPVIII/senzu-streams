@@ -1,7 +1,15 @@
 .chat {
     height: 70vh;
-    width: 18vw;
-    /* margin-right: 8%; */
+    width: 20vw;
+    min-width: 300px;
+    display: block;
+}
+
+.livestream-player-wrapper {
+    padding-left: 60px;
+    min-width: 600px;
+    display: block;
+    float: left;
 }
 
 .livestream-wrapper {
@@ -15,7 +23,6 @@
 .refresh:hover {
     cursor: pointer;
 }
-
 .refresh {
     text-decoration: underline;
 }

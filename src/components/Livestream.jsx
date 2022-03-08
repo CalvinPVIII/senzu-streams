@@ -37,7 +37,7 @@ function Livestream(props) {
     };
 
     return (
-        <div className="livestream-wrapper">
+        <>
             <div className="livestream-player-wrapper">
                 <LivestreamPlayer
                     onTheaterModeClick={onTheaterModeClick}
@@ -47,14 +47,12 @@ function Livestream(props) {
 
                 <p className="source-error-message">{sourceErrorMessage}</p>
             </div>
+            <iframe
+                src="https://www.twitch.tv/embed/senzustreams/chat?parent=localhost"
+                title="chat"
+                className="chat"
+            ></iframe>
 
-            <div className="chat-wrapper">
-                <iframe
-                    title="chat"
-                    className="chat"
-                    src="https://www.twitch.tv/embed/sensustreams/chat?parent=localhost"
-                ></iframe>
-            </div>
             <style jsx>
                 {`
                     .livestream-player-wrapper {
@@ -87,7 +85,7 @@ function Livestream(props) {
                     }
                 `}
             </style>
-        </div>
+        </>
     );
 }
 

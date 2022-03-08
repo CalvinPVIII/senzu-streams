@@ -22,3 +22,7 @@
 .video-quality-option:hover {
     cursor: pointer;
 }
+
+.episode-player {
+    min-width: 350px;
+}
