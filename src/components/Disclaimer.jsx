@@ -8,7 +8,7 @@ function Disclaimer() {
     return (
         <div className="disclaimer">
             <p className="disclaimer-text">
-                Sensu Streams is a non-profit fan project. We do not host the
+                Senzu Streams is a non-profit fan project. We do not host the
                 videos ourselves. All videos come from third party sources.
                 Please contact the appropriate video host for removal. Dragon
                 Ball, Dragon Ball Z, Dragon Ball GT, and Dragon Ball Super are

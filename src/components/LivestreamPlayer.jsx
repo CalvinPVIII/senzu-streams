@@ -53,7 +53,6 @@ function LivestreamPlayer(props) {
     const [currentMutedIcon, setCurrentMutedIcon] = useState(muteIcon);
 
     const setVideoQuality = (language, sourceName, fileIndex) => {
-        console.log(language, sourceName, fileIndex);
         if (language === "en") {
             storage.dubSource = sourceName;
             storage.dubQuality = fileIndex;
@@ -331,11 +330,11 @@ function LivestreamPlayer(props) {
 
     const handleOnPlayerReady = (player) => {
         if (player === "sub") {
-            console.log("sub");
+            // console.log("sub");
             setSubReady(true);
         }
         if (player === "dub") {
-            console.log("dub");
+            // console.log("dub");
             setDubReady(true);
         }
     };
@@ -498,7 +497,7 @@ function LivestreamPlayer(props) {
     if (apiError) {
         return (
             <p className="api-error-message">
-                Sensu Streams is currently down. Please come back later
+                Senzu Streams is currently down. Please come back later
             </p>
         );
     } else if (isVideoLoading) {
