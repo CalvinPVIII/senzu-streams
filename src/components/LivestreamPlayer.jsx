@@ -44,6 +44,8 @@ function LivestreamPlayer(props) {
     const [isVideoLoading, setIsVideoLoading] = useState(true);
     const [isSubBuffering, setIsSubBuffering] = useState("");
     const [isDubBuffering, setIsDubBuffering] = useState("");
+    const [subSeekTo, setSubSeekTo] = useState();
+    const [dubSeekTo, setDubSeekTo] = useState();
     const [fullscreenControlsVisibility, setFullscreenControlsVisibility] =
         useState("none");
     let muteIcon = <i class="volume off icon" />;
@@ -66,6 +68,7 @@ function LivestreamPlayer(props) {
         setIsVideoLoading(true);
         fetch(props.fetchLink)
             .then(function (response) {
+                setApiError(false);
                 return response.json();
             })
             .then(function (data) {
@@ -75,15 +78,15 @@ function LivestreamPlayer(props) {
                     setOverlayVisibility("none");
                     setPlayerOpacity(1);
                     setEpisodeInfo(data.episodeInfo);
+
                     // this gets the source. If no source has already been set in storage, it will look for Gogo, if there is no Gogo it will pick the first option
                     let dubSource = data.currentDubFiles[0];
                     data.currentDubFiles.forEach((source) => {
-                        // if (
-                        //     source.source === "Gogoanime" &&
-                        //     !storage.dubSource
-                        // ) {
-                        //     dubSource = source;
-                        // }
+                        // Sets Gogo as default dub source if no source has been previously selected
+                        if (source.source === "Gogo" && !storage.dubSource) {
+                            dubSource = source;
+                        }
+                        //
                         if (source.source === storage.dubSource) {
                             dubSource = source;
                         }
@@ -100,12 +103,11 @@ function LivestreamPlayer(props) {
 
                     let subSource = data.currentSubFiles[0];
                     data.currentSubFiles.forEach((source) => {
-                        // if (
-                        //     source.source === "Gogoanime" &&
-                        //     !storage.subSource
-                        // ) {
-                        //     subSource = source;
-                        // }
+                        // Sets Gogo as default dub source if no source has been previously selected
+                        if (source.source === "Gogo" && !storage.subSource) {
+                            subSource = source;
+                        }
+                        //
                         if (source.source === storage.subSource) {
                             subSource = source;
                         }
@@ -146,23 +148,23 @@ function LivestreamPlayer(props) {
                     // the current duration has passed the end of the dub episode (i.e the sub is longer)
                     if (data.currentTime >= data.dubDuration) {
                         // set the dubPlayer to the end of the video
-                        dubPlayer.current.seekTo(data.dubDuration - 0.1);
+                        setDubSeekTo(data.dubDuration - 0.1);
                         // set the subPlayer to the current time
-                        subPlayer.current.seekTo(data.currentTime);
+                        setSubSeekTo(data.currentTime);
                     }
                     // the current duration has passed the end of the sub episode (i.e the dub is longer)
                     if (data.currentTime >= data.subDuration) {
                         // set the subPlayer to the end of the video
-                        subPlayer.current.seekTo(data.subDuration - 0.1);
+                        setSubSeekTo(data.subDuration - 0.1);
                         // set the dubPlayer to the current time
-                        dubPlayer.current.seekTo(data.currentTime);
+                        setDubSeekTo(data.currentTime);
                     }
                     if (
                         data.currentTime < data.dubDuration &&
                         data.currentTime < data.subDuration
                     ) {
-                        dubPlayer.current.seekTo(data.currentTime);
-                        subPlayer.current.seekTo(data.currentTime);
+                        setDubSeekTo(data.currentTime);
+                        setSubSeekTo(data.currentTime);
                     }
                 } else {
                     setTimeout(() => {
@@ -173,6 +175,7 @@ function LivestreamPlayer(props) {
             })
             .catch((error) => {
                 console.log(error);
+                setApiError(true);
             });
     };
 
@@ -405,11 +408,86 @@ function LivestreamPlayer(props) {
             </Segment>{" "}
         </div>
     );
+    let controls = (
+        <>
+            <Progress
+                attached="top"
+                percent={progressPercent}
+                inverted
+                className="progress-bar"
+                size="tiny"
+            />
+            <div className="controls-wrapper">
+                <Segment inverted className="controls">
+                    <span>
+                        <Popup
+                            inverted
+                            basic
+                            position="bottom right"
+                            trigger={
+                                <Flag
+                                    name="us"
+                                    onClick={() => onControlsFlagClick("us")}
+                                    className="us-flag control-icon"
+                                />
+                            }
+                            content="Set language to English"
+                            size="mini"
+                        />
+                        /{" "}
+                        <Popup
+                            inverted
+                            basic
+                            position="bottom right"
+                            trigger={
+                                <Flag
+                                    name="jp"
+                                    onClick={() => onControlsFlagClick("jp")}
+                                    className="jp-flag control-icon"
+                                />
+                            }
+                            content="Set language to Japanese"
+                            size="mini"
+                        />
+                    </span>
+                    <QualitySelector
+                        dubFiles={dubFiles}
+                        subFiles={subFiles}
+                        selector={setVideoQuality}
+                    />
+                    {muteButton}
 
-    const onFileClick = (file, index) => {
-        storage.videoQuality = index;
-        window.location.reload();
-    };
+                    {volumeSlider}
+
+                    <span
+                        className="theater-mode-icon-wrapper control-icon"
+                        onClick={() => onTheaterModeClick()}
+                    >
+                        <Popup
+                            trigger={<i className="expand icon" />}
+                            inverted
+                            basic
+                            position="bottom center"
+                            size="mini"
+                            content="Theater mode"
+                        />
+                    </span>
+                    {fullscreenButton}
+                </Segment>
+            </div>
+
+            <p className="video-error-refresh-text">
+                Problems playing the video? Click{" "}
+                <span
+                    onClick={() => window.location.reload()}
+                    className="refresh"
+                >
+                    here
+                </span>{" "}
+                to refresh, or try a different source.
+            </p>
+        </>
+    );
 
     let playerTitle;
     if (episodeInfo) {
@@ -417,7 +495,6 @@ function LivestreamPlayer(props) {
     } else {
         playerTitle = <></>;
     }
-
     if (apiError) {
         return (
             <p className="api-error-message">
@@ -440,148 +517,74 @@ function LivestreamPlayer(props) {
 
                 <p className="episode-title">{playerTitle}</p>
 
-                <div className="dub-player-wrapper ">
-                    <ReactPlayer
-                        ref={dubPlayer}
-                        url={dubVideoLink}
-                        muted={dubMuted}
-                        playing={true}
-                        volume={volume}
-                        width={playerWidth}
-                        height={playerHeight}
-                        onBuffer={() => setIsDubBuffering(true)}
-                        onBufferEnd={() => setIsDubBuffering(false)}
-                        onProgress={(progress) =>
-                            onVideoProgress(progress, "en")
-                        }
-                        className="player"
-                        onEnded={() => onVideoEnd("en", dubPlayer)}
-                        onReady={() => handleOnPlayerReady("dub")}
-                        config={{
-                            file: {
-                                attributes: {
-                                    preload: "",
+                <div className="player-wrapper">
+                    <div className="dub-player-wrapper ">
+                        <ReactPlayer
+                            ref={dubPlayer}
+                            url={dubVideoLink}
+                            muted={dubMuted}
+                            playing={true}
+                            volume={volume}
+                            width={playerWidth}
+                            height={playerHeight}
+                            onBuffer={() => setIsDubBuffering(true)}
+                            onBufferEnd={() => setIsDubBuffering(false)}
+                            onProgress={(progress) =>
+                                onVideoProgress(progress, "en")
+                            }
+                            className="player"
+                            onEnded={() => onVideoEnd("en", dubPlayer)}
+                            onReady={() => handleOnPlayerReady("dub")}
+                            onStart={() => dubPlayer.current.seekTo(dubSeekTo)}
+                            config={{
+                                file: {
+                                    attributes: {
+                                        preload: "",
+                                    },
                                 },
-                            },
-                        }}
-                    />
-                    {fullScreenControls}
-                </div>
-
-                <div className="sub-player-wrapper ">
-                    <ReactPlayer
-                        ref={subPlayer}
-                        url={subVideoLink}
-                        muted={subMuted}
-                        playing={true}
-                        volume={volume}
-                        width={playerWidth}
-                        height={playerHeight}
-                        onBuffer={() => setIsSubBuffering(true)}
-                        onBufferEnd={() => setIsSubBuffering(false)}
-                        onProgress={(progress) =>
-                            onVideoProgress(progress, "jp")
-                        }
-                        className="player"
-                        onEnded={() => onVideoEnd("jp", subPlayer)}
-                        onReady={() => handleOnPlayerReady("sub")}
-                        config={{
-                            file: {
-                                attributes: {
-                                    preload: "",
-                                },
-                            },
-                        }}
-                    />
-                    {fullScreenControls}
-                </div>
-
-                <Progress
-                    attached="top"
-                    percent={progressPercent}
-                    inverted
-                    className="progress-bar"
-                    size="tiny"
-                />
-                <div className="controls-wrapper">
-                    <Segment inverted className="controls">
-                        <span>
-                            <Popup
-                                inverted
-                                basic
-                                position="bottom right"
-                                trigger={
-                                    <Flag
-                                        name="us"
-                                        onClick={() =>
-                                            onControlsFlagClick("us")
-                                        }
-                                        className="us-flag control-icon"
-                                    />
-                                }
-                                content="Set language to English"
-                                size="mini"
-                            />
-                            /{" "}
-                            <Popup
-                                inverted
-                                basic
-                                position="bottom right"
-                                trigger={
-                                    <Flag
-                                        name="jp"
-                                        onClick={() =>
-                                            onControlsFlagClick("jp")
-                                        }
-                                        className="jp-flag control-icon"
-                                    />
-                                }
-                                content="Set language to Japanese"
-                                size="mini"
-                            />
-                        </span>
-                        <QualitySelector
-                            dubFiles={dubFiles}
-                            subFiles={subFiles}
-                            selector={setVideoQuality}
+                            }}
                         />
-                        {muteButton}
+                        {fullScreenControls}
+                        {controls}
+                    </div>
 
-                        {volumeSlider}
-
-                        <span
-                            className="theater-mode-icon-wrapper control-icon"
-                            onClick={() => onTheaterModeClick()}
-                        >
-                            <Popup
-                                trigger={<i className="expand icon" />}
-                                inverted
-                                basic
-                                position="bottom center"
-                                size="mini"
-                                content="Theater mode"
-                            />
-                        </span>
-                        {fullscreenButton}
-                    </Segment>
+                    <div className="sub-player-wrapper ">
+                        <ReactPlayer
+                            ref={subPlayer}
+                            url={subVideoLink}
+                            muted={subMuted}
+                            playing={true}
+                            volume={volume}
+                            width={playerWidth}
+                            height={playerHeight}
+                            onBuffer={() => setIsSubBuffering(true)}
+                            onBufferEnd={() => setIsSubBuffering(false)}
+                            onProgress={(progress) =>
+                                onVideoProgress(progress, "jp")
+                            }
+                            className="player"
+                            onEnded={() => onVideoEnd("jp", subPlayer)}
+                            onReady={() => handleOnPlayerReady("sub")}
+                            onStart={() => subPlayer.current.seekTo(subSeekTo)}
+                            config={{
+                                file: {
+                                    attributes: {
+                                        preload: "",
+                                    },
+                                },
+                            }}
+                        />
+                        {fullScreenControls}
+                        {controls}
+                    </div>
                 </div>
-
-                <p className="video-error-refresh-text">
-                    Problems playing the video? Click{" "}
-                    <span
-                        onClick={() => window.location.reload()}
-                        className="refresh"
-                    >
-                        here
-                    </span>{" "}
-                    to refresh, or try a different source.
-                </p>
 
                 <style jsx>
                     {`
                         .sub-player-wrapper {
                             visibility: ${subPlayerVisibility};
-                            max-height: 100%;
+                            min-heigth: 100%;
+                            height: ${playerHeight};
                         }
                         .dub-player-wrapper {
                             visibility: ${dubPlayerVisibility};
