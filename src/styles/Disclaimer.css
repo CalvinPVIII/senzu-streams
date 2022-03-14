@@ -2,6 +2,7 @@
     text-align: center;
     border-top: 2px solid white;
     margin-top: 10vh;
+    display: inline-block;
 }
 .disclaimer-text {
     width: 50%;

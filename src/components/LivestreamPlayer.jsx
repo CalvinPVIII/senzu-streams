@@ -52,6 +52,10 @@ function LivestreamPlayer(props) {
     let unMuteIcon = <i class="volume up icon" />;
     const [currentMutedIcon, setCurrentMutedIcon] = useState(muteIcon);
 
+    const playerVisibilty = {
+        VISIBLE: "auto",
+        HIDDEN: "none",
+    };
     const setVideoQuality = (language, sourceName, fileIndex) => {
         if (language === "en") {
             storage.dubSource = sourceName;
@@ -344,13 +348,13 @@ function LivestreamPlayer(props) {
     let usFlagOpacity;
     let jpFlagOpacity;
     if (activePlayer === dubPlayer) {
-        dubPlayerVisibility = "visible";
-        subPlayerVisibility = "hidden";
+        dubPlayerVisibility = playerVisibilty.VISIBLE;
+        subPlayerVisibility = playerVisibilty.HIDDEN;
         usFlagOpacity = "50%";
         jpFlagOpacity = "100%";
     } else if (activePlayer === subPlayer) {
-        subPlayerVisibility = "visible";
-        dubPlayerVisibility = "hidden";
+        subPlayerVisibility = playerVisibilty.VISIBLE;
+        dubPlayerVisibility = playerVisibilty.HIDDEN;
         jpFlagOpacity = "50%";
         usFlagOpacity = "100%";
     }
@@ -581,13 +585,10 @@ function LivestreamPlayer(props) {
                 <style jsx>
                     {`
                         .sub-player-wrapper {
-                            visibility: ${subPlayerVisibility};
-                            min-heigth: 100%;
-                            height: ${playerHeight};
+                            display: ${subPlayerVisibility};
                         }
                         .dub-player-wrapper {
-                            visibility: ${dubPlayerVisibility};
-                            max-height: 0;
+                            display: ${dubPlayerVisibility};
                         }
                         .controls-wrapper {
                             width: ${playerWidth};

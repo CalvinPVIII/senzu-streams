@@ -1,5 +1,6 @@
 .livestream-player {
     position: relative;
+    height: max-content;
 }
 .player {
     position: relative;
