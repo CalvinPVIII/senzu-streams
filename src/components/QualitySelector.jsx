@@ -39,8 +39,28 @@ function QualitySelector(props) {
                                                     }}
                                                 >
                                                     <span className="quality-selector-option">
-                                                        {source.source}{" "}
-                                                        {file.label}
+                                                        {props.currentQuality
+                                                            .dub ===
+                                                            source.source &&
+                                                        parseInt(
+                                                            props.currentQuality
+                                                                .dubQuality
+                                                        ) ===
+                                                            parseInt(
+                                                                source.files.indexOf(
+                                                                    file
+                                                                )
+                                                            ) ? (
+                                                            <>
+                                                                •{source.source}{" "}
+                                                                {file.label} •
+                                                            </>
+                                                        ) : (
+                                                            <>
+                                                                {source.source}{" "}
+                                                                {file.label}
+                                                            </>
+                                                        )}
                                                     </span>
                                                 </p>
                                             )
@@ -70,8 +90,28 @@ function QualitySelector(props) {
                                                     }}
                                                 >
                                                     <span className="quality-selector-option">
-                                                        {source.source}{" "}
-                                                        {file.label}
+                                                        {props.currentQuality
+                                                            .sub ===
+                                                            source.source &&
+                                                        parseInt(
+                                                            props.currentQuality
+                                                                .subQuality
+                                                        ) ===
+                                                            parseInt(
+                                                                source.files.indexOf(
+                                                                    file
+                                                                )
+                                                            ) ? (
+                                                            <>
+                                                                •{source.source}{" "}
+                                                                {file.label} •
+                                                            </>
+                                                        ) : (
+                                                            <>
+                                                                {source.source}{" "}
+                                                                {file.label}
+                                                            </>
+                                                        )}
                                                     </span>
                                                 </p>
                                             )

@@ -46,6 +46,7 @@ function LivestreamPlayer(props) {
     const [isDubBuffering, setIsDubBuffering] = useState("");
     const [subSeekTo, setSubSeekTo] = useState();
     const [dubSeekTo, setDubSeekTo] = useState();
+    const [currentSources, setCurrentSources] = useState({ dub: "", sub: "" });
     const [fullscreenControlsVisibility, setFullscreenControlsVisibility] =
         useState("none");
     let muteIcon = <i class="volume off icon" />;
@@ -115,6 +116,16 @@ function LivestreamPlayer(props) {
                             subSource = source;
                         }
                     });
+
+                    setCurrentSources({
+                        dub: dubSource.source,
+                        dubQuality: storage.dubQuality ? storage.dubQuality : 0,
+                        sub: subSource.source,
+                        subQuality: storage.subQuality ? storage.subQuality : 0,
+                    });
+                    storage.subSource = subSource.source;
+                    storage.dubSource = dubSource.source;
+
                     let subLink;
                     if (
                         storage.subQuality &&
@@ -457,6 +468,7 @@ function LivestreamPlayer(props) {
                         dubFiles={dubFiles}
                         subFiles={subFiles}
                         selector={setVideoQuality}
+                        currentQuality={currentSources}
                     />
                     {muteButton}
 
@@ -493,7 +505,25 @@ function LivestreamPlayer(props) {
     );
 
     let playerTitle;
+    let animeOwlSubDisclaimer;
     if (episodeInfo) {
+        if (
+            currentSources.sub === "Anime Owl" &&
+            episodeInfo.substring(0, 34) ===
+                "Dragon Ball Kai The Final Chapters" &&
+            activePlayer === subPlayer
+        ) {
+            animeOwlSubDisclaimer = (
+                <>
+                    <span className="video-error-refresh-text">
+                        Only the dub is available for Dragon Ball Kai The Final
+                        Chapters with this source.
+                    </span>
+                </>
+            );
+        } else {
+            animeOwlSubDisclaimer = <></>;
+        }
         playerTitle = episodeInfo;
     } else {
         playerTitle = <></>;
@@ -579,6 +609,7 @@ function LivestreamPlayer(props) {
                         />
                         {fullScreenControls}
                         {controls}
+                        {animeOwlSubDisclaimer}
                     </div>
                 </div>
 
