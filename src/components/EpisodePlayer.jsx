@@ -26,7 +26,7 @@ function EpisodePlayer(props) {
     let muteIcon = <i class="volume off icon" />;
     let unMuteIcon = <i class="volume up icon" />;
     const [currentMutedIcon, setCurrentMutedIcon] = useState(muteIcon);
-
+    const [currentSources, setCurrentSources] = useState({ dub: "", sub: "" });
     let playIcon = <i class="play icon" />;
     let pauseIcon = <i class="pause icon" />;
     const [currentPlayIcon, setCurrentPlayIcon] = useState(pauseIcon);
@@ -51,6 +51,10 @@ function EpisodePlayer(props) {
                     break;
                 }
             }
+            setCurrentSources({
+                dub: storage.currentDubSourceName,
+                dubQuality: storage.currentDubFileIndex,
+            });
         }
 
         if (language === "jp") {
@@ -64,6 +68,10 @@ function EpisodePlayer(props) {
                     break;
                 }
             }
+            setCurrentSources({
+                sub: storage.currentSubSourceName,
+                subQuality: storage.currentSubFileIndex,
+            });
         }
         setCurrentUrl(videoLink);
         setIsVideoLoading(false);
@@ -377,6 +385,7 @@ function EpisodePlayer(props) {
                                 dubFiles={JSON.parse(storage.videoData).dub}
                                 subFiles={JSON.parse(storage.videoData).sub}
                                 selector={setVideoInfo}
+                                currentQuality={currentSources}
                             />
                         </span>
                         <span
