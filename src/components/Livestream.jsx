@@ -35,14 +35,13 @@ function Livestream(props) {
                 .classList.remove("theater-expanded");
         }
     };
-
     return (
         <>
             <div className="livestream-player-wrapper">
                 <LivestreamPlayer
                     onTheaterModeClick={onTheaterModeClick}
                     setSourceErrorMessage={setSourceErrorMessage}
-                    fetchLink={"http://localhost:3001/streaminfo"}
+                    fetchLink={`${process.env.REACT_APP_API_CALL}/streaminfo`}
                 />
 
                 <p className="source-error-message">{sourceErrorMessage}</p>

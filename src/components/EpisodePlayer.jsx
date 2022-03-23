@@ -82,7 +82,9 @@ function EpisodePlayer(props) {
         storage.currentVideoTime = 0;
 
         console.log("Getting video info");
-        fetch(`http://localhost:3001/${props.series}/${props.episode}`)
+        fetch(
+            `${process.env.REACT_APP_API_CALL}/${props.series}/${props.episode}`
+        )
             .then(function (response) {
                 return response.json();
             })
@@ -277,6 +279,7 @@ function EpisodePlayer(props) {
                         file: {
                             attributes: {
                                 preload: "",
+                                forceHLS: true,
                             },
                         },
                     }}

@@ -7,6 +7,7 @@ import SeriesSelector from "./components/SeriesSelector";
 import SeriesEpisodes from "./components/SeriesEpisodes";
 import Episode from "./components/Episode";
 import Disclaimer from "./components/Disclaimer";
+import Admin from "./components/Admin";
 import dbImage from "./icons/series/dragonball.jpg";
 import dbzImage from "./icons/series/z.jpg";
 import dbKaiImage from "./icons/series/kai.jpg";
@@ -56,6 +57,9 @@ function App() {
             <Header />
             <Switch>
                 <Route exact path="/" render={(props) => <Livestream />} />
+                <Route exact path="/admin">
+                    <Admin />
+                </Route>
                 <Route
                     exact
                     path="/vods"

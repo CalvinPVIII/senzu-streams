@@ -573,6 +573,7 @@ function LivestreamPlayer(props) {
                                 file: {
                                     attributes: {
                                         preload: "",
+                                        forceHLS: true,
                                     },
                                 },
                             }}
@@ -603,6 +604,7 @@ function LivestreamPlayer(props) {
                                 file: {
                                     attributes: {
                                         preload: "",
+                                        forceHLS: true,
                                     },
                                 },
                             }}
