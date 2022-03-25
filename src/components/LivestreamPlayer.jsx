@@ -87,7 +87,10 @@ function LivestreamPlayer(props) {
                     let dubSource = data.currentDubFiles[0];
                     data.currentDubFiles.forEach((source) => {
                         // Sets Gogo as default dub source if no source has been previously selected
-                        if (source.source === "Gogo" && !storage.dubSource) {
+                        if (
+                            source.source === "Gogoanime" &&
+                            !storage.dubSource
+                        ) {
                             dubSource = source;
                         }
                         //
@@ -108,7 +111,10 @@ function LivestreamPlayer(props) {
                     let subSource = data.currentSubFiles[0];
                     data.currentSubFiles.forEach((source) => {
                         // Sets Gogo as default dub source if no source has been previously selected
-                        if (source.source === "Gogo" && !storage.subSource) {
+                        if (
+                            source.source === "Gogoanime" &&
+                            !storage.subSource
+                        ) {
                             subSource = source;
                         }
                         //

@@ -83,7 +83,7 @@ function EpisodePlayer(props) {
 
         console.log("Getting video info");
         fetch(
-            `${process.env.REACT_APP_API_CALL}/${props.series}/${props.episode}`
+            `${process.env.REACT_APP_API_CALL}/episode/${props.series}/${props.episode}`
         )
             .then(function (response) {
                 return response.json();
