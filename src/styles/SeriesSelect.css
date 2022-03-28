@@ -1,11 +1,21 @@
-.series-image {
+.series-card {
+    margin: 5%;
 }
-
-.series-select {
+.shows {
+    width: 100%;
     display: flex;
     flex-flow: row wrap;
 }
 
-.series-card {
-    margin: 5%;
+.movies {
+    width: 100%;
+    display: flex;
+    flex-flow: row wrap;
+}
+
+.movies-header {
+    width: 100%;
+    text-align: center;
+    border-bottom: 1px solid white;
+    font-family: "Comfortaa", cursive;
 }

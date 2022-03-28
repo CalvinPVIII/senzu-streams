@@ -14,7 +14,7 @@ function SeriesEpisodes(props) {
                 <SeriesCard
                     seriesImage={seriesInfo.image}
                     seriesName={seriesInfo.name}
-                    seriesLength={seriesInfo.episodes}
+                    seriesInfo={seriesInfo.episodes + " Episodes"}
                 />
             </div>
 

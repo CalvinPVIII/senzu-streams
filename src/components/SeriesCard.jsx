@@ -13,7 +13,8 @@ function SeriesCard(props) {
                 />
                 <Card.Content>
                     <Card.Header>{props.seriesName} </Card.Header>
-                    <Card.Meta>{props.seriesLength} Episodes</Card.Meta>
+
+                    <Card.Meta>{props.seriesInfo}</Card.Meta>
                 </Card.Content>
             </Card>
         </div>

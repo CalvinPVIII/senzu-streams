@@ -34,7 +34,7 @@ function EpisodePlayer(props) {
 
     const [isVideoLoading, setIsVideoLoading] = useState(true);
 
-    let defaultSource = "Anime Owl";
+    let defaultSource = "Gogoanime";
 
     const setVideoInfo = (language, sourceName, fileIndex) => {
         const episodes = JSON.parse(storage.videoData);
@@ -82,9 +82,7 @@ function EpisodePlayer(props) {
         storage.currentVideoTime = 0;
 
         console.log("Getting video info");
-        fetch(
-            `${process.env.REACT_APP_API_CALL}/episode/${props.series}/${props.episode}`
-        )
+        fetch(`${process.env.REACT_APP_API_CALL}${props.apiEndpoint}`)
             .then(function (response) {
                 return response.json();
             })
@@ -236,6 +234,12 @@ function EpisodePlayer(props) {
         };
 
         const onVideoProgress = (progress) => {
+            if (
+                isNaN(currentTotalDuration) &&
+                videoPlayer.current.getDuration()
+            ) {
+                setCurrentTotalDuration(videoPlayer.current.getDuration());
+            }
             setProgressBarPercent(
                 (progress.playedSeconds / currentTotalDuration) * 100
             );
@@ -255,6 +259,10 @@ function EpisodePlayer(props) {
             setCurrentPlayedTime(time);
             storage.setItem("currentVideoTime", playedSeconds);
         };
+        const onVideoStart = () => {
+            videoPlayer.current.seekTo(storage.currentVideoTime);
+            setCurrentTotalDuration(videoPlayer.current.getDuration());
+        };
 
         return (
             <div className="episode-player" id="player">
@@ -264,13 +272,9 @@ function EpisodePlayer(props) {
                     muted={muted}
                     playing={playing}
                     volume={volume}
-                    onReady={() => {
-                        setCurrentTotalDuration(
-                            videoPlayer.current.getDuration()
-                        );
-                    }}
+                    onReady={() => {}}
                     onStart={() => {
-                        videoPlayer.current.seekTo(storage.currentVideoTime);
+                        onVideoStart();
                     }}
                     onProgress={(progress) => onVideoProgress(progress)}
                     width={playerWidth}
@@ -279,7 +283,6 @@ function EpisodePlayer(props) {
                         file: {
                             attributes: {
                                 preload: "",
-                                forceHLS: true,
                             },
                         },
                     }}
