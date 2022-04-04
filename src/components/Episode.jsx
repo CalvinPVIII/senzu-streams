@@ -42,7 +42,7 @@ function Episode(props) {
                     <>
                         <div className="episode-player-wrapper">
                             <EpisodePlayer
-                                apiEndpoint={`/movie/${seriesShortName}/${episodeNumber}`}
+                                apiEndpoint={`movie/${seriesShortName}/${episodeNumber}`}
                             />
                         </div>
                     </>
@@ -51,7 +51,7 @@ function Episode(props) {
                         {" "}
                         <div className="episode-player-wrapper">
                             <EpisodePlayer
-                                apiEndpoint={`/episode/${seriesShortName}/${episodeNumber}`}
+                                apiEndpoint={`episode/${seriesShortName}/${episodeNumber}`}
                             />
                         </div>
                         <div className="episodes-list-wrapper">
