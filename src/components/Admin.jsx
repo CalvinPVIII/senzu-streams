@@ -11,6 +11,8 @@ function Admin() {
     const [changePlaylistForm, setChangePlaylistForm] = useState("main");
     const [setEpisodeForm, setSetEpisodeForm] = useState(0);
     const [startStopStreamForm, setStartStopStreamForm] = useState("start");
+    const [apiToken, setApiToken] = useState("");
+    const [apiReturn, setApiReturn] = useState("");
 
     const onFormSubmit = (e, action, data) => {
         e.preventDefault();
@@ -21,11 +23,15 @@ function Admin() {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                token: process.env.REACT_APP_API_TOKEN,
+                token: apiToken,
                 action: action,
                 data: data,
             }),
-        });
+        })
+            .then((response) => console.log(response))
+            .then((data) => {
+                console.log(data);
+            });
     };
 
     const onSecurityFormSubmit = (event) => {
@@ -117,6 +123,10 @@ function Admin() {
                                 <option value="main">main</option>
                                 <option value="mainWithZ">mainWithZ</option>
                                 <option value="canon">canon</option>
+                                <option value="mainWithSuperMovies">
+                                    mainWithSuperMovies
+                                </option>
+                                <option value="movies">movies</option>
                             </select>
                             <input type="submit" value="Submit" />
                         </form>
@@ -160,6 +170,17 @@ function Admin() {
                             </select>
                             <input type="submit" value="Submit" />
                         </form>
+                    </div>
+                    <div className="api-token-form">
+                        <label for="token">API Token</label>
+                        <input
+                            type="password"
+                            name="apiToken"
+                            value={apiToken}
+                            onChange={(e) => {
+                                setApiToken(e.target.value);
+                            }}
+                        ></input>
                     </div>
                 </div>
             </div>

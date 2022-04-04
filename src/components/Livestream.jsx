@@ -47,7 +47,7 @@ function Livestream(props) {
                 <p className="source-error-message">{sourceErrorMessage}</p>
             </div>
             <iframe
-                src="https://www.twitch.tv/embed/senzustreams/chat?parent=localhost"
+                src={`https://www.twitch.tv/embed/senzustreams/chat?parent=${process.env.REACT_APP_TWITCH_CHAT_PARENT}&darkpopout`}
                 title="chat"
                 className="chat"
             ></iframe>
