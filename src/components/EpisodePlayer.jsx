@@ -82,7 +82,7 @@ function EpisodePlayer(props) {
         storage.currentVideoTime = 0;
 
         console.log("Getting video info");
-        fetch(`${process.env.REACT_APP_API_CALL}${props.apiEndpoint}`)
+        fetch(`/api${props.apiEndpoint}`)
             .then(function (response) {
                 return response.json();
             })

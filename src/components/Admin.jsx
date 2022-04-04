@@ -16,7 +16,7 @@ function Admin() {
 
     const onFormSubmit = (e, action, data) => {
         e.preventDefault();
-        fetch(`${process.env.REACT_APP_API_CALL}/admin`, {
+        fetch(`/api/admin`, {
             method: "POST",
             headers: {
                 Accept: "application/json",

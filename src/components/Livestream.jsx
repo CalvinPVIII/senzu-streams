@@ -41,7 +41,7 @@ function Livestream(props) {
                 <LivestreamPlayer
                     onTheaterModeClick={onTheaterModeClick}
                     setSourceErrorMessage={setSourceErrorMessage}
-                    fetchLink={`${process.env.REACT_APP_API_CALL}/streaminfo`}
+                    fetchLink={`/api/streaminfo`}
                 />
 
                 <p className="source-error-message">{sourceErrorMessage}</p>
