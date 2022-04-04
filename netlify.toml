@@ -1,4 +1,4 @@
 [[redirects]]
-  from = "/*"
-  to = "/"
-  status = 404
+  from = "/videos"
+  to = "/vods"
+  status = 200
