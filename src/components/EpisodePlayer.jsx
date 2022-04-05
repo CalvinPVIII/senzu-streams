@@ -7,6 +7,10 @@ import QualitySelector from "./QualitySelector";
 import WaitingForPlayer from "./WaitingForPlayer";
 
 function EpisodePlayer(props) {
+    const flagOpacity = {
+        FULL: "1",
+        HALF: "0.5",
+    };
     let storage = window.sessionStorage;
     let videoPlayer = useRef(null);
     const [currentUrl, setCurrentUrl] = useState();
@@ -18,8 +22,8 @@ function EpisodePlayer(props) {
     const [muteButtonText, setMuteButtonText] = useState("Mute");
     const [playerWidth, setPlayerWidth] = useState("100%");
     const [playerHeight, setPlayerHeight] = useState("100%");
-    const [usFlagOpacity, setUsFlagOpacity] = useState("50%");
-    const [jpFlagOpacity, setJpFlagOpacity] = useState("100%");
+    const [usFlagOpacity, setUsFlagOpacity] = useState(flagOpacity.HALF);
+    const [jpFlagOpacity, setJpFlagOpacity] = useState(flagOpacity.FULL);
     const [playedSeconds, setPlayedSeconds] = useState(0);
     const [currentPlayedTime, setCurrentPlayedTime] = useState(0);
 
@@ -40,8 +44,8 @@ function EpisodePlayer(props) {
         const episodes = JSON.parse(storage.videoData);
         let videoLink;
         if (language === "en") {
-            setUsFlagOpacity("50%");
-            setJpFlagOpacity("100%");
+            setUsFlagOpacity(flagOpacity.HALF);
+            setJpFlagOpacity(flagOpacity.FULL);
             storage.currentDubSourceName = sourceName;
             storage.currentDubFileIndex = fileIndex;
             for (let i = 0; i < episodes.dub.length; i++) {
@@ -58,8 +62,8 @@ function EpisodePlayer(props) {
         }
 
         if (language === "jp") {
-            setUsFlagOpacity("100%");
-            setJpFlagOpacity("50%");
+            setUsFlagOpacity(flagOpacity.FULL);
+            setJpFlagOpacity(flagOpacity.HALF);
             storage.currentSubSourceName = sourceName;
             storage.currentSubFileIndex = fileIndex;
             for (let i = 0; i < episodes.dub.length; i++) {
@@ -149,9 +153,9 @@ function EpisodePlayer(props) {
             seconds = videoPlayer.current.getCurrentTime();
             storage.setItem("currentVideoTime", seconds);
 
-            if (flag === "us" && jpFlagOpacity === "50%") {
-                setUsFlagOpacity("50%");
-                setJpFlagOpacity("100%");
+            if (flag === "us" && jpFlagOpacity === flagOpacity.HALF) {
+                setUsFlagOpacity(flagOpacity.HALF);
+                setJpFlagOpacity(flagOpacity.FULL);
                 let sourceName = storage.currentDubSourceName
                     ? storage.currentDubSourceName
                     : JSON.parse(storage.videoData).dub[0].source;
@@ -163,9 +167,9 @@ function EpisodePlayer(props) {
                 // need to seek to in another place
                 // videoPlayer.current.seekTo(storage.currentVideoTime, "seconds");
             }
-            if (flag === "jp" && usFlagOpacity === "50%") {
-                setUsFlagOpacity("100%");
-                setJpFlagOpacity("50%");
+            if (flag === "jp" && usFlagOpacity === flagOpacity.HALF) {
+                setUsFlagOpacity(flagOpacity.FULL);
+                setJpFlagOpacity(flagOpacity.HALF);
 
                 let sourceName = storage.currentSubSourceName
                     ? storage.currentSubSourceName

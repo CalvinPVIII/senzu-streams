@@ -37,7 +37,7 @@
 }
 
 .fullscreen-controls:hover {
-    opacity: 50%;
+    opacity: 0.5;
 }
 
 .video-files-wrapper {
@@ -48,7 +48,7 @@
 
 .video-files-header {
     text-align: left;
-    opacity: 50%;
+    opacity: 0.5;
 }
 .video-files-header:hover {
     cursor: pointer;

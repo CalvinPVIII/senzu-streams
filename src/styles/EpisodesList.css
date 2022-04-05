@@ -20,7 +20,7 @@ a:link {
 }
 .episode-box {
     margin: 1px;
-    opacity: 60%;
+    opacity: 0.6;
 }
 
 .episode-link-content {

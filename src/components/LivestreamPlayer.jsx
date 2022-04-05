@@ -7,6 +7,10 @@ import QualitySelector from "./QualitySelector";
 import "../styles/LivestreamPlayer.css";
 
 function LivestreamPlayer(props) {
+    const flagOpacity = {
+        FULL: "1",
+        HALF: "0.5",
+    };
     let storage = window.sessionStorage;
     let subPlayer = useRef(null);
     let dubPlayer = useRef(null);
@@ -367,13 +371,13 @@ function LivestreamPlayer(props) {
     if (activePlayer === dubPlayer) {
         dubPlayerVisibility = playerVisibilty.VISIBLE;
         subPlayerVisibility = playerVisibilty.HIDDEN;
-        usFlagOpacity = "50%";
-        jpFlagOpacity = "100%";
+        usFlagOpacity = flagOpacity.HALF;
+        jpFlagOpacity = flagOpacity.FULL;
     } else if (activePlayer === subPlayer) {
         subPlayerVisibility = playerVisibilty.VISIBLE;
         dubPlayerVisibility = playerVisibilty.HIDDEN;
-        jpFlagOpacity = "50%";
-        usFlagOpacity = "100%";
+        jpFlagOpacity = flagOpacity.HALF;
+        usFlagOpacity = flagOpacity.FULL;
     }
 
     let muteButton = (

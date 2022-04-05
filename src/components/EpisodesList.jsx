@@ -34,7 +34,7 @@ function EpisodesList(props) {
             <style jsx>
                 {`
                     #episode-${props.currentEpisode} {
-                        opacity: 10%;
+                        opacity: 0.1;
                     }
                 `}
             </style>
