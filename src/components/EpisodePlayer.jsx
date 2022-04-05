@@ -34,7 +34,7 @@ function EpisodePlayer(props) {
 
     const [isVideoLoading, setIsVideoLoading] = useState(true);
 
-    let defaultSource = "Gogoanime";
+    let defaultSource = "Gogo";
 
     const setVideoInfo = (language, sourceName, fileIndex) => {
         const episodes = JSON.parse(storage.videoData);
