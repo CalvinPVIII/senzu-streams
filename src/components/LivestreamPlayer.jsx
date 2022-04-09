@@ -93,8 +93,10 @@ function LivestreamPlayer(props) {
                         // Sets Gogo as default dub source if no source has been previously selected
                         if (source.source === "Gogo" && !storage.dubSource) {
                             dubSource = source;
-                            if (source.files[4].type === "hls") {
-                                storage.dubQuality = 4;
+                            for (let i = 0; i < source.files.length; i++) {
+                                if (source.files[i].type === "hls") {
+                                    storage.dubQuality = i;
+                                }
                             }
                         }
                         //
@@ -117,8 +119,10 @@ function LivestreamPlayer(props) {
                         // Sets Gogo as default dub source if no source has been previously selected
                         if (source.source === "Gogo" && !storage.subSource) {
                             subSource = source;
-                            if (source.files[4].type === "hls") {
-                                storage.subQuality = 4;
+                            for (let i = 0; i < source.files.length; i++) {
+                                if (source.files[i].type === "hls") {
+                                    storage.subQuality = i;
+                                }
                             }
                         }
                         //
