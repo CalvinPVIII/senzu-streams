@@ -38,7 +38,12 @@ function EpisodePlayer(props) {
 
     const [isVideoLoading, setIsVideoLoading] = useState(true);
 
-    let defaultSource = "Gogo";
+    const [defaultDubSource, setDefaultDubSource] = useState(
+        storage.defaultDubSource ? storage.defaultDubSource : "Anime Owl"
+    );
+    const [defaultSubSource, setDefaultSubSource] = useState(
+        storage.defaultSubSource ? storage.defaultSubSource : "Anime Owl"
+    );
 
     const setVideoInfo = (language, sourceName, fileIndex) => {
         const episodes = JSON.parse(storage.videoData);
@@ -92,8 +97,31 @@ function EpisodePlayer(props) {
             })
             .then(function (data) {
                 storage.setItem("videoData", JSON.stringify(data));
+                data.dub.forEach((source) => {
+                    if (
+                        source.source === "Gogoapi" ||
+                        source.source === "Gogo"
+                    ) {
+                        storage.defaultDubSource = source.source;
+                        console.log("yes");
+                        setDefaultDubSource(source.source);
+                    } else {
+                        storage.defaultDubSource = "Anime Owl";
+                    }
+                });
+                data.sub.forEach((source) => {
+                    if (
+                        source.source === "Gogoapi" ||
+                        source.source === "Gogo"
+                    ) {
+                        storage.defaultSubSource = source.source;
+                        setDefaultSubSource(source.source);
+                    } else {
+                        storage.defaultSubSource = "Anime Owl";
+                    }
+                });
 
-                setVideoInfo("en", defaultSource, 0);
+                setVideoInfo("en", storage.defaultDubSource, 0);
             })
             .catch((error) => {
                 console.log(error);
@@ -110,7 +138,7 @@ function EpisodePlayer(props) {
 
         if (storage.currentLink === window.location.href) {
             if (storage.videoData) {
-                setVideoInfo("en", defaultSource, 0);
+                setVideoInfo("en", defaultDubSource, 0);
             } else {
                 getVideoInfo();
             }
@@ -156,9 +184,10 @@ function EpisodePlayer(props) {
             if (flag === "us" && jpFlagOpacity === flagOpacity.HALF) {
                 setUsFlagOpacity(flagOpacity.HALF);
                 setJpFlagOpacity(flagOpacity.FULL);
+
                 let sourceName = storage.currentDubSourceName
                     ? storage.currentDubSourceName
-                    : JSON.parse(storage.videoData).dub[0].source;
+                    : defaultDubSource;
                 let fileIndex = storage.currentDubFileIndex
                     ? storage.currentDubFileIndex
                     : 0;
@@ -173,7 +202,7 @@ function EpisodePlayer(props) {
 
                 let sourceName = storage.currentSubSourceName
                     ? storage.currentSubSourceName
-                    : JSON.parse(storage.videoData).sub[0].source;
+                    : defaultSubSource;
                 let fileIndex = storage.currentSubFileIndex
                     ? storage.currentSubFileIndex
                     : 0;
