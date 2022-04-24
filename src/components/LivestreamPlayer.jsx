@@ -8,8 +8,8 @@ import "../styles/LivestreamPlayer.css";
 
 function LivestreamPlayer(props) {
     const flagOpacity = {
-        FULL: "1",
-        HALF: "0.5",
+        FULL: "0.50",
+        HALF: "1",
     };
     let storage = window.sessionStorage;
     let subPlayer = useRef(null);
