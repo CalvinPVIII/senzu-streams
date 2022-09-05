@@ -1,28 +1,39 @@
 .fullscreen-controls {
-    position: fixed;
-    display: block;
-    z-index: 2;
-    opacity: 0;
-    width: 100%;
-    height: 100%;
-    margin-top: -2%;
+  position: fixed;
+  display: block;
+  z-index: 2;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  margin-top: -2%;
 }
 
 .fullscreen-controls:hover {
-    opacity: 0.5;
+  opacity: 0.5;
 }
 
 .seek-slider {
-    width: 50%;
-    opacity: 0;
-    z-index: 1;
-    position: absolute;
+  width: 50%;
+  opacity: 0;
+  z-index: 1;
+  position: absolute;
 }
 
 .video-quality-option:hover {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .episode-player {
-    min-width: 350px;
+  min-width: 350px;
+}
+
+#autoplayWrapper {
+  margin-right: 4%;
+  font-family: "Comfortaa", cursive;
+}
+#nextButtonWrapper {
+  margin-right: 3%;
+  width: 6%;
+  display: flex;
+  justify-content: space-between;
 }
