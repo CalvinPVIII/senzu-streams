@@ -5,10 +5,13 @@
 }
 #livestream-chat {
   margin-top: 1em;
-  height: 100%;
-  border: 1px solid yellow;
+  height: 80vh;
+  box-shadow: 1px 3px 3px 3px black;
 }
 #livestream-player {
   margin-top: 1em;
-  max-width: 55%;
+}
+
+.chat {
+  height: 100%;
 }

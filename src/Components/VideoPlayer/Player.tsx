@@ -27,9 +27,7 @@ export default function Player(props: VideoPlayerProps) {
   const player = useRef(null);
 
   const styles = {
-    // maxWidth: `${width}%`,
-    // maxHeight: `${height}vh`,
-    // border: "1px solid orange",
+    boxShadow: "3px 3px 3px black",
   };
 
   return (
@@ -47,6 +45,7 @@ export default function Player(props: VideoPlayerProps) {
           onDuration={props.onDuration}
           onEnded={props.onEnded}
           onStart={props.onStart}
+          style={styles}
           className="main-video-player"
         />
       </div>
