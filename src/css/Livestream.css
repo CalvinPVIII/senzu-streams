@@ -1,0 +1,14 @@
+#livestream-wrapper {
+  display: flex;
+  justify-content: space-around;
+  flex-flow: wrap;
+}
+#livestream-chat {
+  margin-top: 1em;
+  height: 100%;
+  border: 1px solid yellow;
+}
+#livestream-player {
+  margin-top: 1em;
+  max-width: 55%;
+}

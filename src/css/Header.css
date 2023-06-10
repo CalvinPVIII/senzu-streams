@@ -1,0 +1,62 @@
+@import url("https://fonts.googleapis.com/css2?family=Comfortaa:wght@300&display=swap");
+
+.header-bg {
+  width: 100vw;
+  box-shadow: 3px 3px 3px black;
+  background-color: #1b1c1d;
+  padding-top: 0.3em;
+}
+
+#header-text {
+  font-size: xx-large;
+  font-weight: bolder;
+  font-family: "Comfortaa", cursive;
+  cursor: pointer;
+}
+
+#header-img {
+  max-width: 50px;
+  max-height: 50px;
+  cursor: pointer;
+}
+
+#header-left {
+  display: flex;
+  margin-left: 2em;
+  padding-bottom: 0.3em;
+}
+
+#header-right {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+#header-wrapper {
+  display: flex;
+  justify-content: space-around;
+}
+
+.header-link {
+  margin-left: 4em;
+  margin-right: 4em;
+  margin-top: 0.3em;
+  font-size: x-large;
+  font-family: "Comfortaa", cursive;
+  cursor: pointer;
+}
+
+#header-responsive-title {
+  display: flex;
+  justify-content: center;
+}
+
+#header-wrapper-responsive {
+  display: flex;
+  justify-content: space-around;
+  width: 100vw;
+}
+
+#hamburger-menu-button {
+  font-size: xx-large;
+  cursor: pointer;
+}
