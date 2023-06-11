@@ -1,17 +1,23 @@
-#livestream-wrapper {
-  display: flex;
-  justify-content: space-around;
-  flex-flow: wrap;
-}
 #livestream-chat {
   margin-top: 1em;
   height: 80vh;
   box-shadow: 1px 3px 3px 3px black;
 }
+
 #livestream-player {
   margin-top: 1em;
 }
 
 .chat {
   height: 100%;
+}
+
+#livestream-wrapper {
+  display: flex;
+  justify-content: space-around;
+  flex-flow: wrap;
+}
+
+.theater-mode {
+  width: 90vw;
 }

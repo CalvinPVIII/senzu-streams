@@ -25,7 +25,6 @@
 
 .card-body {
   padding-left: 15px;
-  /* margin-top: -15px; */
   padding-bottom: 10px;
   font-size: smaller;
   color: grey;
@@ -33,5 +32,4 @@
 }
 .card-content {
   max-height: 100px;
-  /* padding: 3%; */
 }
