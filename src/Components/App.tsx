@@ -4,7 +4,7 @@ import { Routes, Route } from "react-router-dom";
 import Home from "./Home";
 import Vods from "./Vods";
 import WatchEpisode from "./WatchEpisode";
-import SeriesPage from "./SeriesPage";
+import AllSeries from "./AllSeries";
 
 function App() {
   return (
@@ -12,8 +12,8 @@ function App() {
       <Header />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/vods" element={<Vods />} />
-        <Route path="/vods/:series" element={<SeriesPage />} />
+        <Route path="/vods" element={<AllSeries />} />
+        <Route path="/vods/:series" element={<Vods />} />
         <Route path="/vods/:series/:episode" element={<WatchEpisode />} />
       </Routes>
     </>
