@@ -4,7 +4,16 @@ import dbKaiImage from "../assets/images/series/kai.jpg";
 import dbsImage from "../assets/images/series/super.jpg";
 import dbgtImage from "../assets/images/series/gt.jpg";
 
-const allSeries = {
+interface SeriesInfo {
+  [key: string]: {
+    name: string;
+    shortName: string;
+    episodes: number;
+    image: string;
+  };
+}
+
+const allSeries: SeriesInfo = {
   db: {
     name: "Dragon Ball ",
     shortName: "db",

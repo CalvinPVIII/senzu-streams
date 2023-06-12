@@ -24,7 +24,15 @@ import dbzTrunks from ".././assets/images/movies/dbz-trunks.jpg";
 import dbs1 from ".././assets/images/movies/dbs1.jpg";
 import dbs2 from ".././assets/images/movies/dbs2.jpg";
 
-const allMovies = [
+interface MovieInfo {
+  name: string;
+  number: string;
+  image: string;
+  series: string;
+  info: string;
+}
+
+const allMovies: Array<MovieInfo> = [
   {
     name: "Dragon Ball: Curse of the Blood Rubies",
     number: "1",
