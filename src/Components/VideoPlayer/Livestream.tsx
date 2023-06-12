@@ -4,12 +4,12 @@ export default function LiveStream() {
   // when the current episode is 4:3, min-width should be 55vw, if its 16:9 it should be 75
   return (
     <div id="livestream-wrapper">
-      <div id="livestream-player">
+      <div className="livestream-player">
         <Player
           seriesName="Dragon Ball Super"
           episodeNumber="1"
           url={
-            "https://monkey-d-luffy.site/v1/files?resolution=default&id=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhbmltZV9pZCI6Ik9Ua3dORFk9IiwidGltZXN0YW1wIjoxNjQ0MDEzNTUyMDYxLCJpcCI6IjI2MDE6MWMwOjY5MDA6MjhkMDphYzA4OjEzMTc6NTk5OTo0NTk4IiwiaWF0IjoxNjQ0MDEzNTUyfQ.xZIcFOb2mCoPC86t-_scOHpf5qrXXkBNe2hqWfgqQGM"
+            "https://monkey-d-luffy.site/v1/files?resolution=default&id=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhbmltZV9pZCI6Ik1UQTFOVGd5IiwidGltZXN0YW1wIjoxNjQ0MDEyMTQ1MjQyLCJpcCI6IjI2MDE6MWMwOjY5MDA6MjhkMDphYzA4OjEzMTc6NTk5OTo0NTk4IiwiaWF0IjoxNjQ0MDEyMTQ1fQ.2nT2RJ2FOa6vIVRrK_E5VRoqFn_o5IQ82uC2RukuKpQ"
           }
           playing={true}
         />

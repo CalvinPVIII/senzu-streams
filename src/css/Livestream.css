@@ -1,13 +1,12 @@
 #livestream-chat {
   margin-top: 36px;
   height: 80vh;
-
   box-shadow: 1px 3px 3px 3px black;
 }
 
-#livestream-player {
+.livestream-player {
   margin-top: 1em;
-  min-width: 75vw;
+  width: 75%;
 }
 
 .chat {
@@ -23,4 +22,8 @@
 
 .theater-mode {
   width: 90vw;
+}
+
+.four-by-three {
+  width: 55%;
 }
