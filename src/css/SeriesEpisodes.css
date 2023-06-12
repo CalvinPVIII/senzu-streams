@@ -38,3 +38,8 @@
 .episode-box:hover {
   opacity: 1;
 }
+
+.current-episode {
+  background-color: #92c407;
+  color: white;
+}

@@ -1,5 +1,5 @@
 import "../css/SeriesEpisodes.css";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 interface SeriesEpisodesProps {
   numberOfEpisodes: number;
@@ -7,14 +7,24 @@ interface SeriesEpisodesProps {
 }
 
 export default function SeriesEpisodes(props: SeriesEpisodesProps) {
+  const { episode } = useParams();
+  console.log(episode);
   const createLinkArray = (): Array<JSX.Element> => {
     const episodeButtons: Array<JSX.Element> = [];
     for (let i = 1; i <= props.numberOfEpisodes; i++) {
       episodeButtons.push(
-        <Link to={`/vods/${props.seriesName}/${i}`}>
-          <div className="episode-box">
-            <p className="episode-number">{i}</p>
-          </div>
+        <Link to={`/vods/${props.seriesName}/${i}`} key={props.seriesName + i}>
+          {episode && parseInt(episode) === i ? (
+            <>
+              <div className="episode-box current-episode">
+                <p className="episode-number ">{i}</p>
+              </div>
+            </>
+          ) : (
+            <div className="episode-box">
+              <p className="episode-number">{i}</p>
+            </div>
+          )}
         </Link>
       );
     }

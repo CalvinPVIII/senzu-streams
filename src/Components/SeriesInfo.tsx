@@ -3,12 +3,8 @@ import SeriesCard from "./SeriesCard";
 import SeriesEpisodes from "./SeriesEpisodes";
 import { useParams } from "react-router-dom";
 
-type SeriesParams = {
-  series: string;
-};
-
 export default function SeriesInfo() {
-  const { series } = useParams<SeriesParams>();
+  const { series } = useParams();
 
   if (series) {
     const foundSeries = allSeries[series];

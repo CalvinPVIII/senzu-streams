@@ -3,8 +3,14 @@ import { useState, useRef } from "react";
 import "../../css/Player.css";
 import PlayerControls from "./PlayerControls";
 
+// other things this component might need: start time of video, end time of video, call back functions to go to next episode/make another api call
+
+// might also want to look into lazy loading dub/sub for performance reasons
+
 interface VideoPlayerProps {
-  url?: string;
+  url: string;
+  episodeNumber: string;
+  seriesName: string;
   playing?: boolean;
   width?: number;
   onReady?: () => void;
@@ -22,8 +28,7 @@ export default function Player(props: VideoPlayerProps) {
   const [url, setUrl] = useState("" || props.url);
   const [playing, setPlaying] = useState(props.playing || false);
   const [volume, setVolume] = useState(0);
-  const [width, setWidth] = useState(props.width || 65);
-  const [height, setHeight] = useState(20);
+
   const player = useRef(null);
 
   const styles = {
@@ -32,6 +37,9 @@ export default function Player(props: VideoPlayerProps) {
 
   return (
     <>
+      <h1 id="player-header">
+        {props.seriesName} Episode {props.episodeNumber}
+      </h1>
       <div style={styles}>
         <ReactPlayer
           ref={player}
@@ -49,7 +57,7 @@ export default function Player(props: VideoPlayerProps) {
           className="main-video-player"
         />
       </div>
-      <PlayerControls width={width} />
+      <PlayerControls />
     </>
   );
 }
