@@ -9,8 +9,8 @@ import PlayerControls from "./PlayerControls";
 
 interface VideoPlayerProps {
   url: string;
-  episodeNumber: string;
-  seriesName: string;
+  playerHeader: string;
+
   playing?: boolean;
   width?: number;
   onReady?: () => void;
@@ -37,9 +37,7 @@ export default function Player(props: VideoPlayerProps) {
 
   return (
     <>
-      <h1 id="player-header">
-        {props.seriesName} Episode {props.episodeNumber}
-      </h1>
+      <h1 id="player-header">{props.playerHeader}</h1>
       <div style={styles}>
         <ReactPlayer
           ref={player}

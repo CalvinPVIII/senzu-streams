@@ -1,3 +1,5 @@
+import { MovieInfo } from "../../types";
+
 import db1 from ".././assets/images/movies/db1.jpg";
 import db2 from ".././assets/images/movies/db2.jpg";
 import db3 from ".././assets/images/movies/db3.jpg";
@@ -23,14 +25,6 @@ import dbzTrunks from ".././assets/images/movies/dbz-trunks.jpg";
 
 import dbs1 from ".././assets/images/movies/dbs1.jpg";
 import dbs2 from ".././assets/images/movies/dbs2.jpg";
-
-interface MovieInfo {
-  name: string;
-  number: string;
-  image: string;
-  series: string;
-  info: string;
-}
 
 const allMovies: Array<MovieInfo> = [
   {

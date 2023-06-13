@@ -5,6 +5,7 @@ import Home from "./Home";
 import SeriesInfo from "./SeriesInfo";
 import WatchEpisode from "./WatchEpisode";
 import AllSeries from "./AllSeries";
+import WatchMovie from "./WatchMovie";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Route path="/vods" element={<AllSeries />} />
         <Route path="/vods/:series" element={<SeriesInfo />} />
         <Route path="/vods/:series/:episode" element={<WatchEpisode />} />
+        <Route path="/vods/:series/movie/:movieNumber" element={<WatchMovie />} />
       </Routes>
     </>
   );

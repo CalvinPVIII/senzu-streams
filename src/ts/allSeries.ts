@@ -1,19 +1,12 @@
+import { SeriesInfo } from "../../types";
+
 import dbImage from "../assets/images/series/dragonball.jpg";
 import dbzImage from "../assets/images/series/z.jpg";
 import dbKaiImage from "../assets/images/series/kai.jpg";
 import dbsImage from "../assets/images/series/super.jpg";
 import dbgtImage from "../assets/images/series/gt.jpg";
 
-interface SeriesInfo {
-  [key: string]: {
-    name: string;
-    shortName: string;
-    episodes: number;
-    image: string;
-  };
-}
-
-const allSeries: SeriesInfo = {
+const allSeries: { [key: string]: SeriesInfo } = {
   db: {
     name: "Dragon Ball ",
     shortName: "db",
