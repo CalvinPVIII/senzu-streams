@@ -48,13 +48,42 @@ export default function PlayerControls(props: PlayerControlsProps) {
             </PopoverContent>
           </Popover>
         </div>
+
         <div id="play-pause-buttons" className="clickable">
-          {paused ? <BsFillPlayFill onClick={handlePause} /> : <BsPauseFill onClick={handlePause} />}
+          <Popover trigger="hover" placement="bottom">
+            <PopoverTrigger>
+              <IconButton
+                size="s"
+                variant="ghost"
+                colorScheme="white"
+                icon={paused ? <BsFillPlayFill onClick={handlePause} size="20" /> : <BsPauseFill onClick={handlePause} size="20" />}
+                aria-label={"Play"}
+              />
+            </PopoverTrigger>
+            <PopoverContent maxW="75px">
+              {paused ? <PopoverBody fontSize={"12px"}>Play</PopoverBody> : <PopoverBody fontSize={"12px"}>Pause</PopoverBody>}
+            </PopoverContent>
+          </Popover>
         </div>
 
         <div id="volume-controls" className="controls-sections">
           <span className="clickable">
-            {muted || volume === 0 ? <BsVolumeMuteFill size="20" /> : <BsVolumeOffFill onClick={handleMuted} size="20" />}
+            <Popover trigger="hover" placement="bottom">
+              <PopoverTrigger>
+                <div className="speaker-icon">
+                  <IconButton
+                    size="s"
+                    variant="ghost"
+                    colorScheme="white"
+                    icon={muted || volume === 0 ? <BsVolumeMuteFill size="20" /> : <BsVolumeOffFill onClick={handleMuted} size="20" />}
+                    aria-label={"Mute"}
+                  />
+                </div>
+              </PopoverTrigger>
+              <PopoverContent maxW="60px">
+                <PopoverBody fontSize={"12px"}>Mute</PopoverBody>
+              </PopoverContent>
+            </Popover>
           </span>
 
           <Slider minW="100px" value={volume} colorScheme="green" onChange={handleVolumeSlide}>
@@ -64,14 +93,36 @@ export default function PlayerControls(props: PlayerControlsProps) {
             <SliderThumb />
           </Slider>
           <span className="clickable">
-            <BsVolumeUpFill size="20" />
+            <div className="speaker-icon">
+              <IconButton size="s" variant="ghost" colorScheme="white" icon={<BsVolumeUpFill size="20" />} aria-label={"Volume Up"} />
+            </div>
           </span>
         </div>
+
         <div id="next-episode" className="clickable">
-          <BsArrowRight />
+          <Popover trigger="hover" placement="bottom">
+            <PopoverTrigger>
+              <IconButton size="s" variant="ghost" colorScheme="white" icon={<BsArrowRight />} aria-label={"Next Episode"} />
+            </PopoverTrigger>
+            <PopoverContent maxW="75px">
+              <PopoverBody fontSize={"10px"}>
+                <span>Next Episode</span>
+              </PopoverBody>
+            </PopoverContent>
+          </Popover>
         </div>
+
         <div id="next-episode" className="clickable">
-          <BsArrowsFullscreen />
+          <Popover trigger="hover" placement="bottom">
+            <PopoverTrigger>
+              <IconButton size="s" variant="ghost" colorScheme="white" icon={<BsArrowsFullscreen />} aria-label={"Full Screen"} />
+            </PopoverTrigger>
+            <PopoverContent maxW="75px">
+              <PopoverBody fontSize={"10px"}>
+                <span>Full screen</span>
+              </PopoverBody>
+            </PopoverContent>
+          </Popover>
         </div>
       </div>
     </div>
