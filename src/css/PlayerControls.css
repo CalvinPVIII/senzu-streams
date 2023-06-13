@@ -11,6 +11,17 @@
   justify-content: space-around;
 }
 
-#volume-controls > * {
-  display: inline;
+#volume-controls {
+}
+
+#next-prev-episode {
+}
+
+.controls-sections {
+  display: flex;
+  flex-direction: row;
+}
+
+.clickable {
+  cursor: pointer;
 }
