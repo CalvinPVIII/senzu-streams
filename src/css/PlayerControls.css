@@ -4,3 +4,13 @@
   background-color: #111114;
   width: 100%;
 }
+
+#player-controls {
+  padding-top: 0.5em;
+  display: flex;
+  justify-content: space-around;
+}
+
+#volume-controls > * {
+  display: inline;
+}

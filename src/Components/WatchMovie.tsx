@@ -3,8 +3,12 @@ import allMovies from "../ts/allMovies";
 import Player from "./VideoPlayer/Player";
 import "../css/WatchMovie.css";
 import SeriesCards from "./SeriesCards";
+import { useEffect } from "react";
 export default function WatchMovie() {
   const { series, movieNumber } = useParams();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   if (series && movieNumber) {
     const foundMovie = allMovies.find((movie) => movie.series === series && movie.number === movieNumber);
