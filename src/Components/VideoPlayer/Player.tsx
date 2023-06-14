@@ -28,6 +28,7 @@ export default function Player(props: VideoPlayerProps) {
   const [url, setUrl] = useState("" || props.url);
   const [playing, setPlaying] = useState(props.playing || false);
   const [volume, setVolume] = useState(0);
+  const [currentLanguage, setCurrentLanguage] = useState<"english" | "japanese">("english");
 
   const player = useRef(null);
 
@@ -55,7 +56,13 @@ export default function Player(props: VideoPlayerProps) {
           className="main-video-player"
         />
       </div>
-      <PlayerControls />
+      <PlayerControls
+        handlePlayerVolume={setVolume}
+        handlePlayerPlaying={setPlaying}
+        playerPlaying={playing}
+        currentPlayerLanguage={currentLanguage}
+        handlePlayerCurrentLanguage={setCurrentLanguage}
+      />
     </>
   );
 }

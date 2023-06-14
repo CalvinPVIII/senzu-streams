@@ -14,23 +14,39 @@ import { Popover, PopoverContent, PopoverBody, IconButton } from "@chakra-ui/rea
 import { useState } from "react";
 
 interface PlayerControlsProps {
-  width?: number;
+  handlePlayerVolume: React.Dispatch<React.SetStateAction<number>>;
+  handlePlayerPlaying: React.Dispatch<React.SetStateAction<boolean>>;
+  playerPlaying: boolean;
+  currentPlayerLanguage: "english" | "japanese";
+  handlePlayerCurrentLanguage: React.Dispatch<React.SetStateAction<"english" | "japanese">>;
 }
 
 export default function PlayerControls(props: PlayerControlsProps) {
-  const [paused, setPaused] = useState(false);
+  const [playing, setPlaying] = useState(props.playerPlaying);
   const [muted] = useState(false);
   const [volume, setVolume] = useState(0);
+  const [language, setLanguage] = useState<"english" | "japanese">(props.currentPlayerLanguage);
 
-  const handlePause = () => {
-    setPaused(!paused);
+  const handlePlaying = () => {
+    setPlaying(!playing);
+    props.handlePlayerPlaying(!playing);
   };
   const handleMuted = () => {
     setVolume(0);
+    props.handlePlayerVolume(0);
   };
 
   const handleVolumeSlide = (value: number) => {
     setVolume(value);
+    props.handlePlayerVolume(0.01 * value);
+  };
+
+  const handleChangeLanguage = () => {
+    if (language === "english") {
+      setLanguage("japanese");
+    } else if (language === "japanese") {
+      setLanguage("english");
+    }
   };
 
   return (
@@ -56,12 +72,44 @@ export default function PlayerControls(props: PlayerControlsProps) {
                 size="s"
                 variant="ghost"
                 colorScheme="white"
-                icon={paused ? <BsFillPlayFill onClick={handlePause} size="20" /> : <BsPauseFill onClick={handlePause} size="20" />}
+                icon={playing ? <BsPauseFill onClick={handlePlaying} size="20" /> : <BsFillPlayFill onClick={handlePlaying} size="20" />}
                 aria-label={"Play"}
               />
             </PopoverTrigger>
             <PopoverContent maxW="75px">
-              {paused ? <PopoverBody fontSize={"12px"}>Play</PopoverBody> : <PopoverBody fontSize={"12px"}>Pause</PopoverBody>}
+              {playing ? <PopoverBody fontSize={"12px"}>Pause</PopoverBody> : <PopoverBody fontSize={"12px"}>Play</PopoverBody>}
+            </PopoverContent>
+          </Popover>
+        </div>
+
+        <div id="language-control-buttons" className="clickable">
+          <Popover trigger="hover" placement="bottom">
+            <PopoverTrigger>
+              {language === "japanese" ? (
+                <span style={{ opacity: "0.5" }} onClick={handleChangeLanguage}>
+                  🇺🇸
+                </span>
+              ) : (
+                <span>🇺🇸</span>
+              )}
+            </PopoverTrigger>
+            <PopoverContent maxW="90px">
+              <PopoverBody fontSize={"10px"}>Set language to English</PopoverBody>
+            </PopoverContent>
+          </Popover>
+          <span id="language-separator">/</span>
+          <Popover trigger="hover" placement="bottom">
+            <PopoverTrigger>
+              {language === "english" ? (
+                <span style={{ opacity: "0.5" }} onClick={handleChangeLanguage}>
+                  🇯🇵
+                </span>
+              ) : (
+                <span>🇯🇵</span>
+              )}
+            </PopoverTrigger>
+            <PopoverContent maxW="90px">
+              <PopoverBody fontSize={"10px"}>Set language to Japanese</PopoverBody>
             </PopoverContent>
           </Popover>
         </div>
@@ -117,7 +165,7 @@ export default function PlayerControls(props: PlayerControlsProps) {
             <PopoverTrigger>
               <IconButton size="s" variant="ghost" colorScheme="white" icon={<BsArrowsFullscreen />} aria-label={"Full Screen"} />
             </PopoverTrigger>
-            <PopoverContent maxW="75px">
+            <PopoverContent maxW="60px">
               <PopoverBody fontSize={"10px"}>
                 <span>Full screen</span>
               </PopoverBody>
