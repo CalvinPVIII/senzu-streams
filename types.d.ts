@@ -12,3 +12,19 @@ export interface SeriesInfo {
   episodes: number;
   image: string;
 }
+
+interface episode {
+  dub: languageOption;
+  sub: languageOption;
+  episodeInfo: string;
+}
+
+interface source {
+  source: string;
+  video: string;
+}
+
+interface languageOption {
+  sources: Array<source>;
+  episodeLength: number;
+}

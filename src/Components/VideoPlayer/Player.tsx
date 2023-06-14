@@ -8,8 +8,7 @@ import PlayerControls from "./PlayerControls";
 // might also want to look into lazy loading dub/sub for performance reasons
 
 interface VideoPlayerProps {
-  url: string;
-  playerHeader: string;
+  files: any;
 
   playing?: boolean;
   width?: number;
@@ -25,7 +24,7 @@ interface VideoPlayerProps {
 }
 
 export default function Player(props: VideoPlayerProps) {
-  const [url, setUrl] = useState("" || props.url);
+  console.log(props.files);
   const [playing, setPlaying] = useState(props.playing || false);
   const [volume, setVolume] = useState(0);
   const [currentLanguage, setCurrentLanguage] = useState<"english" | "japanese">("english");
@@ -36,13 +35,15 @@ export default function Player(props: VideoPlayerProps) {
     boxShadow: "3px 3px 3px black",
   };
 
+  console.log(props.files.files.dub[0][0].file);
+
   return (
     <>
-      <h1 id="player-header">{props.playerHeader}</h1>
+      <h1 id="player-header">{props.files.episodeInfo}</h1>
       <div style={styles}>
         <ReactPlayer
           ref={player}
-          url={url}
+          url={props.files.files.dub[0][0].file}
           playing={playing}
           volume={volume}
           width="100%"
