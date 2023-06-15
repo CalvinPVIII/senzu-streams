@@ -28,3 +28,12 @@ interface languageOption {
   sources: Array<source>;
   episodeLength: number;
 }
+
+interface EpisodeFiles {
+  dub: Array<any>;
+  sub: Array<any>;
+}
+interface ApiEpisodeResponse {
+  episodeInfo: string;
+  files: EpisodeFiles;
+}

@@ -6,10 +6,10 @@ import "../css/WatchEpisode.css";
 import SERIES from "../ts/seriesEnum";
 import { useEffect, useState } from "react";
 
-import { episode } from "../../types";
+import { ApiEpisodeResponse } from "../../types";
 
 export default function WatchEpisode() {
-  const [episodeInfo, setEpisodeInfo] = useState<episode>();
+  const [episodeInfo, setEpisodeInfo] = useState<ApiEpisodeResponse>();
   const { series, episode } = useParams();
 
   useEffect(() => {

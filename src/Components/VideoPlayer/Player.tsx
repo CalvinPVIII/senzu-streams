@@ -3,12 +3,14 @@ import { useState, useRef } from "react";
 import "../../css/Player.css";
 import PlayerControls from "./PlayerControls";
 
+import { ApiEpisodeResponse } from "../../../types";
+
 // other things this component might need: start time of video, end time of video, call back functions to go to next episode/make another api call
 
 // might also want to look into lazy loading dub/sub for performance reasons
 
 interface VideoPlayerProps {
-  files: any;
+  files: ApiEpisodeResponse;
 
   playing?: boolean;
   width?: number;
@@ -23,6 +25,8 @@ interface VideoPlayerProps {
   onError?: () => void;
 }
 
+// next steps: organize all files given from API, have option to pick between them in controls. Go back and change EpisodeFiles to not have any type
+
 export default function Player(props: VideoPlayerProps) {
   console.log(props.files);
   const [playing, setPlaying] = useState(props.playing || false);
@@ -35,7 +39,7 @@ export default function Player(props: VideoPlayerProps) {
     boxShadow: "3px 3px 3px black",
   };
 
-  console.log(props.files.files.dub[0][0].file);
+  // console.log(props.files.files.dub[0][0].file);
 
   return (
     <>
@@ -43,7 +47,7 @@ export default function Player(props: VideoPlayerProps) {
       <div style={styles}>
         <ReactPlayer
           ref={player}
-          url={props.files.files.dub[0][0].file}
+          // url={props.files.files.dub[0][0].file}
           playing={playing}
           volume={volume}
           width="100%"
