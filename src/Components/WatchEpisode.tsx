@@ -21,7 +21,7 @@ export default function WatchEpisode() {
         })
       );
     }
-  }, [episode]);
+  }, [episode, series]);
 
   if (series && episode && episodeInfo) {
     const foundSeries = allSeries[series];
