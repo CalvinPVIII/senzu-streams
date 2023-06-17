@@ -14,9 +14,9 @@ export default function SeriesCards(props: SeriesCardsProps) {
       {Object.values(props.seriesValues).map((series) => (
         <div className="series-card">
           {props.seriesType === "movie" ? (
-            <Link to={`/vods/${series.series}/movie/${series.number}`}>
+            <a href={`/vods/${series.series}/movie/${series.number}`}>
               <SeriesCard name={series.name} info={series.info} shortname={series.info} image={series.image} type={props.seriesType} />
-            </Link>
+            </a>
           ) : (
             <Link to={`/vods/${series.shortName}`}>
               <SeriesCard name={series.name} info={series.info} shortname={series.info} image={series.image} type={props.seriesType} />

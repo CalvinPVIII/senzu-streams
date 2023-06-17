@@ -9,11 +9,9 @@ import SERIES from "../ts/seriesEnum";
 export default function WatchMovie() {
   const { series, movieNumber } = useParams();
   const [movieInfo, setMovieInfo] = useState<StructuredFileInfo>();
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     if (series && movieNumber) {
       fetch(`${import.meta.env.VITE_API_URL}/movies/${SERIES[series]}/${movieNumber}`).then((response) =>
         response.json().then((result) => {
@@ -22,7 +20,7 @@ export default function WatchMovie() {
         })
       );
     }
-  }, []);
+  }, [series, movieNumber]);
 
   if (series && movieNumber && movieInfo) {
     return (

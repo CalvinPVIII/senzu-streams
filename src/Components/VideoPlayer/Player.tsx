@@ -60,7 +60,7 @@ export default function Player(props: VideoPlayerProps) {
     setCurrentDubLink(source.find((file) => file.label === selectedQuality) || source[0]);
     setCurrentDubSource(sourceName);
     setCurrentDubQuality(selectedQuality || source[0].label);
-  }, []);
+  }, [props.files]);
 
   useEffect(() => {
     let source;
@@ -81,7 +81,7 @@ export default function Player(props: VideoPlayerProps) {
     setCurrentSubLink(source.find((file) => file.label === selectedQuality) || source[0]);
     setCurrentSubSource(sourceName);
     setCurrentSubQuality(selectedQuality || source[0].label);
-  }, []);
+  }, [props.files]);
 
   const updateVideo = (file: file, sourceName: string) => {
     // if (language === "dub") {

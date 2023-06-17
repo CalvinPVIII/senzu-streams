@@ -13,7 +13,7 @@ export default function SeriesEpisodes(props: SeriesEpisodesProps) {
     const episodeButtons: Array<JSX.Element> = [];
     for (let i = 1; i <= props.numberOfEpisodes; i++) {
       episodeButtons.push(
-        <Link to={`/vods/${props.seriesName}/${i}`} key={props.seriesName + i}>
+        <a href={`/vods/${props.seriesName}/${i}`} key={props.seriesName + i}>
           {episode && parseInt(episode) === i ? (
             <>
               <div className="episode-box current-episode">
@@ -25,7 +25,7 @@ export default function SeriesEpisodes(props: SeriesEpisodesProps) {
               <p className="episode-number">{i}</p>
             </div>
           )}
-        </Link>
+        </a>
       );
     }
     return episodeButtons;
