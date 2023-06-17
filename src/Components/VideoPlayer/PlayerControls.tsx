@@ -9,9 +9,12 @@ import {
   BsArrowsFullscreen,
   BsVolumeOffFill,
 } from "react-icons/bs";
-import { Slider, SliderTrack, SliderFilledTrack, SliderThumb, PopoverTrigger } from "@chakra-ui/react";
+import { LuSettings } from "react-icons/lu";
+import "/node_modules/flag-icons/css/flag-icons.min.css";
+import { Slider, SliderTrack, SliderFilledTrack, SliderThumb, PopoverTrigger, PopoverCloseButton, PopoverHeader } from "@chakra-ui/react";
 import { Popover, PopoverContent, PopoverBody, IconButton } from "@chakra-ui/react";
 import { useState } from "react";
+import { file } from "../../../types";
 
 interface PlayerControlsProps {
   handlePlayerVolume: React.Dispatch<React.SetStateAction<number>>;
@@ -19,6 +22,10 @@ interface PlayerControlsProps {
   playerPlaying: boolean;
   currentPlayerLanguage: "english" | "japanese";
   handlePlayerCurrentLanguage: React.Dispatch<React.SetStateAction<"english" | "japanese">>;
+  videoFiles: { [key: string]: file[] };
+  currentSource: string;
+  currentQuality: string;
+  changeVideoFiles: (file: file, sourceName: string) => void;
 }
 
 export default function PlayerControls(props: PlayerControlsProps) {
@@ -26,6 +33,8 @@ export default function PlayerControls(props: PlayerControlsProps) {
   const [muted] = useState(false);
   const [volume, setVolume] = useState(0);
   const [language, setLanguage] = useState<"english" | "japanese">(props.currentPlayerLanguage);
+  const [activeSource, setActiveSource] = useState(props.currentSource);
+  const [currentFocusedSource, setCurrentFocusedSource] = useState(props.currentSource);
 
   const handlePlaying = () => {
     setPlaying(!playing);
@@ -49,6 +58,11 @@ export default function PlayerControls(props: PlayerControlsProps) {
     }
   };
 
+  const handleChangeVideoFile = (sourceName: string, source: file) => {
+    setActiveSource(sourceName);
+    props.changeVideoFiles(source, sourceName);
+  };
+
   return (
     <div id="player-controls-wrapper">
       <div id="player-controls">
@@ -57,7 +71,7 @@ export default function PlayerControls(props: PlayerControlsProps) {
             <PopoverTrigger>
               <IconButton size="s" variant="ghost" colorScheme="white" icon={<BsArrowLeft />} aria-label={"Previous Episode"} />
             </PopoverTrigger>
-            <PopoverContent maxW="75px">
+            <PopoverContent maxW="75px" color="white" borderColor="black" backgroundColor="black">
               <PopoverBody fontSize={"10px"}>
                 <span>Previous Episode</span>
               </PopoverBody>
@@ -76,7 +90,7 @@ export default function PlayerControls(props: PlayerControlsProps) {
                 aria-label={"Play"}
               />
             </PopoverTrigger>
-            <PopoverContent maxW="75px">
+            <PopoverContent maxW="75px" color="white" borderColor="black" backgroundColor="black">
               {playing ? <PopoverBody fontSize={"12px"}>Pause</PopoverBody> : <PopoverBody fontSize={"12px"}>Play</PopoverBody>}
             </PopoverContent>
           </Popover>
@@ -87,13 +101,15 @@ export default function PlayerControls(props: PlayerControlsProps) {
             <PopoverTrigger>
               {language === "japanese" ? (
                 <span style={{ opacity: "0.5" }} onClick={handleChangeLanguage}>
-                  🇺🇸
+                  <span className="fi fi-us"></span>
                 </span>
               ) : (
-                <span>🇺🇸</span>
+                <span>
+                  <span className="fi fi-us"></span>
+                </span>
               )}
             </PopoverTrigger>
-            <PopoverContent maxW="90px">
+            <PopoverContent maxW="90px" color="white" borderColor="black" backgroundColor="black">
               <PopoverBody fontSize={"10px"}>Set language to English</PopoverBody>
             </PopoverContent>
           </Popover>
@@ -102,13 +118,15 @@ export default function PlayerControls(props: PlayerControlsProps) {
             <PopoverTrigger>
               {language === "english" ? (
                 <span style={{ opacity: "0.5" }} onClick={handleChangeLanguage}>
-                  🇯🇵
+                  <span className="fi fi-jp"></span>
                 </span>
               ) : (
-                <span>🇯🇵</span>
+                <span>
+                  <span className="fi fi-jp"></span>
+                </span>
               )}
             </PopoverTrigger>
-            <PopoverContent maxW="90px">
+            <PopoverContent maxW="90px" color="white" borderColor="black" backgroundColor="black">
               <PopoverBody fontSize={"10px"}>Set language to Japanese</PopoverBody>
             </PopoverContent>
           </Popover>
@@ -128,7 +146,7 @@ export default function PlayerControls(props: PlayerControlsProps) {
                   />
                 </div>
               </PopoverTrigger>
-              <PopoverContent maxW="60px">
+              <PopoverContent maxW="60px" color="white" borderColor="black" backgroundColor="black">
                 <PopoverBody fontSize={"12px"}>Mute</PopoverBody>
               </PopoverContent>
             </Popover>
@@ -147,14 +165,42 @@ export default function PlayerControls(props: PlayerControlsProps) {
           </span>
         </div>
 
-        <div id="next-episode" className="clickable">
-          <Popover trigger="hover" placement="bottom">
+        <div id="settings" className="clickable">
+          <Popover trigger="click" placement="top">
             <PopoverTrigger>
-              <IconButton size="s" variant="ghost" colorScheme="white" icon={<BsArrowRight />} aria-label={"Next Episode"} />
+              <IconButton size="s" variant="ghost" colorScheme="white" icon={<LuSettings />} aria-label={"Settings"} />
             </PopoverTrigger>
-            <PopoverContent maxW="75px">
-              <PopoverBody fontSize={"10px"}>
-                <span>Next Episode</span>
+            <PopoverContent color="white" borderColor="black" backgroundColor="black">
+              <PopoverCloseButton />
+              <PopoverHeader textAlign="center">Settings</PopoverHeader>
+              <PopoverHeader display={"flex"} justifyContent={"space-around"}>
+                {Object.keys(props.videoFiles).map((sourceName) => (
+                  <>
+                    {sourceName === currentFocusedSource ? (
+                      <p key={sourceName}>{sourceName}</p>
+                    ) : (
+                      <p key={sourceName} onClick={() => setCurrentFocusedSource(sourceName)} style={{ opacity: "0.5" }}>
+                        {sourceName}
+                      </p>
+                    )}
+                  </>
+                ))}
+              </PopoverHeader>
+              <PopoverBody>
+                {props.videoFiles[currentFocusedSource].map((source) => (
+                  <>
+                    {activeSource === currentFocusedSource && source.label === props.currentQuality ? (
+                      <p>
+                        •{source.label} {source.type}
+                      </p>
+                    ) : (
+                      <p onClick={() => handleChangeVideoFile(currentFocusedSource, source)}>
+                        {source.label} {source.type}
+                      </p>
+                    )}
+                  </>
+                ))}
+                {/* <span>Settings</span> */}
               </PopoverBody>
             </PopoverContent>
           </Popover>
@@ -165,9 +211,22 @@ export default function PlayerControls(props: PlayerControlsProps) {
             <PopoverTrigger>
               <IconButton size="s" variant="ghost" colorScheme="white" icon={<BsArrowsFullscreen />} aria-label={"Full Screen"} />
             </PopoverTrigger>
-            <PopoverContent maxW="60px">
+            <PopoverContent maxW="60px" color="white" borderColor="black" backgroundColor="black">
               <PopoverBody fontSize={"10px"}>
                 <span>Full screen</span>
+              </PopoverBody>
+            </PopoverContent>
+          </Popover>
+        </div>
+
+        <div id="next-episode" className="clickable">
+          <Popover trigger="hover" placement="bottom">
+            <PopoverTrigger>
+              <IconButton size="s" variant="ghost" colorScheme="white" icon={<BsArrowRight />} aria-label={"Next Episode"} />
+            </PopoverTrigger>
+            <PopoverContent maxW="75px" color="white" borderColor="black" backgroundColor="black">
+              <PopoverBody fontSize={"10px"}>
+                <span>Next Episode</span>
               </PopoverBody>
             </PopoverContent>
           </Popover>

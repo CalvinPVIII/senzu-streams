@@ -29,11 +29,16 @@ interface languageOption {
   episodeLength: number;
 }
 
-interface EpisodeFiles {
-  dub: Array<any>;
-  sub: Array<any>;
+interface file {
+  file: string;
+  label: string;
+  type: string;
 }
-interface ApiEpisodeResponse {
+
+interface StructuredFileInfo {
+  dub: { [key: string]: Array<file> };
+  sub: { [key: string]: Array<file> };
   episodeInfo: string;
-  files: EpisodeFiles;
+  dubLength: number;
+  subLength: number;
 }

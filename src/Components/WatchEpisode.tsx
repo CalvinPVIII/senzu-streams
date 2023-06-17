@@ -6,10 +6,10 @@ import "../css/WatchEpisode.css";
 import SERIES from "../ts/seriesEnum";
 import { useEffect, useState } from "react";
 
-import { ApiEpisodeResponse } from "../../types";
+import { StructuredFileInfo } from "../../types";
 
 export default function WatchEpisode() {
-  const [episodeInfo, setEpisodeInfo] = useState<ApiEpisodeResponse>();
+  const [episodeInfo, setEpisodeInfo] = useState<StructuredFileInfo>();
   const { series, episode } = useParams();
 
   useEffect(() => {
