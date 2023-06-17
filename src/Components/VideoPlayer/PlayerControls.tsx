@@ -170,10 +170,10 @@ export default function PlayerControls(props: PlayerControlsProps) {
             <PopoverTrigger>
               <IconButton size="s" variant="ghost" colorScheme="white" icon={<LuSettings />} aria-label={"Settings"} />
             </PopoverTrigger>
-            <PopoverContent color="white" borderColor="black" backgroundColor="black">
+            <PopoverContent color="white" borderColor="black" backgroundColor="black" maxW="80%">
               <PopoverCloseButton />
               <PopoverHeader textAlign="center">Settings</PopoverHeader>
-              <PopoverHeader display={"flex"} justifyContent={"space-around"}>
+              <PopoverHeader display={"flex"} justifyContent={"space-around"} backgroundColor={"#1b1c1d"} fontSize={"small"}>
                 {Object.keys(props.videoFiles).map((sourceName) => (
                   <>
                     {sourceName === currentFocusedSource ? (
@@ -186,11 +186,11 @@ export default function PlayerControls(props: PlayerControlsProps) {
                   </>
                 ))}
               </PopoverHeader>
-              <PopoverBody>
+              <PopoverBody fontSize={"small"}>
                 {props.videoFiles[currentFocusedSource].map((source) => (
                   <>
                     {activeSource === currentFocusedSource && source.label === props.currentQuality ? (
-                      <p>
+                      <p style={{ fontWeight: "bold" }}>
                         •{source.label} {source.type}
                       </p>
                     ) : (
@@ -200,7 +200,6 @@ export default function PlayerControls(props: PlayerControlsProps) {
                     )}
                   </>
                 ))}
-                {/* <span>Settings</span> */}
               </PopoverBody>
             </PopoverContent>
           </Popover>
