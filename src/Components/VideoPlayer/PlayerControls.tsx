@@ -13,7 +13,7 @@ import { LuSettings } from "react-icons/lu";
 import "/node_modules/flag-icons/css/flag-icons.min.css";
 import { Slider, SliderTrack, SliderFilledTrack, SliderThumb, PopoverTrigger, PopoverCloseButton, PopoverHeader } from "@chakra-ui/react";
 import { Popover, PopoverContent, PopoverBody, IconButton } from "@chakra-ui/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { file } from "../../../types";
 
 interface PlayerControlsProps {
@@ -21,7 +21,7 @@ interface PlayerControlsProps {
   handlePlayerPlaying: React.Dispatch<React.SetStateAction<boolean>>;
   playerPlaying: boolean;
   currentPlayerLanguage: "english" | "japanese";
-  handlePlayerCurrentLanguage: React.Dispatch<React.SetStateAction<"english" | "japanese">>;
+  handlePlayerCurrentLanguage: (language: "english" | "japanese") => void;
   videoFiles: { [key: string]: file[] };
   currentSource: string;
   currentQuality: string;
@@ -35,6 +35,11 @@ export default function PlayerControls(props: PlayerControlsProps) {
   const [language, setLanguage] = useState<"english" | "japanese">(props.currentPlayerLanguage);
   const [activeSource, setActiveSource] = useState(props.currentSource);
   const [currentFocusedSource, setCurrentFocusedSource] = useState(props.currentSource);
+
+  // need to fix bug where if one source doesnt exist for another language
+  console.log(props);
+  console.log("focusedSource " + currentFocusedSource);
+  console.log("activeSource " + activeSource);
 
   const handlePlaying = () => {
     setPlaying(!playing);
@@ -53,8 +58,10 @@ export default function PlayerControls(props: PlayerControlsProps) {
   const handleChangeLanguage = () => {
     if (language === "english") {
       setLanguage("japanese");
+      props.handlePlayerCurrentLanguage("japanese");
     } else if (language === "japanese") {
       setLanguage("english");
+      props.handlePlayerCurrentLanguage("english");
     }
   };
 

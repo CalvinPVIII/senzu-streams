@@ -8,17 +8,25 @@ import { StructuredFileInfo } from "../../types";
 import SERIES from "../ts/seriesEnum";
 export default function WatchMovie() {
   const { series, movieNumber } = useParams();
+  const [loading, setLoading] = useState(true);
+  const [fetchError, setFetchError] = useState(false);
   const [movieInfo, setMovieInfo] = useState<StructuredFileInfo>();
 
   useEffect(() => {
     window.scrollTo(0, 0);
     if (series && movieNumber) {
-      fetch(`${import.meta.env.VITE_API_URL}/movies/${SERIES[series]}/${movieNumber}`).then((response) =>
-        response.json().then((result) => {
-          console.log(result);
-          setMovieInfo(result);
-        })
-      );
+      fetch(`${import.meta.env.VITE_API_URL}/movies/${SERIES[series]}/${movieNumber}`)
+        .then((response) =>
+          response
+            .json()
+            .then((result) => {
+              console.log(result);
+              setMovieInfo(result);
+              setLoading(false);
+            })
+            .catch(() => setFetchError(true))
+        )
+        .catch(() => setFetchError(true));
     }
   }, [series, movieNumber]);
 
@@ -34,5 +42,9 @@ export default function WatchMovie() {
         </div>
       </div>
     );
+  } else if (fetchError) {
+    return <h3 style={{ textAlign: "center" }}>There was an error getting this movie</h3>;
+  } else if (loading) {
+    return <h3 style={{ textAlign: "center" }}>Loading</h3>;
   }
 }

@@ -10,16 +10,28 @@ import { StructuredFileInfo } from "../../types";
 
 export default function WatchEpisode() {
   const [episodeInfo, setEpisodeInfo] = useState<StructuredFileInfo>();
+  const [fetchError, setFetchError] = useState(false);
+  const [loading, setLoading] = useState(true);
   const { series, episode } = useParams();
 
   useEffect(() => {
     if (series && episode) {
-      fetch(`${import.meta.env.VITE_API_URL}/episodes/${SERIES[series]}/${episode}`).then((response) =>
-        response.json().then((result) => {
-          console.log(result);
-          setEpisodeInfo(result);
-        })
-      );
+      fetch(`${import.meta.env.VITE_API_URL}/episodes/${SERIES[series]}/${episode}`)
+        .then((response) =>
+          response
+            .json()
+            .then((result) => {
+              console.log(result);
+              setEpisodeInfo(result);
+              setLoading(false);
+            })
+            .catch(() => {
+              setFetchError(true);
+            })
+        )
+        .catch(() => {
+          setFetchError(true);
+        });
     }
   }, [episode, series]);
 
@@ -34,6 +46,18 @@ export default function WatchEpisode() {
           <SeriesEpisodes numberOfEpisodes={foundSeries.episodes} seriesName={foundSeries.shortName} />
         </div>
       </div>
+    );
+  } else if (fetchError) {
+    return (
+      <>
+        <h3>There was an error getting this episode</h3>
+      </>
+    );
+  } else if (loading) {
+    return (
+      <>
+        <h3>Loading</h3>
+      </>
     );
   }
 }
