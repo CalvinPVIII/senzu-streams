@@ -33,13 +33,7 @@ export default function PlayerControls(props: PlayerControlsProps) {
   const [muted] = useState(false);
   const [volume, setVolume] = useState(0);
   const [language, setLanguage] = useState<"english" | "japanese">(props.currentPlayerLanguage);
-  const [activeSource, setActiveSource] = useState(props.currentSource);
   const [currentFocusedSource, setCurrentFocusedSource] = useState(props.currentSource);
-
-  // need to fix bug where if one source doesnt exist for another language
-  console.log(props);
-  console.log("focusedSource " + currentFocusedSource);
-  console.log("activeSource " + activeSource);
 
   const handlePlaying = () => {
     setPlaying(!playing);
@@ -58,15 +52,14 @@ export default function PlayerControls(props: PlayerControlsProps) {
   const handleChangeLanguage = () => {
     if (language === "english") {
       setLanguage("japanese");
-      props.handlePlayerCurrentLanguage("japanese");
+      props.handlePlayerCurrentLanguage("japanese", setCurrentFocusedSource);
     } else if (language === "japanese") {
       setLanguage("english");
-      props.handlePlayerCurrentLanguage("english");
+      props.handlePlayerCurrentLanguage("english", setCurrentFocusedSource);
     }
   };
 
   const handleChangeVideoFile = (sourceName: string, source: file) => {
-    setActiveSource(sourceName);
     props.changeVideoFiles(source, sourceName);
   };
 
@@ -196,12 +189,12 @@ export default function PlayerControls(props: PlayerControlsProps) {
               <PopoverBody fontSize={"small"}>
                 {props.videoFiles[currentFocusedSource].map((source) => (
                   <>
-                    {activeSource === currentFocusedSource && source.label === props.currentQuality ? (
-                      <p style={{ fontWeight: "bold" }}>
+                    {currentFocusedSource === props.currentSource && source.label === props.currentQuality ? (
+                      <p style={{ fontWeight: "bold" }} onClick={() => handleChangeVideoFile(currentFocusedSource, source, setCurrentFocusedSource)}>
                         •{source.label} {source.type}
                       </p>
                     ) : (
-                      <p onClick={() => handleChangeVideoFile(currentFocusedSource, source)}>
+                      <p onClick={() => handleChangeVideoFile(currentFocusedSource, source, setCurrentFocusedSource)}>
                         {source.label} {source.type}
                       </p>
                     )}

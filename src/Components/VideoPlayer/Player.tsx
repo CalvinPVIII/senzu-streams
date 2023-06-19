@@ -50,9 +50,9 @@ export default function Player(props: VideoPlayerProps) {
     // setting default source
     let source;
     let sourceName;
-    if (props.files.dub["Gogoapi"]) {
-      sourceName = "Gogoapi";
-      source = props.files.dub["Gogoapi"];
+    if (props.files.dub["Anime Owl"]) {
+      sourceName = "Anime Owl";
+      source = props.files.dub["Anime Owl"];
     } else {
       source = Object.values(props.files.dub)[0];
       sourceName = Object.keys(props.files.dub)[0];
@@ -102,7 +102,7 @@ export default function Player(props: VideoPlayerProps) {
     }
   };
 
-  const changePlayerLanguage = (language: "english" | "japanese") => {
+  const changePlayerLanguage = (language: "english" | "japanese", updateSourceCallback: React.Dispatch<React.SetStateAction<string>>) => {
     if (language === "english") {
       localStorage.setItem("playerLanguage", "english");
       setCurrentLanguage("english");
@@ -110,15 +110,20 @@ export default function Player(props: VideoPlayerProps) {
       setSubPlayerVisibility("none");
       setDubPlayerVolume(subPlayerVolume);
       setSubPlayerVolume(0);
+      updateSourceCallback(currentDubSource);
     } else if (language === "japanese") {
       localStorage.setItem("playerLanguage", "japanese");
       setCurrentLanguage("japanese");
       setDubPlayerVisibility("none");
       setSubPlayerVisibility("block");
       setSubPlayerVolume(dubPlayerVolume);
+      updateSourceCallback(currentSubSource);
       setDubPlayerVolume(0);
     }
   };
+
+  console.log(currentDubSource);
+  console.log(currentSubSource);
 
   const styles = {
     boxShadow: "3px 3px 3px black",
