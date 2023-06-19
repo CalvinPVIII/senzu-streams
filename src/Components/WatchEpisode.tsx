@@ -21,7 +21,6 @@ export default function WatchEpisode() {
           response
             .json()
             .then((result) => {
-              console.log(result);
               setEpisodeInfo(result);
               setLoading(false);
             })

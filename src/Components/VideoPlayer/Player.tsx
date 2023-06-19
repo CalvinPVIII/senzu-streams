@@ -32,9 +32,11 @@ export default function Player(props: VideoPlayerProps) {
   const [playing, setPlaying] = useState(props.playing || false);
   const [dubPlayerVolume, setDubPlayerVolume] = useState(0);
   const [subPlayerVolume, setSubPlayerVolume] = useState(0);
-  const [currentLanguage, setCurrentLanguage] = useState<"english" | "japanese">(
-    localStorage.getItem("playerLanguage") ? localStorage.getItem("playerLanguage") : "english"
-  );
+
+  const playerLanguage = localStorage.getItem("playerLanguage");
+  const languageInitialState: "english" | "japanese" = typeof playerLanguage !== null ? (playerLanguage as "english" | "japanese") : "english";
+  const [currentLanguage, setCurrentLanguage] = useState<"english" | "japanese">(languageInitialState);
+
   const [currentDubLink, setCurrentDubLink] = useState<file>();
   const [currentDubSource, setCurrentDubSource] = useState("");
   const [currentDubQuality, setCurrentDubQuality] = useState("");
@@ -50,9 +52,9 @@ export default function Player(props: VideoPlayerProps) {
     // setting default source
     let source;
     let sourceName;
-    if (props.files.dub["Anime Owl"]) {
-      sourceName = "Anime Owl";
-      source = props.files.dub["Anime Owl"];
+    if (props.files.dub["Gogoapi"]) {
+      sourceName = "Gogoapi";
+      source = props.files.dub["Gogoapi"];
     } else {
       source = Object.values(props.files.dub)[0];
       sourceName = Object.keys(props.files.dub)[0];
@@ -121,9 +123,6 @@ export default function Player(props: VideoPlayerProps) {
       setDubPlayerVolume(0);
     }
   };
-
-  console.log(currentDubSource);
-  console.log(currentSubSource);
 
   const styles = {
     boxShadow: "3px 3px 3px black",

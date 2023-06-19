@@ -1,5 +1,5 @@
 import "../css/SeriesEpisodes.css";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 interface SeriesEpisodesProps {
   numberOfEpisodes: number;
@@ -8,7 +8,6 @@ interface SeriesEpisodesProps {
 
 export default function SeriesEpisodes(props: SeriesEpisodesProps) {
   const { episode } = useParams();
-  console.log(episode);
   const createLinkArray = (): Array<JSX.Element> => {
     const episodeButtons: Array<JSX.Element> = [];
     for (let i = 1; i <= props.numberOfEpisodes; i++) {

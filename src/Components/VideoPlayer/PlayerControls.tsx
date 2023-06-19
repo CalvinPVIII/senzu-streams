@@ -13,7 +13,7 @@ import { LuSettings } from "react-icons/lu";
 import "/node_modules/flag-icons/css/flag-icons.min.css";
 import { Slider, SliderTrack, SliderFilledTrack, SliderThumb, PopoverTrigger, PopoverCloseButton, PopoverHeader } from "@chakra-ui/react";
 import { Popover, PopoverContent, PopoverBody, IconButton } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useState, Fragment } from "react";
 import { file } from "../../../types";
 
 interface PlayerControlsProps {
@@ -21,7 +21,7 @@ interface PlayerControlsProps {
   handlePlayerPlaying: React.Dispatch<React.SetStateAction<boolean>>;
   playerPlaying: boolean;
   currentPlayerLanguage: "english" | "japanese";
-  handlePlayerCurrentLanguage: (language: "english" | "japanese") => void;
+  handlePlayerCurrentLanguage: (language: "english" | "japanese", updateSourceCallback: React.Dispatch<React.SetStateAction<string>>) => void;
   videoFiles: { [key: string]: file[] };
   currentSource: string;
   currentQuality: string;
@@ -175,30 +175,30 @@ export default function PlayerControls(props: PlayerControlsProps) {
               <PopoverHeader textAlign="center">Settings</PopoverHeader>
               <PopoverHeader display={"flex"} justifyContent={"space-around"} backgroundColor={"#1b1c1d"} fontSize={"small"}>
                 {Object.keys(props.videoFiles).map((sourceName) => (
-                  <>
+                  <Fragment key={sourceName}>
                     {sourceName === currentFocusedSource ? (
-                      <p key={sourceName}>{sourceName}</p>
+                      <p>{sourceName}</p>
                     ) : (
-                      <p key={sourceName} onClick={() => setCurrentFocusedSource(sourceName)} style={{ opacity: "0.5" }}>
+                      <p onClick={() => setCurrentFocusedSource(sourceName)} style={{ opacity: "0.5" }}>
                         {sourceName}
                       </p>
                     )}
-                  </>
+                  </Fragment>
                 ))}
               </PopoverHeader>
               <PopoverBody fontSize={"small"}>
-                {props.videoFiles[currentFocusedSource].map((source) => (
-                  <>
+                {props.videoFiles[currentFocusedSource].map((source, index) => (
+                  <Fragment key={index}>
                     {currentFocusedSource === props.currentSource && source.label === props.currentQuality ? (
-                      <p style={{ fontWeight: "bold" }} onClick={() => handleChangeVideoFile(currentFocusedSource, source, setCurrentFocusedSource)}>
+                      <p style={{ fontWeight: "bold" }} onClick={() => handleChangeVideoFile(currentFocusedSource, source)}>
                         •{source.label} {source.type}
                       </p>
                     ) : (
-                      <p onClick={() => handleChangeVideoFile(currentFocusedSource, source, setCurrentFocusedSource)}>
+                      <p onClick={() => handleChangeVideoFile(currentFocusedSource, source)}>
                         {source.label} {source.type}
                       </p>
                     )}
-                  </>
+                  </Fragment>
                 ))}
               </PopoverBody>
             </PopoverContent>

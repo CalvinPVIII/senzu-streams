@@ -20,7 +20,6 @@ export default function WatchMovie() {
           response
             .json()
             .then((result) => {
-              console.log(result);
               setMovieInfo(result);
               setLoading(false);
             })
