@@ -19,7 +19,7 @@ export default function SeriesCards(props: SeriesCardsProps) {
             </a>
           ) : (
             <Link to={`/vods/${series.shortName}`}>
-              <SeriesCard name={series.name} info={series.info} shortname={series.info} image={series.image} type={props.seriesType} />
+              <SeriesCard name={series.name} info={series.episodes} shortname={series.shortName} image={series.image} type={props.seriesType} />
             </Link>
           )}
         </div>
