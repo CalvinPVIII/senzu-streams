@@ -43,8 +43,10 @@ export default function Player(props: VideoPlayerProps) {
   const [currentSubLink, setCurrentSubLink] = useState<file>();
   const [currentSubSource, setCurrentSubSource] = useState("");
   const [currentSubQuality, setCurrentSubQuality] = useState("");
-  const [dubPlayerVisibility, setDubPlayerVisibility] = useState<"block" | "none">("block");
-  const [subPlayerVisibility, setSubPlayerVisibility] = useState<"block" | "none">("none");
+  const defaultDubPlayerVisibility = playerLanguage === "english" ? "block" : "none";
+  const [dubPlayerVisibility, setDubPlayerVisibility] = useState<"block" | "none">(defaultDubPlayerVisibility);
+  const defaultSubPlayerVisibility = playerLanguage === "japanese" ? "block" : "none";
+  const [subPlayerVisibility, setSubPlayerVisibility] = useState<"block" | "none">(defaultSubPlayerVisibility);
 
   const player = useRef(null);
 
