@@ -16,6 +16,7 @@ export default function WatchEpisode() {
 
   useEffect(() => {
     if (series && episode) {
+      localStorage.setItem("vodEpisodeInfo", series + episode);
       fetch(`${import.meta.env.VITE_API_URL}/episodes/${SERIES[series]}/${episode}`)
         .then((response) =>
           response

@@ -52,8 +52,8 @@ export default function Player(props: VideoPlayerProps) {
   const [dubPlayerVisibility, setDubPlayerVisibility] = useState<"block" | "none">(defaultDubPlayerVisibility);
   const [subPlayerVisibility, setSubPlayerVisibility] = useState<"block" | "none">(defaultSubPlayerVisibility);
 
-  const player = useRef(null);
-
+  const dubPlayer = useRef(null);
+  const subPlayer = useRef(null);
   useEffect(() => {
     // setting default source
     let source;
@@ -102,6 +102,13 @@ export default function Player(props: VideoPlayerProps) {
       setCurrentDubLink(file);
       setCurrentDubQuality(file.label);
       setCurrentDubSource(sourceName);
+
+      // const dubTime = localStorage.getItem("dubTime");
+      // if (dubTime && dubPlayer.current) {
+      //   dubPlayer.current.seekTo(parseInt(dubTime));
+      //   console.log(dubTime);
+      //   console.log(dubPlayer.current.seekTo);
+      // }
     }
     if (currentLanguage === "japanese") {
       setCurrentSubLink(file);
@@ -130,6 +137,10 @@ export default function Player(props: VideoPlayerProps) {
     }
   };
 
+  const handleProgress = (e: any, playerLanguage: "dub" | "sub") => {
+    localStorage.setItem(`${playerLanguage}Time`, e.playedSeconds);
+  };
+
   const styles = {
     boxShadow: "3px 3px 3px black",
   };
@@ -140,14 +151,14 @@ export default function Player(props: VideoPlayerProps) {
       <div id="dub-player">
         <div style={{ display: dubPlayerVisibility }} className="player">
           <ReactPlayer
-            ref={player}
+            ref={dubPlayer}
             url={currentDubLink.file}
             playing={playing}
             volume={dubPlayerVolume}
             width="100%"
             height="100%"
             onBuffer={props.onBuffer}
-            onProgress={props.onProgress}
+            onProgress={props.onProgress ? props.onProgress : (e) => handleProgress(e, "dub")}
             onDuration={props.onDuration}
             onEnded={props.onEnded}
             onStart={props.onStart}
@@ -159,14 +170,14 @@ export default function Player(props: VideoPlayerProps) {
       <div id="sub-player">
         <div style={{ display: subPlayerVisibility }} className="player">
           <ReactPlayer
-            ref={player}
+            ref={subPlayer}
             url={currentSubLink.file}
             playing={playing}
             volume={subPlayerVolume}
             width="100%"
             height="100%"
             onBuffer={props.onBuffer}
-            onProgress={props.onProgress}
+            onProgress={props.onProgress ? props.onProgress : (e) => handleProgress(e, "sub")}
             onDuration={props.onDuration}
             onEnded={props.onEnded}
             onStart={props.onStart}
