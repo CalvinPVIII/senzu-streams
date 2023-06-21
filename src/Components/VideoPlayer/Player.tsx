@@ -34,8 +34,11 @@ export default function Player(props: VideoPlayerProps) {
   const [subPlayerVolume, setSubPlayerVolume] = useState(0);
 
   const playerLanguage = localStorage.getItem("playerLanguage");
-  const languageInitialState: "english" | "japanese" = typeof playerLanguage !== null ? (playerLanguage as "english" | "japanese") : "english";
-  const [currentLanguage, setCurrentLanguage] = useState<"english" | "japanese">(languageInitialState);
+  const [currentLanguage, setCurrentLanguage] = useState<"english" | "japanese">(
+    playerLanguage === "english" || playerLanguage === "japanese" ? playerLanguage : "english"
+  );
+  console.log(playerLanguage);
+  console.log(currentLanguage);
 
   const [currentDubLink, setCurrentDubLink] = useState<file>();
   const [currentDubSource, setCurrentDubSource] = useState("");
@@ -43,9 +46,10 @@ export default function Player(props: VideoPlayerProps) {
   const [currentSubLink, setCurrentSubLink] = useState<file>();
   const [currentSubSource, setCurrentSubSource] = useState("");
   const [currentSubQuality, setCurrentSubQuality] = useState("");
-  const defaultDubPlayerVisibility = playerLanguage === "english" ? "block" : "none";
-  const [dubPlayerVisibility, setDubPlayerVisibility] = useState<"block" | "none">(defaultDubPlayerVisibility);
+
+  const defaultDubPlayerVisibility = playerLanguage === "english" ? "block" : playerLanguage === null ? "block" : "none";
   const defaultSubPlayerVisibility = playerLanguage === "japanese" ? "block" : "none";
+  const [dubPlayerVisibility, setDubPlayerVisibility] = useState<"block" | "none">(defaultDubPlayerVisibility);
   const [subPlayerVisibility, setSubPlayerVisibility] = useState<"block" | "none">(defaultSubPlayerVisibility);
 
   const player = useRef(null);
