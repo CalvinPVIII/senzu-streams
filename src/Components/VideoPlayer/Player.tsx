@@ -15,7 +15,7 @@ interface VideoPlayerProps {
   playing?: boolean;
   width?: number;
   onReady?: () => void;
-  onStart?: () => void;
+  onStart?: (player: any, language: "dub" | "sub") => void;
   onProgress?: () => void;
   onDuration?: () => void;
   onPause?: () => void;
@@ -161,7 +161,7 @@ export default function Player(props: VideoPlayerProps) {
             onProgress={props.onProgress ? props.onProgress : (e) => handleProgress(e, "dub")}
             onDuration={props.onDuration}
             onEnded={props.onEnded}
-            onStart={props.onStart}
+            onStart={() => props.onStart(dubPlayer, "dub")}
             style={styles}
             className="main-video-player"
           />

@@ -12,11 +12,11 @@ export default function WatchEpisode() {
   const [episodeInfo, setEpisodeInfo] = useState<StructuredFileInfo>();
   const [fetchError, setFetchError] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [onLoadCallback, setOnLoadCallback] = useState();
   const { series, episode } = useParams();
 
   useEffect(() => {
     if (series && episode) {
-      localStorage.setItem("vodEpisodeInfo", series + episode);
       fetch(`${import.meta.env.VITE_API_URL}/episodes/${SERIES[series]}/${episode}`)
         .then((response) =>
           response
@@ -34,13 +34,27 @@ export default function WatchEpisode() {
         });
     }
   }, [episode, series]);
+  // WIP
+  const setVideoToPrevTime = (player: any, language: "dub" | "sub") => {
+    if (series && episode) {
+      const vodEpisode = localStorage.getItem("vodEpisodeInfo");
+      if (vodEpisode === series + episode) {
+        const playerTime = localStorage.getItem(`${language}Time`);
+        if (playerTime) {
+          player.current.seekTo(parseInt(playerTime));
+        }
+      } else {
+        localStorage.setItem("vodEpisodeInfo", series + episode);
+      }
+    }
+  };
 
   if (series && episode && episodeInfo) {
     const foundSeries = allSeries[series];
     return (
       <div>
         <div id="watch-player-wrapper">
-          <Player playing={true} files={episodeInfo} />
+          <Player playing={true} files={episodeInfo} onStart={setVideoToPrevTime} />
         </div>
         <div style={{ display: "flex", justifyContent: "center", margin: "10px" }}>
           <SeriesEpisodes numberOfEpisodes={foundSeries.episodes} seriesName={foundSeries.shortName} />
