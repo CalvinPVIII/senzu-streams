@@ -5,6 +5,7 @@ import Player from "./VideoPlayer/Player";
 import "../css/WatchEpisode.css";
 import SERIES from "../ts/seriesEnum";
 import { useEffect, useState } from "react";
+import ReactPlayer from "react-player";
 
 import { StructuredFileInfo } from "../../types";
 
@@ -35,16 +36,19 @@ export default function WatchEpisode() {
     }
   }, [episode, series]);
   // WIP
-  const setVideoToPrevTime = (player: any, language: "dub" | "sub") => {
+  const setVideoToPrevTime = (player: React.RefObject<ReactPlayer>, language: "dub" | "sub", syncCallback: (syncFrom: "dub" | "sub") => void) => {
     if (series && episode) {
       const vodEpisode = localStorage.getItem("vodEpisodeInfo");
       if (vodEpisode === series + episode) {
         const playerTime = localStorage.getItem(`${language}Time`);
-        if (playerTime) {
+        if (playerTime && player.current) {
           player.current.seekTo(parseInt(playerTime));
+          syncCallback(language);
         }
       } else {
         localStorage.setItem("vodEpisodeInfo", series + episode);
+        localStorage.setItem("dubTime", "0");
+        localStorage.setItem("subTime", "0");
       }
     }
   };

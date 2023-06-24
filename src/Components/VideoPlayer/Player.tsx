@@ -15,7 +15,7 @@ interface VideoPlayerProps {
   playing?: boolean;
   width?: number;
   onReady?: () => void;
-  onStart?: (player: any, language: "dub" | "sub") => void;
+  onStart: (player: React.RefObject<ReactPlayer>, language: "dub" | "sub", syncCallback: (syncFrom: "dub" | "sub") => void) => void;
   onProgress?: () => void;
   onDuration?: () => void;
   onPause?: () => void;
@@ -26,8 +26,6 @@ interface VideoPlayerProps {
   lazyLoad?: boolean;
 }
 
-// next steps: organize all files given from API, have option to pick between them in controls. Go back and change EpisodeFiles to not have any type
-
 export default function Player(props: VideoPlayerProps) {
   const [playing, setPlaying] = useState(props.playing || false);
   const [dubPlayerVolume, setDubPlayerVolume] = useState(0);
@@ -37,8 +35,6 @@ export default function Player(props: VideoPlayerProps) {
   const [currentLanguage, setCurrentLanguage] = useState<"english" | "japanese">(
     playerLanguage === "english" || playerLanguage === "japanese" ? playerLanguage : "english"
   );
-  console.log(playerLanguage);
-  console.log(currentLanguage);
 
   const [currentDubLink, setCurrentDubLink] = useState<file>();
   const [currentDubSource, setCurrentDubSource] = useState("");
@@ -52,8 +48,8 @@ export default function Player(props: VideoPlayerProps) {
   const [dubPlayerVisibility, setDubPlayerVisibility] = useState<"block" | "none">(defaultDubPlayerVisibility);
   const [subPlayerVisibility, setSubPlayerVisibility] = useState<"block" | "none">(defaultSubPlayerVisibility);
 
-  const dubPlayer = useRef(null);
-  const subPlayer = useRef(null);
+  const dubPlayer = useRef<ReactPlayer>(null);
+  const subPlayer = useRef<ReactPlayer>(null);
   useEffect(() => {
     // setting default source
     let source;
@@ -102,18 +98,22 @@ export default function Player(props: VideoPlayerProps) {
       setCurrentDubLink(file);
       setCurrentDubQuality(file.label);
       setCurrentDubSource(sourceName);
-
-      // const dubTime = localStorage.getItem("dubTime");
-      // if (dubTime && dubPlayer.current) {
-      //   dubPlayer.current.seekTo(parseInt(dubTime));
-      //   console.log(dubTime);
-      //   console.log(dubPlayer.current.seekTo);
-      // }
     }
     if (currentLanguage === "japanese") {
       setCurrentSubLink(file);
       setCurrentSubQuality(file.label);
       setCurrentSubSource(sourceName);
+    }
+  };
+
+  const syncPlayers = (syncFrom: "dub" | "sub") => {
+    if (dubPlayer.current && subPlayer.current) {
+      if (syncFrom === "dub") {
+        subPlayer.current.seekTo(dubPlayer.current.getCurrentTime());
+      }
+      if (syncFrom === "sub") {
+        dubPlayer.current.seekTo(subPlayer.current.getCurrentTime());
+      }
     }
   };
 
@@ -161,7 +161,7 @@ export default function Player(props: VideoPlayerProps) {
             onProgress={props.onProgress ? props.onProgress : (e) => handleProgress(e, "dub")}
             onDuration={props.onDuration}
             onEnded={props.onEnded}
-            onStart={() => props.onStart(dubPlayer, "dub")}
+            onStart={() => props.onStart(dubPlayer, "dub", syncPlayers)}
             style={styles}
             className="main-video-player"
           />
@@ -180,7 +180,7 @@ export default function Player(props: VideoPlayerProps) {
             onProgress={props.onProgress ? props.onProgress : (e) => handleProgress(e, "sub")}
             onDuration={props.onDuration}
             onEnded={props.onEnded}
-            onStart={props.onStart}
+            onStart={() => props.onStart(subPlayer, "sub", syncPlayers)}
             style={styles}
             className="main-video-player"
           />
