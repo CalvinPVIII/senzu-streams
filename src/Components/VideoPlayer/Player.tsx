@@ -4,6 +4,7 @@ import "../../css/Player.css";
 import PlayerControls from "./PlayerControls";
 
 import { StructuredFileInfo, file } from "../../../types";
+import { OnProgressProps } from "react-player/base";
 
 // other things this component might need: start time of video, end time of video, call back functions to go to next episode/make another api call
 
@@ -143,8 +144,8 @@ export default function Player(props: VideoPlayerProps) {
     }
   };
 
-  const handleProgress = (e: any, playerLanguage: "dub" | "sub") => {
-    localStorage.setItem(`${playerLanguage}Time`, e.playedSeconds);
+  const handleProgress = (e: OnProgressProps, playerLanguage: "dub" | "sub") => {
+    localStorage.setItem(`${playerLanguage}Time`, `${e.playedSeconds}`);
   };
 
   const handleStart = () => {
