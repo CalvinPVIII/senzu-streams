@@ -5,7 +5,7 @@ import ReactPlayer from "react-player";
 export default function LiveStream() {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState(false);
-  const [apiResult, setApiResult] = useState();
+
   const [streamFiles, setStreamFiles] = useState();
 
   useEffect(() => {
@@ -15,7 +15,6 @@ export default function LiveStream() {
           .json()
           .then((result) => {
             console.log(result);
-            setApiResult(result);
             setStreamFiles(result.currentFiles);
             setLoading(false);
           })
