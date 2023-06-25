@@ -8,7 +8,7 @@ export default function LiveStream() {
 
   const [streamFiles, setStreamFiles] = useState();
 
-  useEffect(() => {
+  const fetchStreamInfo = () => {
     fetch(`${import.meta.env.VITE_API_URL}/stream`)
       .then((response) =>
         response
@@ -25,6 +25,10 @@ export default function LiveStream() {
       .catch(() => {
         setError(true);
       });
+  };
+
+  useEffect(() => {
+    fetchStreamInfo();
   }, []);
 
   const syncToStream = (dubPlayer: React.RefObject<ReactPlayer>, subPlayer: React.RefObject<ReactPlayer>) => {
@@ -43,7 +47,7 @@ export default function LiveStream() {
     return (
       <div id="livestream-wrapper">
         <div className="livestream-player">
-          <Player playing={true} files={streamFiles} onStreamStart={syncToStream} playerType="stream" />
+          <Player playing={true} files={streamFiles} onStreamStart={syncToStream} playerType="stream" onEnded={fetchStreamInfo} />
         </div>
         <div id="livestream-chat">
           <iframe
