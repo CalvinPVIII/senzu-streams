@@ -13,7 +13,7 @@ export default function WatchEpisode() {
   const [episodeInfo, setEpisodeInfo] = useState<StructuredFileInfo>();
   const [fetchError, setFetchError] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [onLoadCallback, setOnLoadCallback] = useState();
+
   const { series, episode } = useParams();
 
   useEffect(() => {
@@ -36,7 +36,7 @@ export default function WatchEpisode() {
     }
   }, [episode, series]);
   // WIP
-  const setVideoToPrevTime = (player: React.RefObject<ReactPlayer>, language: "dub" | "sub", syncCallback: (syncFrom: "dub" | "sub") => void) => {
+  const setVideoToPrevTime = (language: "dub" | "sub", player: React.RefObject<ReactPlayer>, syncCallback: (syncFrom: "dub" | "sub") => void) => {
     if (series && episode) {
       const vodEpisode = localStorage.getItem("vodEpisodeInfo");
       if (vodEpisode === series + episode) {
@@ -58,7 +58,7 @@ export default function WatchEpisode() {
     return (
       <div>
         <div id="watch-player-wrapper">
-          <Player playing={true} files={episodeInfo} onStart={setVideoToPrevTime} />
+          <Player playing={true} files={episodeInfo} onVodStart={setVideoToPrevTime} playerType="vod" />
         </div>
         <div style={{ display: "flex", justifyContent: "center", margin: "10px" }}>
           <SeriesEpisodes numberOfEpisodes={foundSeries.episodes} seriesName={foundSeries.shortName} />

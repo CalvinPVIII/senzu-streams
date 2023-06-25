@@ -9,13 +9,18 @@ import { StructuredFileInfo, file } from "../../../types";
 
 // might also want to look into lazy loading dub/sub for performance reasons
 
+type watchVodStartCallback = (language: "dub" | "sub", player: React.RefObject<ReactPlayer>, syncCallback: (syncFrom: "dub" | "sub") => void) => void;
+
+type watchStreamStartCallback = (dubPlayer: React.RefObject<ReactPlayer>, subPlayer: React.RefObject<ReactPlayer>) => void;
+
 interface VideoPlayerProps {
   files: StructuredFileInfo;
 
   playing?: boolean;
   width?: number;
   onReady?: () => void;
-  onStart: (player: React.RefObject<ReactPlayer>, language: "dub" | "sub", syncCallback: (syncFrom: "dub" | "sub") => void) => void;
+  onVodStart?: watchVodStartCallback;
+  onStreamStart?: watchStreamStartCallback;
   onProgress?: () => void;
   onDuration?: () => void;
   onPause?: () => void;
@@ -24,6 +29,7 @@ interface VideoPlayerProps {
   onEnded?: () => void;
   onError?: () => void;
   lazyLoad?: boolean;
+  playerType: "vod" | "stream";
 }
 
 export default function Player(props: VideoPlayerProps) {
@@ -141,6 +147,17 @@ export default function Player(props: VideoPlayerProps) {
     localStorage.setItem(`${playerLanguage}Time`, e.playedSeconds);
   };
 
+  const handleStart = () => {
+    if (props.playerType === "vod" && props.onVodStart) {
+      const language = currentLanguage === "english" ? "dub" : "sub";
+      const player = language === "dub" ? dubPlayer : subPlayer;
+      props.onVodStart(language, player, syncPlayers);
+    } else if (props.playerType === "stream" && props.onStreamStart) {
+      console.log("test");
+      props.onStreamStart(dubPlayer, subPlayer);
+    }
+  };
+
   const styles = {
     boxShadow: "3px 3px 3px black",
   };
@@ -161,7 +178,7 @@ export default function Player(props: VideoPlayerProps) {
             onProgress={props.onProgress ? props.onProgress : (e) => handleProgress(e, "dub")}
             onDuration={props.onDuration}
             onEnded={props.onEnded}
-            onStart={() => props.onStart(dubPlayer, "dub", syncPlayers)}
+            onStart={handleStart}
             style={styles}
             className="main-video-player"
           />
@@ -180,7 +197,7 @@ export default function Player(props: VideoPlayerProps) {
             onProgress={props.onProgress ? props.onProgress : (e) => handleProgress(e, "sub")}
             onDuration={props.onDuration}
             onEnded={props.onEnded}
-            onStart={() => props.onStart(subPlayer, "sub", syncPlayers)}
+            onStart={handleStart}
             style={styles}
             className="main-video-player"
           />
