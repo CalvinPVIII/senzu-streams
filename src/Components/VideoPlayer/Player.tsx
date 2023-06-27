@@ -166,54 +166,57 @@ export default function Player(props: VideoPlayerProps) {
   return currentDubLink && currentSubLink ? (
     <>
       <h1 id="player-header">{props.files.episodeInfo}</h1>
-      <div id="dub-player">
-        <div style={{ display: dubPlayerVisibility }} className="player">
-          <ReactPlayer
-            ref={dubPlayer}
-            url={currentDubLink.file}
-            playing={playing}
-            volume={dubPlayerVolume}
-            width="100%"
-            height="100%"
-            onBuffer={props.onBuffer}
-            onProgress={props.onProgress ? props.onProgress : (e) => handleProgress(e, "dub")}
-            onDuration={props.onDuration}
-            onEnded={props.onEnded}
-            onStart={handleStart}
-            style={styles}
-            className="main-video-player"
+      <div id="players">
+        <div id="dub-player">
+          <div style={{ display: dubPlayerVisibility }} className="player">
+            <ReactPlayer
+              ref={dubPlayer}
+              url={currentDubLink.file}
+              playing={playing}
+              volume={dubPlayerVolume}
+              width="100%"
+              height="100%"
+              onBuffer={props.onBuffer}
+              onProgress={props.onProgress ? props.onProgress : (e) => handleProgress(e, "dub")}
+              onDuration={props.onDuration}
+              onEnded={props.onEnded}
+              onStart={handleStart}
+              style={styles}
+              className="main-video-player"
+            />
+          </div>
+        </div>
+        <div id="sub-player">
+          <div style={{ display: subPlayerVisibility }} className="player">
+            <ReactPlayer
+              ref={subPlayer}
+              url={currentSubLink.file}
+              playing={playing}
+              volume={subPlayerVolume}
+              width="100%"
+              height="100%"
+              onBuffer={props.onBuffer}
+              onProgress={props.onProgress ? props.onProgress : (e) => handleProgress(e, "sub")}
+              onDuration={props.onDuration}
+              onEnded={props.onEnded}
+              onStart={handleStart}
+              style={styles}
+              className="main-video-player"
+            />
+          </div>
+          <PlayerControls
+            handlePlayerVolume={currentLanguage === "english" ? setDubPlayerVolume : setSubPlayerVolume}
+            handlePlayerPlaying={setPlaying}
+            playerPlaying={playing}
+            currentPlayerLanguage={currentLanguage}
+            handlePlayerCurrentLanguage={changePlayerLanguage}
+            videoFiles={currentLanguage === "english" ? props.files.dub : props.files.sub}
+            currentSource={currentLanguage === "english" ? currentDubSource : currentSubSource}
+            currentQuality={currentLanguage === "english" ? currentDubQuality : currentSubQuality}
+            changeVideoFiles={updateVideo}
+            controlsType={props.playerType}
           />
         </div>
-      </div>
-      <div id="sub-player">
-        <div style={{ display: subPlayerVisibility }} className="player">
-          <ReactPlayer
-            ref={subPlayer}
-            url={currentSubLink.file}
-            playing={playing}
-            volume={subPlayerVolume}
-            width="100%"
-            height="100%"
-            onBuffer={props.onBuffer}
-            onProgress={props.onProgress ? props.onProgress : (e) => handleProgress(e, "sub")}
-            onDuration={props.onDuration}
-            onEnded={props.onEnded}
-            onStart={handleStart}
-            style={styles}
-            className="main-video-player"
-          />
-        </div>
-        <PlayerControls
-          handlePlayerVolume={currentLanguage === "english" ? setDubPlayerVolume : setSubPlayerVolume}
-          handlePlayerPlaying={setPlaying}
-          playerPlaying={playing}
-          currentPlayerLanguage={currentLanguage}
-          handlePlayerCurrentLanguage={changePlayerLanguage}
-          videoFiles={currentLanguage === "english" ? props.files.dub : props.files.sub}
-          currentSource={currentLanguage === "english" ? currentDubSource : currentSubSource}
-          currentQuality={currentLanguage === "english" ? currentDubQuality : currentSubQuality}
-          changeVideoFiles={updateVideo}
-        />
       </div>
     </>
   ) : (
