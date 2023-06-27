@@ -55,6 +55,8 @@ export default function Player(props: VideoPlayerProps) {
   const [dubPlayerVisibility, setDubPlayerVisibility] = useState<"block" | "none">(defaultDubPlayerVisibility);
   const [subPlayerVisibility, setSubPlayerVisibility] = useState<"block" | "none">(defaultSubPlayerVisibility);
 
+  const [isFullscreen, setIsFullscreen] = useState(false);
+
   const dubPlayer = useRef<ReactPlayer>(null);
   const subPlayer = useRef<ReactPlayer>(null);
   useEffect(() => {
@@ -99,6 +101,22 @@ export default function Player(props: VideoPlayerProps) {
     setCurrentSubSource(sourceName);
     setCurrentSubQuality(selectedQuality || source[0].label);
   }, [props.files]);
+
+  useEffect(() => {
+    function onFullscreenChange() {
+      if (document.fullscreenElement) {
+        setIsFullscreen(true);
+        console.log(true);
+      } else if (!document.fullscreenElement) {
+        console.log(false);
+        setIsFullscreen(false);
+      }
+    }
+
+    document.addEventListener("fullscreenchange", onFullscreenChange);
+
+    return () => document.removeEventListener("fullscreenchange", onFullscreenChange);
+  }, []);
 
   const updateVideo = (file: file, sourceName: string) => {
     if (currentLanguage === "english") {
@@ -145,7 +163,9 @@ export default function Player(props: VideoPlayerProps) {
   };
 
   const handleProgress = (e: OnProgressProps, playerLanguage: "dub" | "sub") => {
-    localStorage.setItem(`${playerLanguage}Time`, `${e.playedSeconds}`);
+    if (props.playerType === "vod") {
+      localStorage.setItem(`${playerLanguage}Time`, `${e.playedSeconds}`);
+    }
   };
 
   const handleStart = () => {
@@ -204,19 +224,19 @@ export default function Player(props: VideoPlayerProps) {
               className="main-video-player"
             />
           </div>
-          <PlayerControls
-            handlePlayerVolume={currentLanguage === "english" ? setDubPlayerVolume : setSubPlayerVolume}
-            handlePlayerPlaying={setPlaying}
-            playerPlaying={playing}
-            currentPlayerLanguage={currentLanguage}
-            handlePlayerCurrentLanguage={changePlayerLanguage}
-            videoFiles={currentLanguage === "english" ? props.files.dub : props.files.sub}
-            currentSource={currentLanguage === "english" ? currentDubSource : currentSubSource}
-            currentQuality={currentLanguage === "english" ? currentDubQuality : currentSubQuality}
-            changeVideoFiles={updateVideo}
-            controlsType={props.playerType}
-          />
         </div>
+        <PlayerControls
+          handlePlayerVolume={currentLanguage === "english" ? setDubPlayerVolume : setSubPlayerVolume}
+          handlePlayerPlaying={setPlaying}
+          playerPlaying={playing}
+          currentPlayerLanguage={currentLanguage}
+          handlePlayerCurrentLanguage={changePlayerLanguage}
+          videoFiles={currentLanguage === "english" ? props.files.dub : props.files.sub}
+          currentSource={currentLanguage === "english" ? currentDubSource : currentSubSource}
+          currentQuality={currentLanguage === "english" ? currentDubQuality : currentSubQuality}
+          changeVideoFiles={updateVideo}
+          controlsType={props.playerType}
+        />
       </div>
     </>
   ) : (

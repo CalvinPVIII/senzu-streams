@@ -35,7 +35,6 @@ export default function PlayerControls(props: PlayerControlsProps) {
   const [volume, setVolume] = useState(0);
   const [language, setLanguage] = useState<"english" | "japanese">(props.currentPlayerLanguage);
   const [currentFocusedSource, setCurrentFocusedSource] = useState(props.currentSource);
-  const [isFullscreen, setIsFullscreen] = useState(false);
 
   const handlePlaying = () => {
     setPlaying(!playing);
@@ -66,13 +65,10 @@ export default function PlayerControls(props: PlayerControlsProps) {
   };
 
   const handleFullscreen = () => {
-    const currentPlayerId = language === "english" ? "dub-player" : "sub-player";
     if (!document.fullscreenElement) {
       document.getElementById("players")?.requestFullscreen();
-      setIsFullscreen(true);
     } else if (document.fullscreenElement) {
       document.exitFullscreen();
-      setIsFullscreen(true);
     }
   };
 
