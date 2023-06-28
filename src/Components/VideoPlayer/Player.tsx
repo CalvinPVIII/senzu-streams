@@ -186,7 +186,7 @@ export default function Player(props: VideoPlayerProps) {
   return currentDubLink && currentSubLink ? (
     <>
       <h1 id="player-header">{props.files.episodeInfo}</h1>
-      <div id="players">
+      <div id="players" style={isFullscreen ? { position: "fixed", width: "10vw", height: "10vh" } : {}}>
         <div id="dub-player">
           <div style={{ display: dubPlayerVisibility }} className="player">
             <ReactPlayer
