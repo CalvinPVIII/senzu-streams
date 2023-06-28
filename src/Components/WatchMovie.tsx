@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import ReactPlayer from "react-player";
 import { StructuredFileInfo } from "../../types";
 import SERIES from "../ts/seriesEnum";
+import Loading from "./Loading";
 export default function WatchMovie() {
   const [loading, setLoading] = useState(true);
   const [fetchError, setFetchError] = useState(false);
@@ -24,9 +25,16 @@ export default function WatchMovie() {
               setMovieInfo(result);
               setLoading(false);
             })
-            .catch(() => setFetchError(true))
+            .catch(() => {
+              setFetchError(true);
+
+              setLoading(false);
+            })
         )
-        .catch(() => setFetchError(true));
+        .catch(() => {
+          setFetchError(true);
+          setLoading(false);
+        });
     }
   }, [series, movieNumber]);
 
@@ -47,11 +55,11 @@ export default function WatchMovie() {
     }
   };
 
-  if (series && movieNumber && movieInfo) {
+  if (series && movieNumber && !fetchError) {
     return (
       <div>
         <div id="watch-player-wrapper">
-          <Player files={movieInfo} playing={true} onVodStart={setVideoToPrevTime} playerType="vod" />
+          {loading ? <Loading /> : movieInfo ? <Player files={movieInfo} playing={true} onVodStart={setVideoToPrevTime} playerType="vod" /> : <></>}
         </div>
         <div id="movie-cards">
           <h1 id="watch-movie-header">More Movies</h1>
@@ -60,8 +68,6 @@ export default function WatchMovie() {
       </div>
     );
   } else if (fetchError) {
-    return <h3 style={{ textAlign: "center" }}>There was an error getting this movie</h3>;
-  } else if (loading) {
-    return <h3 style={{ textAlign: "center" }}>Loading</h3>;
+    return <h1 style={{ textAlign: "center" }}>There was an error getting this movie</h1>;
   }
 }

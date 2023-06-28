@@ -2,9 +2,11 @@ import Player from "./VideoPlayer/Player";
 import "../css/Livestream.css";
 import { useEffect, useState } from "react";
 import ReactPlayer from "react-player";
+import Loading from "./Loading";
 export default function LiveStream() {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState(false);
+  const [noStream, setNoStream] = useState(false);
 
   const [streamFiles, setStreamFiles] = useState();
 
@@ -15,15 +17,21 @@ export default function LiveStream() {
           .json()
           .then((result) => {
             console.log(result);
-            setStreamFiles(result.currentFiles);
+            if (result.isActive) {
+              setStreamFiles(result.currentFiles);
+            } else if (!result.isActive) {
+              setNoStream(true);
+            }
             setLoading(false);
           })
           .catch(() => {
             setError(true);
+            setLoading(false);
           })
       )
       .catch(() => {
         setError(true);
+        setLoading(false);
       });
   };
 
@@ -58,5 +66,11 @@ export default function LiveStream() {
         </div>
       </div>
     );
+  } else if (noStream) {
+    return <h1 style={{ textAlign: "center" }}>There currently is no livestream</h1>;
+  } else if (loading) {
+    return <Loading />;
+  } else if (error) {
+    return <h1 style={{ textAlign: "center" }}>Senzu Streams is currently down. Please check back later</h1>;
   }
 }

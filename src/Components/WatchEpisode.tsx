@@ -6,6 +6,7 @@ import "../css/WatchEpisode.css";
 import SERIES from "../ts/seriesEnum";
 import { useEffect, useState } from "react";
 import ReactPlayer from "react-player";
+import Loading from "./Loading";
 
 import { StructuredFileInfo } from "../../types";
 
@@ -28,14 +29,16 @@ export default function WatchEpisode() {
             })
             .catch(() => {
               setFetchError(true);
+              setLoading(false);
             })
         )
         .catch(() => {
           setFetchError(true);
+          setLoading(false);
         });
     }
   }, [episode, series]);
-  // WIP
+
   const setVideoToPrevTime = (language: "dub" | "sub", player: React.RefObject<ReactPlayer>, syncCallback: (syncFrom: "dub" | "sub") => void) => {
     if (series && episode) {
       const vodEpisode = localStorage.getItem("vodEpisodeInfo");
@@ -53,13 +56,20 @@ export default function WatchEpisode() {
     }
   };
 
-  if (series && episode && episodeInfo) {
+  if (series && episode && !fetchError) {
     const foundSeries = allSeries[series];
     return (
       <div>
-        <div id="watch-player-wrapper">
-          <Player playing={true} files={episodeInfo} onVodStart={setVideoToPrevTime} playerType="vod" />
-        </div>
+        {loading ? (
+          <Loading />
+        ) : episodeInfo ? (
+          <div id="watch-player-wrapper">
+            <Player playing={true} files={episodeInfo} onVodStart={setVideoToPrevTime} playerType="vod" />
+          </div>
+        ) : (
+          <></>
+        )}
+
         <div style={{ display: "flex", justifyContent: "center", margin: "10px" }}>
           <SeriesEpisodes numberOfEpisodes={foundSeries.episodes} seriesName={foundSeries.shortName} />
         </div>
@@ -68,13 +78,7 @@ export default function WatchEpisode() {
   } else if (fetchError) {
     return (
       <>
-        <h3>There was an error getting this episode</h3>
-      </>
-    );
-  } else if (loading) {
-    return (
-      <>
-        <h3>Loading</h3>
+        <h1 style={{ textAlign: "center" }}>There was an error getting this episode</h1>
       </>
     );
   }
