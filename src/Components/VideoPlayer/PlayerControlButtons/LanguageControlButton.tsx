@@ -4,21 +4,20 @@ import { useState } from "react";
 
 interface LanguageControlButtonProps {
   currentPlayerLanguage: "english" | "japanese";
-  handlePlayerCurrentLanguage: (language: "english" | "japanese", updateSourceCallback: React.Dispatch<React.SetStateAction<string>>) => void;
+  handlePlayerCurrentLanguage: (language: "english" | "japanese") => void;
   currentSource: string;
 }
 
 export default function LanguageControlButton(props: LanguageControlButtonProps) {
   const [language, setLanguage] = useState<"english" | "japanese">(props.currentPlayerLanguage);
-  const [currentFocusedSource, setCurrentFocusedSource] = useState(props.currentSource);
 
   const handleChangeLanguage = () => {
     if (language === "english") {
       setLanguage("japanese");
-      props.handlePlayerCurrentLanguage("japanese", setCurrentFocusedSource);
+      props.handlePlayerCurrentLanguage("japanese");
     } else if (language === "japanese") {
       setLanguage("english");
-      props.handlePlayerCurrentLanguage("english", setCurrentFocusedSource);
+      props.handlePlayerCurrentLanguage("english");
     }
   };
 

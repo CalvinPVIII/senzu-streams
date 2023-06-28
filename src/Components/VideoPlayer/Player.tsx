@@ -142,7 +142,7 @@ export default function Player(props: VideoPlayerProps) {
     }
   };
 
-  const changePlayerLanguage = (language: "english" | "japanese", updateSourceCallback: React.Dispatch<React.SetStateAction<string>>) => {
+  const changePlayerLanguage = (language: "english" | "japanese") => {
     if (language === "english") {
       localStorage.setItem("playerLanguage", "english");
       setCurrentLanguage("english");
@@ -150,14 +150,13 @@ export default function Player(props: VideoPlayerProps) {
       setSubPlayerVisibility("none");
       setDubPlayerVolume(subPlayerVolume);
       setSubPlayerVolume(0);
-      updateSourceCallback(currentDubSource);
     } else if (language === "japanese") {
       localStorage.setItem("playerLanguage", "japanese");
       setCurrentLanguage("japanese");
       setDubPlayerVisibility("none");
       setSubPlayerVisibility("block");
       setSubPlayerVolume(dubPlayerVolume);
-      updateSourceCallback(currentSubSource);
+
       setDubPlayerVolume(0);
     }
   };

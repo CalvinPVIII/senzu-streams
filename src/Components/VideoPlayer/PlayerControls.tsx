@@ -12,7 +12,7 @@ interface PlayerControlsProps {
   handlePlayerPlaying: React.Dispatch<React.SetStateAction<boolean>>;
   playerPlaying: boolean;
   currentPlayerLanguage: "english" | "japanese";
-  handlePlayerCurrentLanguage: (language: "english" | "japanese", updateSourceCallback: React.Dispatch<React.SetStateAction<string>>) => void;
+  handlePlayerCurrentLanguage: (language: "english" | "japanese") => void;
   videoFiles: { [key: string]: file[] };
   currentSource: string;
   currentQuality: string;
