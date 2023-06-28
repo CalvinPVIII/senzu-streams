@@ -16,7 +16,6 @@ export default function LiveStream() {
         response
           .json()
           .then((result) => {
-            console.log(result);
             if (result.isActive) {
               setStreamFiles(result.currentFiles);
             } else if (!result.isActive) {
