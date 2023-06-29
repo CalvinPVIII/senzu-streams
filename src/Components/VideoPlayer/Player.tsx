@@ -164,21 +164,29 @@ export default function Player(props: VideoPlayerProps) {
     }
   };
 
-  const handleProgress = (e: OnProgressProps, playerLanguage: "dub" | "sub") => {
-    if (props.playerType === "vod") {
-      localStorage.setItem(`${playerLanguage}Time`, `${e.playedSeconds}`);
-    }
+  const getVideoDuration = (): number => {
     let videoDuration = 0;
     if (currentLanguage === "english" && dubPlayer.current) {
       videoDuration = dubPlayer.current.getDuration();
     } else if (currentLanguage === "japanese" && subPlayer.current) {
       videoDuration = subPlayer.current.getDuration();
     }
+    return videoDuration;
+  };
+
+  const handleProgress = (e: OnProgressProps, playerLanguage: "dub" | "sub") => {
+    if (props.playerType === "vod") {
+      localStorage.setItem(`${playerLanguage}Time`, `${e.playedSeconds}`);
+    }
+    const videoDuration = getVideoDuration();
     setPlayerProgressPercent((e.playedSeconds / videoDuration) * 100);
   };
 
-  const handleSeek = (time: number) => {
-    return;
+  const handleSeek = (value: number) => {
+    if (dubPlayer.current && subPlayer.current) {
+      dubPlayer.current.seekTo(value);
+      subPlayer.current.seekTo(value);
+    }
   };
 
   const handleStart = () => {
@@ -238,7 +246,7 @@ export default function Player(props: VideoPlayerProps) {
             />
           </div>
         </div>
-        <ProgressBar currentPlayerTime={playerProgressPercent} handleSeek={handleSeek} />
+        <ProgressBar currentPlayerTime={playerProgressPercent} handleSeek={handleSeek} getDuration={getVideoDuration} />
         <PlayerControls
           handlePlayerVolume={currentLanguage === "english" ? setDubPlayerVolume : setSubPlayerVolume}
           handlePlayerPlaying={setPlaying}

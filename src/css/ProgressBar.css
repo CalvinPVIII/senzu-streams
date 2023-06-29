@@ -1,0 +1,30 @@
+#video-progress-input {
+  width: 100%;
+  height: 5px;
+  background-color: #164f27;
+  border-radius: 5px;
+  appearance: none;
+  outline: none;
+}
+
+#video-progress-input::-webkit-slider-thumb {
+  appearance: none;
+  width: 4px;
+  height: 5px;
+  background-color: #92c407;
+  cursor: pointer;
+}
+
+#video-progress-input::-moz-range-thumb {
+  width: 4px;
+  height: 5px;
+  background-color: #92c407;
+  cursor: pointer;
+}
+
+#video-progress-input::-ms-thumb {
+  width: 4px;
+  height: 5px;
+  background-color: #92c407;
+  cursor: pointer;
+}
