@@ -27,8 +27,9 @@ export default function ProgressBar(props: ProgressBarProps) {
     return hours + ":" + minutes + ":" + seconds;
   };
 
-  const onHover = (e: any) => {
-    const hoverTime = (((e.clientX - e.target.offsetLeft) / e.target.clientWidth) * 100).toFixed(2);
+  const onHover = (e: React.MouseEvent<HTMLInputElement>) => {
+    const target = e.target as HTMLInputElement;
+    const hoverTime = (((e.clientX - target.offsetLeft) / target.clientWidth) * 100).toFixed(2);
     const duration = (props.getDuration() * parseInt(hoverTime)) / 100;
     setHoverValue(duration);
     setToolTipValue(formatTime(duration));
