@@ -2,6 +2,7 @@ import ReactPlayer from "react-player";
 import { useState, useRef, useEffect } from "react";
 import "../../css/Player.css";
 import PlayerControls from "./PlayerControls";
+import ProgressBar from "./ProgressBar";
 
 import { StructuredFileInfo, file } from "../../../types";
 import { OnProgressProps } from "react-player/base";
@@ -56,6 +57,8 @@ export default function Player(props: VideoPlayerProps) {
   const [subPlayerVisibility, setSubPlayerVisibility] = useState<"block" | "none">(defaultSubPlayerVisibility);
 
   const [isFullscreen, setIsFullscreen] = useState(false);
+
+  const [playerProgressPercent, setPlayerProgressPercent] = useState<number>(0);
 
   const dubPlayer = useRef<ReactPlayer>(null);
   const subPlayer = useRef<ReactPlayer>(null);
@@ -165,6 +168,17 @@ export default function Player(props: VideoPlayerProps) {
     if (props.playerType === "vod") {
       localStorage.setItem(`${playerLanguage}Time`, `${e.playedSeconds}`);
     }
+    let videoDuration = 0;
+    if (currentLanguage === "english" && dubPlayer.current) {
+      videoDuration = dubPlayer.current.getDuration();
+    } else if (currentLanguage === "japanese" && subPlayer.current) {
+      videoDuration = subPlayer.current.getDuration();
+    }
+    setPlayerProgressPercent((e.playedSeconds / videoDuration) * 100);
+  };
+
+  const handleSeek = (time: number) => {
+    return;
   };
 
   const handleStart = () => {
@@ -224,6 +238,7 @@ export default function Player(props: VideoPlayerProps) {
             />
           </div>
         </div>
+        <ProgressBar currentPlayerTime={playerProgressPercent} handleSeek={handleSeek} />
         <PlayerControls
           handlePlayerVolume={currentLanguage === "english" ? setDubPlayerVolume : setSubPlayerVolume}
           handlePlayerPlaying={setPlaying}
