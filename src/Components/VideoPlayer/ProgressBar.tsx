@@ -41,7 +41,7 @@ export default function ProgressBar(props: ProgressBarProps) {
 
   return (
     <div id="player-progress-slider">
-      <Tooltip label={toolTipValue} bg="#92c407">
+      <Tooltip label={toolTipValue} color="#92c407" bg="black">
         <input
           type="range"
           value={props.currentPlayerTime}
