@@ -32,6 +32,7 @@ interface VideoPlayerProps {
   onError?: () => void;
   lazyLoad?: boolean;
   playerType: "vod" | "stream";
+  episodeFinishedMessage: { dub: string; sub: string };
 }
 
 export default function Player(props: VideoPlayerProps) {
@@ -59,6 +60,9 @@ export default function Player(props: VideoPlayerProps) {
   const [isFullscreen, setIsFullscreen] = useState(false);
 
   const [playerProgressPercent, setPlayerProgressPercent] = useState<number>(0);
+
+  const [isDubFinished, setIsDubFinished] = useState(false);
+  const [isSubFinished, setIsSubFinished] = useState(false);
 
   const dubPlayer = useRef<ReactPlayer>(null);
   const subPlayer = useRef<ReactPlayer>(null);
@@ -189,6 +193,19 @@ export default function Player(props: VideoPlayerProps) {
     }
   };
 
+  const handleEnd = (language: string) => {
+    if (language === "dub") {
+      setIsDubFinished(true);
+    }
+    if (language === "sub") {
+      setIsSubFinished(true);
+    }
+    localStorage.setItem(`${playerLanguage}Time`, "0");
+    if (props.onEnded) {
+      props.onEnded();
+    }
+  };
+
   const handleStart = () => {
     if (props.playerType === "vod" && props.onVodStart) {
       const language = currentLanguage === "english" ? "dub" : "sub";
@@ -198,6 +215,8 @@ export default function Player(props: VideoPlayerProps) {
       console.log("test");
       props.onStreamStart(dubPlayer, subPlayer);
     }
+    setIsDubFinished(false);
+    setIsSubFinished(false);
   };
 
   const styles = {
@@ -206,10 +225,17 @@ export default function Player(props: VideoPlayerProps) {
 
   return currentDubLink && currentSubLink ? (
     <>
-      <h1 id="player-header">{props.files.episodeInfo}</h1>
-      <div id="players" style={isFullscreen ? { position: "absolute", overflow: "scroll" } : {}}>
+      <div id="players" style={{ maxWidth: "1000px", margin: "auto" }}>
+        <h1 id="player-header">{props.files.episodeInfo}</h1>
         <div id="dub-player">
           <div style={{ display: dubPlayerVisibility }} className="player">
+            {isDubFinished ? (
+              <div className="player-finished">
+                <h1 className="player-finished-message">{props.episodeFinishedMessage.dub}</h1>
+              </div>
+            ) : (
+              <></>
+            )}
             <ReactPlayer
               ref={dubPlayer}
               url={currentDubLink.file}
@@ -220,7 +246,7 @@ export default function Player(props: VideoPlayerProps) {
               onBuffer={props.onBuffer}
               onProgress={props.onProgress ? props.onProgress : (e) => handleProgress(e, "dub")}
               onDuration={props.onDuration}
-              onEnded={props.onEnded}
+              onEnded={() => handleEnd("dub")}
               onStart={handleStart}
               style={styles}
               className="main-video-player"
@@ -229,6 +255,13 @@ export default function Player(props: VideoPlayerProps) {
         </div>
         <div id="sub-player">
           <div style={{ display: subPlayerVisibility }} className="player">
+            {isSubFinished ? (
+              <div className="player-finished">
+                <h1 className="player-finished-message">{props.episodeFinishedMessage.sub}</h1>
+              </div>
+            ) : (
+              <></>
+            )}
             <ReactPlayer
               ref={subPlayer}
               url={currentSubLink.file}
@@ -239,7 +272,7 @@ export default function Player(props: VideoPlayerProps) {
               onBuffer={props.onBuffer}
               onProgress={props.onProgress ? props.onProgress : (e) => handleProgress(e, "sub")}
               onDuration={props.onDuration}
-              onEnded={props.onEnded}
+              onEnded={() => handleEnd("sub")}
               onStart={handleStart}
               style={styles}
               className="main-video-player"

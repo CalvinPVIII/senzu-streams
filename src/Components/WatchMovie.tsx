@@ -55,11 +55,25 @@ export default function WatchMovie() {
     }
   };
 
+  const episodeFinishedMessage = { dub: "The English Episode Has Finished", sub: "The Japanese Episode Has Finished" };
+
   if (series && movieNumber && !fetchError) {
     return (
       <div>
         <div id="watch-player-wrapper">
-          {loading ? <Loading /> : movieInfo ? <Player files={movieInfo} playing={true} onVodStart={setVideoToPrevTime} playerType="vod" /> : <></>}
+          {loading ? (
+            <Loading />
+          ) : movieInfo ? (
+            <Player
+              files={movieInfo}
+              playing={true}
+              episodeFinishedMessage={episodeFinishedMessage}
+              onVodStart={setVideoToPrevTime}
+              playerType="vod"
+            />
+          ) : (
+            <></>
+          )}
         </div>
         <div id="movie-cards">
           <h1 id="watch-movie-header">More Movies</h1>

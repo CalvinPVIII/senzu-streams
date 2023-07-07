@@ -39,6 +39,8 @@ export default function WatchEpisode() {
     }
   }, [episode, series]);
 
+  console.log(episodeInfo);
+
   const setVideoToPrevTime = (language: "dub" | "sub", player: React.RefObject<ReactPlayer>, syncCallback: (syncFrom: "dub" | "sub") => void) => {
     if (series && episode) {
       const vodEpisode = localStorage.getItem("vodEpisodeInfo");
@@ -56,6 +58,8 @@ export default function WatchEpisode() {
     }
   };
 
+  const episodeFinishedMessage = { dub: "The English Episode Has Finished", sub: "The Japanese Episode Has Finished" };
+
   if (series && episode && !fetchError) {
     const foundSeries = allSeries[series];
     return (
@@ -64,7 +68,13 @@ export default function WatchEpisode() {
           <Loading />
         ) : episodeInfo ? (
           <div id="watch-player-wrapper">
-            <Player playing={true} files={episodeInfo} onVodStart={setVideoToPrevTime} playerType="vod" />
+            <Player
+              playing={true}
+              files={episodeInfo}
+              onVodStart={setVideoToPrevTime}
+              playerType="vod"
+              episodeFinishedMessage={episodeFinishedMessage}
+            />
           </div>
         ) : (
           <></>

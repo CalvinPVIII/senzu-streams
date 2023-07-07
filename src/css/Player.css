@@ -1,3 +1,25 @@
 #player-header {
   font-family: "Comfortaa", cursive;
 }
+
+.player {
+  position: relative;
+}
+
+.player-finished {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+
+  z-index: 1;
+  background-color: black;
+  color: white;
+  opacity: 0.7;
+}
+
+.player-finished-message {
+  font-size: 40px;
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20%;
+}

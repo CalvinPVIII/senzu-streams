@@ -48,13 +48,23 @@ export default function LiveStream() {
       })
     );
   };
-
+  const episodeFinishedMessage = {
+    dub: "The English episode has finished. Please wait for the Japanese Episode",
+    sub: "The Japanese episode has finished. Please wait for the English episode",
+  };
   // when the current episode is 4:3, min-width should be 55vw, if its 16:9 it should be 75
   if (!error && !loading && streamFiles) {
     return (
       <div id="livestream-wrapper">
         <div className="livestream-player">
-          <Player playing={true} files={streamFiles} onStreamStart={syncToStream} playerType="stream" onEnded={fetchStreamInfo} />
+          <Player
+            playing={true}
+            files={streamFiles}
+            onStreamStart={syncToStream}
+            playerType="stream"
+            onEnded={fetchStreamInfo}
+            episodeFinishedMessage={episodeFinishedMessage}
+          />
         </div>
         <div id="livestream-chat">
           <iframe
