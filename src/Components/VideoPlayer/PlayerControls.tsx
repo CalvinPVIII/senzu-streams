@@ -4,7 +4,7 @@ import PlayPauseButton from "./PlayerControlButtons/PlayPauseButton";
 import LanguageControlButton from "./PlayerControlButtons/LanguageControlButton";
 import VolumeControl from "./PlayerControlButtons/VolumeControl";
 import PlayerFileSettings from "./PlayerControlButtons/PlayerFileSettings";
-import FullScreenButton from "./PlayerControlButtons/FullScreenButton";
+import TheaterModeButton from "./PlayerControlButtons/TheaterModeButton";
 import { EpisodeNavigationButton } from "./PlayerControlButtons/EpisodeNavigationButton";
 
 interface PlayerControlsProps {
@@ -18,6 +18,10 @@ interface PlayerControlsProps {
   currentQuality: string;
   changeVideoFiles: (file: file, sourceName: string) => void;
   controlsType: "vod" | "stream";
+  maxWidth: number;
+  theaterModeMaxWidth: number;
+  currentMaxWidth: number;
+  setMaxWidth: React.Dispatch<React.SetStateAction<number>>;
 }
 
 export default function PlayerControls(props: PlayerControlsProps) {
@@ -43,7 +47,12 @@ export default function PlayerControls(props: PlayerControlsProps) {
           currentQuality={props.currentQuality}
         />
 
-        <FullScreenButton />
+        <TheaterModeButton
+          setMaxWidth={props.setMaxWidth}
+          maxWidth={props.maxWidth}
+          theaterModeMaxWidth={props.theaterModeMaxWidth}
+          currentMaxWidth={props.currentMaxWidth}
+        />
 
         {props.controlsType === "stream" ? <></> : <EpisodeNavigationButton type="next" />}
       </div>

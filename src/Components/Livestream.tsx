@@ -64,6 +64,8 @@ export default function LiveStream() {
             playerType="stream"
             onEnded={fetchStreamInfo}
             episodeFinishedMessage={episodeFinishedMessage}
+            maxWidth={1000}
+            theaterModeMaxWidth={1300}
           />
         </div>
         <div id="livestream-chat">

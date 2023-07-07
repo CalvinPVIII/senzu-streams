@@ -74,6 +74,8 @@ export default function WatchEpisode() {
               onVodStart={setVideoToPrevTime}
               playerType="vod"
               episodeFinishedMessage={episodeFinishedMessage}
+              maxWidth={1200}
+              theaterModeMaxWidth={1500}
             />
           </div>
         ) : (

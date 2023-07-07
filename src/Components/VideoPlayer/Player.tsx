@@ -33,6 +33,8 @@ interface VideoPlayerProps {
   lazyLoad?: boolean;
   playerType: "vod" | "stream";
   episodeFinishedMessage: { dub: string; sub: string };
+  maxWidth: number;
+  theaterModeMaxWidth: number;
 }
 
 export default function Player(props: VideoPlayerProps) {
@@ -57,7 +59,7 @@ export default function Player(props: VideoPlayerProps) {
   const [dubPlayerVisibility, setDubPlayerVisibility] = useState<"block" | "none">(defaultDubPlayerVisibility);
   const [subPlayerVisibility, setSubPlayerVisibility] = useState<"block" | "none">(defaultSubPlayerVisibility);
 
-  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [currentMaxWidth, setCurrentMaxWidth] = useState(props.maxWidth);
 
   const [playerProgressPercent, setPlayerProgressPercent] = useState<number>(0);
 
@@ -108,22 +110,6 @@ export default function Player(props: VideoPlayerProps) {
     setCurrentSubSource(sourceName);
     setCurrentSubQuality(selectedQuality || source[0].label);
   }, [props.files]);
-
-  useEffect(() => {
-    function onFullscreenChange() {
-      if (document.fullscreenElement) {
-        setIsFullscreen(true);
-        console.log(true);
-      } else if (!document.fullscreenElement) {
-        console.log(false);
-        setIsFullscreen(false);
-      }
-    }
-
-    document.addEventListener("fullscreenchange", onFullscreenChange);
-
-    return () => document.removeEventListener("fullscreenchange", onFullscreenChange);
-  }, []);
 
   const updateVideo = (file: file, sourceName: string) => {
     if (currentLanguage === "english") {
@@ -225,7 +211,7 @@ export default function Player(props: VideoPlayerProps) {
 
   return currentDubLink && currentSubLink ? (
     <>
-      <div id="players" style={{ maxWidth: "1000px", margin: "auto" }}>
+      <div id="players" style={{ maxWidth: currentMaxWidth, margin: "auto" }}>
         <h1 id="player-header">{props.files.episodeInfo}</h1>
         <div id="dub-player">
           <div style={{ display: dubPlayerVisibility }} className="player">
@@ -291,6 +277,10 @@ export default function Player(props: VideoPlayerProps) {
           currentQuality={currentLanguage === "english" ? currentDubQuality : currentSubQuality}
           changeVideoFiles={updateVideo}
           controlsType={props.playerType}
+          maxWidth={props.maxWidth}
+          currentMaxWidth={currentMaxWidth}
+          theaterModeMaxWidth={props.theaterModeMaxWidth}
+          setMaxWidth={setCurrentMaxWidth}
         />
       </div>
     </>

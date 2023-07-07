@@ -1,15 +1,21 @@
 import { Popover, PopoverContent, PopoverBody, PopoverTrigger, IconButton } from "@chakra-ui/react";
 import { BsArrowsFullscreen } from "react-icons/bs";
 
-const handleFullscreen = () => {
-  if (!document.fullscreenElement) {
-    document.getElementById("players")?.requestFullscreen();
-  } else if (document.fullscreenElement) {
-    document.exitFullscreen();
-  }
-};
+interface TheaterModeButtonProps {
+  setMaxWidth: React.Dispatch<React.SetStateAction<number>>;
+  maxWidth: number;
+  currentMaxWidth: number;
+  theaterModeMaxWidth: number;
+}
 
-export default function FullScreenButton() {
+export default function TheaterMode(props: TheaterModeButtonProps) {
+  const handleFullscreen = () => {
+    if (props.currentMaxWidth === props.maxWidth) {
+      props.setMaxWidth(props.theaterModeMaxWidth);
+    } else {
+      props.setMaxWidth(props.maxWidth);
+    }
+  };
   return (
     <div id="fullscreen" className="clickable">
       <Popover trigger="hover" placement="bottom">
@@ -19,13 +25,13 @@ export default function FullScreenButton() {
             variant="ghost"
             colorScheme="white"
             icon={<BsArrowsFullscreen />}
-            aria-label={"Full Screen"}
+            aria-label={"Theater Mode"}
             onClick={handleFullscreen}
           />
         </PopoverTrigger>
         <PopoverContent maxW="60px" color="white" borderColor="black" backgroundColor="black">
           <PopoverBody fontSize={"10px"}>
-            <span>Full screen</span>
+            <span>Theater Mode</span>
           </PopoverBody>
         </PopoverContent>
       </Popover>
