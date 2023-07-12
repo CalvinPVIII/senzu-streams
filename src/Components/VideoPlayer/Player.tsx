@@ -7,9 +7,10 @@ import ProgressBar from "./ProgressBar";
 import { StructuredFileInfo, file } from "../../../types";
 import { OnProgressProps } from "react-player/base";
 
-// other things this component might need: start time of video, end time of video, call back functions to go to next episode/make another api call
+// some things to consider: adding intro offset to specific video sources. If one source has an offset, then the other source needs to account for that. I.E: If the dub source doesnt have an intro, every time the sub source seeks/gets set/time changes in general, the offset from the dub source needs to be applied.
 
 // might also want to look into lazy loading dub/sub for performance reasons
+// with lazy loading, I would need to store the current time of the previous player before switching to the next player, potentially need to update the syncPlayers function to have another optional parameter of time to sync to.
 
 type watchVodStartCallback = (language: "dub" | "sub", player: React.RefObject<ReactPlayer>, syncCallback: (syncFrom: "dub" | "sub") => void) => void;
 
@@ -143,13 +144,14 @@ export default function Player(props: VideoPlayerProps) {
       setSubPlayerVisibility("none");
       setDubPlayerVolume(subPlayerVolume);
       setSubPlayerVolume(0);
+      syncPlayers("sub");
     } else if (language === "japanese") {
       localStorage.setItem("playerLanguage", "japanese");
       setCurrentLanguage("japanese");
       setDubPlayerVisibility("none");
       setSubPlayerVisibility("block");
       setSubPlayerVolume(dubPlayerVolume);
-
+      syncPlayers("dub");
       setDubPlayerVolume(0);
     }
   };
