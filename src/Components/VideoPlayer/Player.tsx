@@ -63,6 +63,7 @@ export default function Player(props: VideoPlayerProps) {
   const [currentMaxWidth, setCurrentMaxWidth] = useState(props.maxWidth);
 
   const [playerProgressPercent, setPlayerProgressPercent] = useState<number>(0);
+  const [currentPlayerTime, setCurrentPlayerTime] = useState<number>(0);
 
   const [isDubFinished, setIsDubFinished] = useState(false);
   const [isSubFinished, setIsSubFinished] = useState(false);
@@ -172,6 +173,7 @@ export default function Player(props: VideoPlayerProps) {
     }
     const videoDuration = getVideoDuration();
     setPlayerProgressPercent((e.playedSeconds / videoDuration) * 100);
+    setCurrentPlayerTime(e.playedSeconds);
   };
 
   const handleSeek = (value: number) => {
@@ -267,7 +269,13 @@ export default function Player(props: VideoPlayerProps) {
             />
           </div>
         </div>
-        <ProgressBar currentPlayerTime={playerProgressPercent} handleSeek={handleSeek} getDuration={getVideoDuration} />
+        <ProgressBar
+          currentPlayerTimePercent={playerProgressPercent}
+          handleSeek={handleSeek}
+          getDuration={getVideoDuration}
+          playerType={props.playerType}
+          currentPlayerTime={currentPlayerTime}
+        />
         <PlayerControls
           handlePlayerVolume={currentLanguage === "english" ? setDubPlayerVolume : setSubPlayerVolume}
           handlePlayerPlaying={setPlaying}

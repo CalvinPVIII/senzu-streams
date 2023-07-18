@@ -3,9 +3,11 @@ import "../../css/ProgressBar.css";
 import { useState } from "react";
 
 interface ProgressBarProps {
-  currentPlayerTime: number;
+  currentPlayerTimePercent: number;
   handleSeek: (value: number) => void;
   getDuration: () => number;
+  playerType: "vod" | "stream";
+  currentPlayerTime: number;
 }
 
 export default function ProgressBar(props: ProgressBarProps) {
@@ -28,23 +30,30 @@ export default function ProgressBar(props: ProgressBarProps) {
   };
 
   const onHover = (e: React.MouseEvent<HTMLInputElement>) => {
-    const target = e.target as HTMLInputElement;
-    const hoverTime = (((e.clientX - target.offsetLeft) / target.clientWidth) * 100).toFixed(2);
-    const duration = (props.getDuration() * parseInt(hoverTime)) / 100;
-    setHoverValue(duration);
-    setToolTipValue(formatTime(duration));
+    if (props.playerType === "vod") {
+      const target = e.target as HTMLInputElement;
+      const hoverTime = (((e.clientX - target.offsetLeft) / target.clientWidth) * 100).toFixed(2);
+      const duration = (props.getDuration() * parseInt(hoverTime)) / 100;
+      setHoverValue(duration);
+      setToolTipValue(formatTime(duration));
+    } else if (props.playerType === "stream") {
+      setToolTipValue(formatTime(props.currentPlayerTime));
+    }
   };
 
   const handleChange = () => {
-    props.handleSeek(hoverValue);
+    if (props.playerType === "vod") {
+      props.handleSeek(hoverValue);
+    }
   };
 
   return (
     <div id="player-progress-slider">
       <Tooltip label={toolTipValue} color="#92c407" bg="black">
         <input
+          className={props.playerType === "vod" ? "hoverable" : ""}
           type="range"
-          value={props.currentPlayerTime}
+          value={props.currentPlayerTimePercent}
           max="100"
           min="0"
           onMouseMove={onHover}
