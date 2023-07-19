@@ -11,27 +11,29 @@ export default function LiveStream() {
   const [streamFiles, setStreamFiles] = useState();
 
   const fetchStreamInfo = () => {
-    fetch(`${import.meta.env.VITE_API_URL}/stream`)
-      .then((response) =>
-        response
-          .json()
-          .then((result) => {
-            if (result.isActive) {
-              setStreamFiles(result.currentFiles);
-            } else if (!result.isActive) {
-              setNoStream(true);
-            }
-            setLoading(false);
-          })
-          .catch(() => {
-            setError(true);
-            setLoading(false);
-          })
-      )
-      .catch(() => {
-        setError(true);
-        setLoading(false);
-      });
+    setTimeout(() => {
+      fetch(`${import.meta.env.VITE_API_URL}/stream`)
+        .then((response) =>
+          response
+            .json()
+            .then((result) => {
+              if (result.isActive) {
+                setStreamFiles(result.currentFiles);
+              } else if (!result.isActive) {
+                setNoStream(true);
+              }
+              setLoading(false);
+            })
+            .catch(() => {
+              setError(true);
+              setLoading(false);
+            })
+        )
+        .catch(() => {
+          setError(true);
+          setLoading(false);
+        });
+    }, 2000);
   };
 
   useEffect(() => {

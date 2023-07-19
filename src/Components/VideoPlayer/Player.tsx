@@ -190,10 +190,12 @@ export default function Player(props: VideoPlayerProps) {
     if (language === "sub") {
       setIsSubFinished(true);
     }
-    localStorage.setItem(`${playerLanguage}Time`, "0");
-    if (props.onEnded) {
-      props.onEnded();
+    if ((language === "dub" && isSubFinished) || (language === "sub" && isDubFinished)) {
+      if (props.onEnded) {
+        props.onEnded();
+      }
     }
+    localStorage.setItem(`${language}Time`, "0");
   };
 
   const handleStart = () => {
