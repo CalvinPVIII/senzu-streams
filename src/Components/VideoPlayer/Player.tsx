@@ -14,7 +14,7 @@ import { OnProgressProps } from "react-player/base";
 
 type watchVodStartCallback = (language: "dub" | "sub", player: React.RefObject<ReactPlayer>, syncCallback: (syncFrom: "dub" | "sub") => void) => void;
 
-type watchStreamStartCallback = (dubPlayer: React.RefObject<ReactPlayer>, subPlayer: React.RefObject<ReactPlayer>) => void;
+export type watchStreamStartCallback = (dubPlayer: React.RefObject<ReactPlayer>, subPlayer: React.RefObject<ReactPlayer>, playerTime: number) => void;
 
 interface VideoPlayerProps {
   files: StructuredFileInfo;
@@ -205,10 +205,22 @@ export default function Player(props: VideoPlayerProps) {
       props.onVodStart(language, player, syncPlayers);
     } else if (props.playerType === "stream" && props.onStreamStart) {
       console.log("test");
-      props.onStreamStart(dubPlayer, subPlayer);
+      const player = dubPlayer.current ? dubPlayer.current : subPlayer.current;
+      if (player) {
+        props.onStreamStart(dubPlayer, subPlayer, player.getCurrentTime());
+      }
     }
     setIsDubFinished(false);
     setIsSubFinished(false);
+  };
+
+  const syncToStream = (): void => {
+    if (props.onStreamStart && props.playerType === "stream") {
+      const player = dubPlayer.current ? dubPlayer.current : subPlayer.current;
+      if (player) {
+        props.onStreamStart(dubPlayer, subPlayer, player.getCurrentTime());
+      }
+    }
   };
 
   const styles = {
@@ -279,6 +291,7 @@ export default function Player(props: VideoPlayerProps) {
           currentPlayerTime={currentPlayerTime}
         />
         <PlayerControls
+          syncToStream={props.playerType === "stream" ? syncToStream : null}
           handlePlayerVolume={currentLanguage === "english" ? setDubPlayerVolume : setSubPlayerVolume}
           handlePlayerPlaying={setPlaying}
           playerPlaying={playing}

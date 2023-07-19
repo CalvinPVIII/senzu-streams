@@ -22,13 +22,26 @@ interface PlayerControlsProps {
   theaterModeMaxWidth: number;
   currentMaxWidth: number;
   setMaxWidth: React.Dispatch<React.SetStateAction<number>>;
+  syncToStream?: (() => void) | null;
 }
 
 export default function PlayerControls(props: PlayerControlsProps) {
+  const handleLiveClick = () => {
+    if (props.syncToStream) {
+      props.syncToStream();
+    }
+  };
+
   return (
     <div id="player-controls-wrapper">
       <div id="player-controls">
-        {props.controlsType === "stream" ? <></> : <EpisodeNavigationButton type="prev" />}
+        {props.controlsType === "stream" ? (
+          <p className="hoverable" onClick={handleLiveClick}>
+            LIVE
+          </p>
+        ) : (
+          <EpisodeNavigationButton type="prev" />
+        )}
 
         <PlayPauseButton playerPlaying={props.playerPlaying} handlePlayerPlaying={props.handlePlayerPlaying} />
 

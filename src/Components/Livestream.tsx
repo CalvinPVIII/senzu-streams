@@ -40,12 +40,16 @@ export default function LiveStream() {
     fetchStreamInfo();
   }, []);
 
-  const syncToStream = (dubPlayer: React.RefObject<ReactPlayer>, subPlayer: React.RefObject<ReactPlayer>) => {
+  const syncToStream = (dubPlayer: React.RefObject<ReactPlayer>, subPlayer: React.RefObject<ReactPlayer>, playerTime: number) => {
     fetch(`${import.meta.env.VITE_API_URL}/stream`).then((response) =>
       response.json().then((result) => {
-        if (dubPlayer.current && subPlayer.current) {
-          dubPlayer.current.seekTo(result.currentTime);
-          subPlayer.current.seekTo(result.currentTime);
+        if (playerTime > result.currentTime) {
+          fetchStreamInfo();
+        } else {
+          if (dubPlayer.current && subPlayer.current) {
+            dubPlayer.current.seekTo(result.currentTime);
+            subPlayer.current.seekTo(result.currentTime);
+          }
         }
       })
     );
