@@ -68,6 +68,8 @@ export default function Player(props: VideoPlayerProps) {
   const [isDubFinished, setIsDubFinished] = useState(false);
   const [isSubFinished, setIsSubFinished] = useState(false);
 
+  const [fullScreen, setIsFullScreen] = useState(false);
+
   const dubPlayer = useRef<ReactPlayer>(null);
   const subPlayer = useRef<ReactPlayer>(null);
   useEffect(() => {
@@ -112,6 +114,18 @@ export default function Player(props: VideoPlayerProps) {
     setCurrentSubSource(sourceName);
     setCurrentSubQuality(selectedQuality || source[0].label);
   }, [props.files]);
+
+  useEffect(() => {
+    document.getElementById("players")?.addEventListener("fullscreenchange", () => {
+      if (document.fullscreenElement) {
+        setIsFullScreen(true);
+        console.log("enter");
+      } else {
+        setIsFullScreen(false);
+        console.log("exit");
+      }
+    });
+  }, []);
 
   const updateVideo = (file: file, sourceName: string) => {
     if (currentLanguage === "english") {
@@ -223,14 +237,25 @@ export default function Player(props: VideoPlayerProps) {
     }
   };
 
+  const handleFullScreen = (): void => {
+    const player = document.getElementById("players");
+    if (!document.fullscreenElement) {
+      player?.requestFullscreen();
+    } else {
+      document.exitFullscreen();
+    }
+  };
+
   const styles = {
     boxShadow: "3px 3px 3px black",
   };
 
   return currentDubLink && currentSubLink ? (
     <>
+      <h1 id="player-header" style={{ maxWidth: currentMaxWidth, margin: "auto" }}>
+        {props.files.episodeInfo}
+      </h1>
       <div id="players" style={{ maxWidth: currentMaxWidth, margin: "auto" }}>
-        <h1 id="player-header">{props.files.episodeInfo}</h1>
         <div id="dub-player">
           <div style={{ display: dubPlayerVisibility }} className="player">
             {isDubFinished ? (
@@ -308,6 +333,7 @@ export default function Player(props: VideoPlayerProps) {
           setMaxWidth={setCurrentMaxWidth}
         />
       </div>
+      <p onClick={handleFullScreen}>fullscreen</p>
     </>
   ) : (
     <p>Loading</p>
