@@ -3,7 +3,7 @@ import { BsFillPlayFill, BsPauseFill } from "react-icons/bs";
 import { useState } from "react";
 
 interface PlayPauseButtonProps {
-  handlePlayerPlaying: React.Dispatch<React.SetStateAction<boolean>>;
+  handlePlayerPlaying: () => void;
   playerPlaying: boolean;
 }
 
@@ -12,7 +12,7 @@ export default function PlayPauseButton(props: PlayPauseButtonProps) {
 
   const handlePlaying = () => {
     setPlaying(!playing);
-    props.handlePlayerPlaying(!playing);
+    props.handlePlayerPlaying();
   };
 
   return (

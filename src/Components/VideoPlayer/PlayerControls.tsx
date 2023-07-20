@@ -6,10 +6,11 @@ import VolumeControl from "./PlayerControlButtons/VolumeControl";
 import PlayerFileSettings from "./PlayerControlButtons/PlayerFileSettings";
 import TheaterModeButton from "./PlayerControlButtons/TheaterModeButton";
 import { EpisodeNavigationButton } from "./PlayerControlButtons/EpisodeNavigationButton";
+import FullScreenButton from "./PlayerControlButtons/FullScreenButton";
 
 interface PlayerControlsProps {
   handlePlayerVolume: React.Dispatch<React.SetStateAction<number>>;
-  handlePlayerPlaying: React.Dispatch<React.SetStateAction<boolean>>;
+  handlePlayerPlaying: () => void;
   playerPlaying: boolean;
   currentPlayerLanguage: "english" | "japanese";
   handlePlayerCurrentLanguage: (language: "english" | "japanese") => void;
@@ -18,10 +19,7 @@ interface PlayerControlsProps {
   currentQuality: string;
   changeVideoFiles: (file: file, sourceName: string) => void;
   controlsType: "vod" | "stream";
-  maxWidth: number;
-  theaterModeMaxWidth: number;
-  currentMaxWidth: number;
-  setMaxWidth: React.Dispatch<React.SetStateAction<number>>;
+  handleFullScreen: () => void;
   syncToStream?: (() => void) | null;
 }
 
@@ -60,12 +58,14 @@ export default function PlayerControls(props: PlayerControlsProps) {
           currentQuality={props.currentQuality}
         />
 
-        <TheaterModeButton
+        <FullScreenButton handleFullScreen={props.handleFullScreen} />
+
+        {/* <TheaterModeButton
           setMaxWidth={props.setMaxWidth}
           maxWidth={props.maxWidth}
           theaterModeMaxWidth={props.theaterModeMaxWidth}
           currentMaxWidth={props.currentMaxWidth}
-        />
+        /> */}
 
         {props.controlsType === "stream" ? <></> : <EpisodeNavigationButton type="next" />}
       </div>

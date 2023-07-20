@@ -82,7 +82,7 @@ export default function WatchEpisode() {
           <></>
         )}
 
-        <div style={{ display: "flex", justifyContent: "center", margin: "10px" }}>
+        <div style={{ display: "flex", justifyContent: "center", margin: "10px", marginTop: "75px" }}>
           <SeriesEpisodes numberOfEpisodes={foundSeries.episodes} seriesName={foundSeries.shortName} />
         </div>
       </div>

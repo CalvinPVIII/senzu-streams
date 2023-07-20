@@ -60,8 +60,6 @@ export default function Player(props: VideoPlayerProps) {
   const [dubPlayerVisibility, setDubPlayerVisibility] = useState<"block" | "none">(defaultDubPlayerVisibility);
   const [subPlayerVisibility, setSubPlayerVisibility] = useState<"block" | "none">(defaultSubPlayerVisibility);
 
-  const [currentMaxWidth, setCurrentMaxWidth] = useState(props.maxWidth);
-
   const [playerProgressPercent, setPlayerProgressPercent] = useState<number>(0);
   const [currentPlayerTime, setCurrentPlayerTime] = useState<number>(0);
 
@@ -204,6 +202,7 @@ export default function Player(props: VideoPlayerProps) {
     if (language === "sub") {
       setIsSubFinished(true);
     }
+
     if ((language === "dub" && isSubFinished) || (language === "sub" && isDubFinished)) {
       if (props.onEnded) {
         props.onEnded();
@@ -246,16 +245,24 @@ export default function Player(props: VideoPlayerProps) {
     }
   };
 
+  const handlePlaying = (): void => {
+    if (playing) {
+      setPlaying(false);
+    } else {
+      setPlaying(true);
+      setIsDubFinished(false);
+      setIsSubFinished(false);
+    }
+  };
+
   const styles = {
     boxShadow: "3px 3px 3px black",
   };
 
   return currentDubLink && currentSubLink ? (
     <>
-      <h1 id="player-header" style={{ maxWidth: currentMaxWidth, margin: "auto" }}>
-        {props.files.episodeInfo}
-      </h1>
-      <div id="players" style={{ maxWidth: currentMaxWidth, margin: "auto" }}>
+      <h1 id="player-header">{props.files.episodeInfo}</h1>
+      <div id="players">
         <div id="dub-player">
           <div style={{ display: dubPlayerVisibility }} className="player">
             {isDubFinished ? (
@@ -320,7 +327,7 @@ export default function Player(props: VideoPlayerProps) {
           <PlayerControls
             syncToStream={props.playerType === "stream" ? syncToStream : null}
             handlePlayerVolume={currentLanguage === "english" ? setDubPlayerVolume : setSubPlayerVolume}
-            handlePlayerPlaying={setPlaying}
+            handlePlayerPlaying={handlePlaying}
             playerPlaying={playing}
             currentPlayerLanguage={currentLanguage}
             handlePlayerCurrentLanguage={changePlayerLanguage}
@@ -329,14 +336,14 @@ export default function Player(props: VideoPlayerProps) {
             currentQuality={currentLanguage === "english" ? currentDubQuality : currentSubQuality}
             changeVideoFiles={updateVideo}
             controlsType={props.playerType}
-            maxWidth={props.maxWidth}
-            currentMaxWidth={currentMaxWidth}
-            theaterModeMaxWidth={props.theaterModeMaxWidth}
-            setMaxWidth={setCurrentMaxWidth}
+            handleFullScreen={handleFullScreen}
+            // maxWidth={props.maxWidth}
+            // currentMaxWidth={currentMaxWidth}
+            // theaterModeMaxWidth={props.theaterModeMaxWidth}
+            // setMaxWidth={setCurrentMaxWidth}
           />
         </div>
       </div>
-      <p onClick={handleFullScreen}>fullscreen</p>
     </>
   ) : (
     <p>Loading</p>

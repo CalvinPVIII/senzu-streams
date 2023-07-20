@@ -9,7 +9,7 @@ interface TheaterModeButtonProps {
 }
 
 export default function TheaterMode(props: TheaterModeButtonProps) {
-  const handleFullscreen = () => {
+  const handleClick = () => {
     if (props.currentMaxWidth === props.maxWidth) {
       props.setMaxWidth(props.theaterModeMaxWidth);
     } else {
@@ -17,17 +17,10 @@ export default function TheaterMode(props: TheaterModeButtonProps) {
     }
   };
   return (
-    <div id="fullscreen" className="clickable">
+    <div id="theater-mode" className="clickable">
       <Popover trigger="hover" placement="bottom">
         <PopoverTrigger>
-          <IconButton
-            size="s"
-            variant="ghost"
-            colorScheme="white"
-            icon={<BsArrowsFullscreen />}
-            aria-label={"Theater Mode"}
-            onClick={handleFullscreen}
-          />
+          <IconButton size="s" variant="ghost" colorScheme="white" icon={<BsArrowsFullscreen />} aria-label={"Theater Mode"} onClick={handleClick} />
         </PopoverTrigger>
         <PopoverContent maxW="60px" color="white" borderColor="black" backgroundColor="black">
           <PopoverBody fontSize={"10px"}>
