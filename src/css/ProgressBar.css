@@ -1,4 +1,4 @@
-#video-progress-input {
+/* #video-progress-input {
   width: 100%;
   height: 5px;
   background-color: #164f27;
@@ -27,4 +27,25 @@
   height: 5px;
   background-color: #92c407;
   cursor: pointer;
+} */
+
+#progress-background {
+  width: 100%;
+  height: 5px;
+  border-radius: 5px;
+  background-color: #164f27;
+}
+
+#progress-filled {
+  /* width: 50%; */
+  border-radius: 5px;
+  height: 5px;
+  background-color: #92c407;
+}
+
+#video-progress-input {
+  width: 100%;
+  height: 5px;
+  opacity: 0;
+  position: absolute;
 }

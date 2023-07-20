@@ -36,20 +36,21 @@ export default function ProgressBar(props: ProgressBarProps) {
       const duration = (props.getDuration() * parseInt(hoverTime)) / 100;
       setHoverValue(duration);
       setToolTipValue(formatTime(duration));
+      console.log(formatTime(duration));
     } else if (props.playerType === "stream") {
       setToolTipValue(formatTime(props.currentPlayerTime));
     }
   };
 
-  const handleChange = () => {
+  const handleChange = (e: any) => {
     if (props.playerType === "vod") {
-      props.handleSeek(hoverValue);
+      props.handleSeek((props.getDuration() * parseInt(e.target.value)) / 100);
     }
   };
 
   return (
     <div id="player-progress-slider">
-      <Tooltip label={toolTipValue} color="#92c407" bg="black">
+      {/* <Tooltip label={toolTipValue} color="#92c407" bg="black">
         <input
           className={props.playerType === "vod" ? "hoverable" : ""}
           type="range"
@@ -60,7 +61,22 @@ export default function ProgressBar(props: ProgressBarProps) {
           onInput={handleChange}
           id="video-progress-input"
         />
-      </Tooltip>
+      </Tooltip> */}
+      <div id="progress-background">
+        <div id="progress-filled" style={{ width: `${props.currentPlayerTimePercent}%` }}>
+          <input
+            className={props.playerType === "vod" ? "hoverable" : ""}
+            type="range"
+            value={props.currentPlayerTimePercent}
+            max="100"
+            min="0"
+            step="0.1"
+            onMouseMove={onHover}
+            onInput={handleChange}
+            id="video-progress-input"
+          />
+        </div>
+      </div>
     </div>
   );
 }
