@@ -1,6 +1,5 @@
 import { Popover, PopoverTrigger, IconButton, PopoverContent, PopoverBody } from "@chakra-ui/react";
 import { BsFillPlayFill, BsPauseFill } from "react-icons/bs";
-import { useState } from "react";
 
 interface PlayPauseButtonProps {
   handlePlayerPlaying: () => void;
@@ -8,10 +7,7 @@ interface PlayPauseButtonProps {
 }
 
 export default function PlayPauseButton(props: PlayPauseButtonProps) {
-  const [playing, setPlaying] = useState(props.playerPlaying);
-
   const handlePlaying = () => {
-    setPlaying(!playing);
     props.handlePlayerPlaying();
   };
 
@@ -23,12 +19,12 @@ export default function PlayPauseButton(props: PlayPauseButtonProps) {
             size="s"
             variant="ghost"
             colorScheme="white"
-            icon={playing ? <BsPauseFill onClick={handlePlaying} size="20" /> : <BsFillPlayFill onClick={handlePlaying} size="20" />}
+            icon={props.playerPlaying ? <BsPauseFill onClick={handlePlaying} size="20" /> : <BsFillPlayFill onClick={handlePlaying} size="20" />}
             aria-label={"Play"}
           />
         </PopoverTrigger>
         <PopoverContent maxW="75px" color="white" borderColor="black" backgroundColor="black">
-          {playing ? <PopoverBody fontSize={"12px"}>Pause</PopoverBody> : <PopoverBody fontSize={"12px"}>Play</PopoverBody>}
+          {props.playerPlaying ? <PopoverBody fontSize={"12px"}>Pause</PopoverBody> : <PopoverBody fontSize={"12px"}>Play</PopoverBody>}
         </PopoverContent>
       </Popover>
     </div>

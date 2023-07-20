@@ -184,7 +184,9 @@ export default function Player(props: VideoPlayerProps) {
       localStorage.setItem(`${playerLanguage}Time`, `${e.playedSeconds}`);
     }
     const videoDuration = getVideoDuration();
-    setPlayerProgressPercent((e.playedSeconds / videoDuration) * 100);
+    const percentage = (e.playedSeconds / videoDuration) * 100;
+
+    setPlayerProgressPercent(percentage);
     setCurrentPlayerTime(e.playedSeconds);
   };
 
@@ -192,6 +194,8 @@ export default function Player(props: VideoPlayerProps) {
     if (dubPlayer.current && subPlayer.current) {
       dubPlayer.current.seekTo(value);
       subPlayer.current.seekTo(value);
+      setIsDubFinished(false);
+      setIsSubFinished(false);
     }
   };
 
@@ -202,6 +206,7 @@ export default function Player(props: VideoPlayerProps) {
     if (language === "sub") {
       setIsSubFinished(true);
     }
+    setPlaying(false);
 
     if ((language === "dub" && isSubFinished) || (language === "sub" && isDubFinished)) {
       if (props.onEnded) {
@@ -217,7 +222,6 @@ export default function Player(props: VideoPlayerProps) {
       const player = language === "dub" ? dubPlayer : subPlayer;
       props.onVodStart(language, player, syncPlayers);
     } else if (props.playerType === "stream" && props.onStreamStart) {
-      console.log("test");
       const player = dubPlayer.current ? dubPlayer.current : subPlayer.current;
       if (player) {
         props.onStreamStart(dubPlayer, subPlayer, player.getCurrentTime());
