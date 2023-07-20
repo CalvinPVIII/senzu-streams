@@ -308,30 +308,33 @@ export default function Player(props: VideoPlayerProps) {
             />
           </div>
         </div>
-        <ProgressBar
-          currentPlayerTimePercent={playerProgressPercent}
-          handleSeek={handleSeek}
-          getDuration={getVideoDuration}
-          playerType={props.playerType}
-          currentPlayerTime={currentPlayerTime}
-        />
-        <PlayerControls
-          syncToStream={props.playerType === "stream" ? syncToStream : null}
-          handlePlayerVolume={currentLanguage === "english" ? setDubPlayerVolume : setSubPlayerVolume}
-          handlePlayerPlaying={setPlaying}
-          playerPlaying={playing}
-          currentPlayerLanguage={currentLanguage}
-          handlePlayerCurrentLanguage={changePlayerLanguage}
-          videoFiles={currentLanguage === "english" ? props.files.dub : props.files.sub}
-          currentSource={currentLanguage === "english" ? currentDubSource : currentSubSource}
-          currentQuality={currentLanguage === "english" ? currentDubQuality : currentSubQuality}
-          changeVideoFiles={updateVideo}
-          controlsType={props.playerType}
-          maxWidth={props.maxWidth}
-          currentMaxWidth={currentMaxWidth}
-          theaterModeMaxWidth={props.theaterModeMaxWidth}
-          setMaxWidth={setCurrentMaxWidth}
-        />
+
+        <div className="controls">
+          <ProgressBar
+            currentPlayerTimePercent={playerProgressPercent}
+            handleSeek={handleSeek}
+            getDuration={getVideoDuration}
+            playerType={props.playerType}
+            currentPlayerTime={currentPlayerTime}
+          />
+          <PlayerControls
+            syncToStream={props.playerType === "stream" ? syncToStream : null}
+            handlePlayerVolume={currentLanguage === "english" ? setDubPlayerVolume : setSubPlayerVolume}
+            handlePlayerPlaying={setPlaying}
+            playerPlaying={playing}
+            currentPlayerLanguage={currentLanguage}
+            handlePlayerCurrentLanguage={changePlayerLanguage}
+            videoFiles={currentLanguage === "english" ? props.files.dub : props.files.sub}
+            currentSource={currentLanguage === "english" ? currentDubSource : currentSubSource}
+            currentQuality={currentLanguage === "english" ? currentDubQuality : currentSubQuality}
+            changeVideoFiles={updateVideo}
+            controlsType={props.playerType}
+            maxWidth={props.maxWidth}
+            currentMaxWidth={currentMaxWidth}
+            theaterModeMaxWidth={props.theaterModeMaxWidth}
+            setMaxWidth={setCurrentMaxWidth}
+          />
+        </div>
       </div>
       <p onClick={handleFullScreen}>fullscreen</p>
     </>
