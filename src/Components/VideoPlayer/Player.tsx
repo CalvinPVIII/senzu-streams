@@ -70,6 +70,17 @@ export default function Player(props: VideoPlayerProps) {
 
   const dubPlayer = useRef<ReactPlayer>(null);
   const subPlayer = useRef<ReactPlayer>(null);
+
+  const resetPlayer = () => {
+    setIsDubFinished(false);
+    setIsSubFinished(false);
+    setPlaying(true);
+  };
+
+  useEffect(() => {
+    resetPlayer();
+  }, [props.files]);
+
   useEffect(() => {
     // setting default source
     let source;
@@ -200,16 +211,18 @@ export default function Player(props: VideoPlayerProps) {
   };
 
   const handleEnd = (language: string) => {
+    console.log(`${language} end`);
     if (language === "dub") {
       setIsDubFinished(true);
     }
     if (language === "sub") {
       setIsSubFinished(true);
     }
-    setPlaying(false);
 
     if ((language === "dub" && isSubFinished) || (language === "sub" && isDubFinished)) {
+      setPlaying(false);
       if (props.onEnded) {
+        console.log("both ended");
         props.onEnded();
       }
     }
