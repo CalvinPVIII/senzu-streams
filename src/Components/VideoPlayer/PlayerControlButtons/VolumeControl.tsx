@@ -1,5 +1,4 @@
-import { BsVolumeMuteFill, BsVolumeUpFill, BsVolumeOffFill } from "react-icons/bs";
-import "/node_modules/flag-icons/css/flag-icons.min.css";
+import { BsVolumeMuteFill, BsVolumeUpFill } from "react-icons/bs";
 import {
   Slider,
   SliderTrack,

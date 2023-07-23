@@ -1,4 +1,3 @@
-import "/node_modules/flag-icons/css/flag-icons.min.css";
 import { Popover, PopoverContent, PopoverBody, PopoverTrigger } from "@chakra-ui/react";
 import { useState } from "react";
 

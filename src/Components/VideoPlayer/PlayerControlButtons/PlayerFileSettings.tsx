@@ -1,5 +1,4 @@
 import { LuSettings } from "react-icons/lu";
-import "/node_modules/flag-icons/css/flag-icons.min.css";
 import { Popover, PopoverContent, PopoverBody, IconButton, PopoverTrigger, PopoverCloseButton, PopoverHeader } from "@chakra-ui/react";
 import { useState, Fragment } from "react";
 import { file } from "../../../../types";
