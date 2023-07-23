@@ -18,17 +18,27 @@ interface VolumeControlProps {
 }
 
 export default function VolumeControl(props: VolumeControlProps) {
-  const [muted] = useState(false);
+  const [muted, setMuted] = useState(false);
   const [volume, setVolume] = useState(0);
+  const [prevVolume, setPrevVolume] = useState(0);
 
   const handleVolumeSlide = (value: number) => {
+    setMuted(false);
     setVolume(value);
     props.handlePlayerVolume(0.01 * value);
   };
 
   const handleMuted = () => {
-    setVolume(0);
-    props.handlePlayerVolume(0);
+    if (muted) {
+      setMuted(false);
+      setVolume(prevVolume);
+      props.handlePlayerVolume(0.01 * prevVolume);
+    } else {
+      setMuted(true);
+      setPrevVolume(volume);
+      setVolume(0);
+      props.handlePlayerVolume(0);
+    }
   };
   return (
     <div id="volume-controls" className="controls-sections">
@@ -40,7 +50,9 @@ export default function VolumeControl(props: VolumeControlProps) {
                 size="s"
                 variant="ghost"
                 colorScheme="white"
-                icon={muted || volume === 0 ? <BsVolumeMuteFill size="20" /> : <BsVolumeOffFill onClick={handleMuted} size="20" />}
+                icon={
+                  muted || volume === 0 ? <BsVolumeMuteFill size="20" onClick={handleMuted} /> : <BsVolumeUpFill onClick={handleMuted} size="20" />
+                }
                 aria-label={"Mute"}
               />
             </div>
@@ -57,11 +69,6 @@ export default function VolumeControl(props: VolumeControlProps) {
         </SliderTrack>
         <SliderThumb />
       </Slider>
-      <span className="clickable">
-        <div className="speaker-icon">
-          <IconButton size="s" variant="ghost" colorScheme="white" icon={<BsVolumeUpFill size="20" />} aria-label={"Volume Up"} />
-        </div>
-      </span>
     </div>
   );
 }
