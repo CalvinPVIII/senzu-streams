@@ -47,6 +47,7 @@ export default function VolumeControl(props: VolumeControlProps) {
           <PopoverTrigger>
             <div className="speaker-icon">
               <IconButton
+                className="control-icon"
                 size="s"
                 variant="ghost"
                 colorScheme="white"

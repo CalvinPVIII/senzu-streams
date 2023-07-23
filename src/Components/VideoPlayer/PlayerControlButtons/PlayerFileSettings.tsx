@@ -22,7 +22,7 @@ export default function PlayerFileSettings(props: PlayerFileSettingsProps) {
     <div id="settings" className="clickable">
       <Popover trigger="click" placement="top">
         <PopoverTrigger>
-          <IconButton size="s" variant="ghost" colorScheme="white" icon={<LuSettings />} aria-label={"Settings"} />
+          <IconButton size="s" variant="ghost" colorScheme="white" icon={<LuSettings />} aria-label={"Settings"} className="control-icon" />
         </PopoverTrigger>
         <PopoverContent color="white" borderColor="black" backgroundColor="black" maxW="80%">
           <PopoverCloseButton />

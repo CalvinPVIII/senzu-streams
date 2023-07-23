@@ -60,6 +60,7 @@ export function EpisodeNavigationButton(props: EpisodeNavigationButtonProps) {
         <PopoverTrigger>
           <a href={link}>
             <IconButton
+              className="control-icon"
               size="s"
               variant="ghost"
               colorScheme="white"

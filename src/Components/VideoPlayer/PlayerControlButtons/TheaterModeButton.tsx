@@ -20,7 +20,15 @@ export default function TheaterMode(props: TheaterModeButtonProps) {
     <div id="theater-mode" className="clickable">
       <Popover trigger="hover" placement="bottom">
         <PopoverTrigger>
-          <IconButton size="s" variant="ghost" colorScheme="white" icon={<BsArrowsFullscreen />} aria-label={"Theater Mode"} onClick={handleClick} />
+          <IconButton
+            className="control-icon"
+            size="s"
+            variant="ghost"
+            colorScheme="white"
+            icon={<BsArrowsFullscreen />}
+            aria-label={"Theater Mode"}
+            onClick={handleClick}
+          />
         </PopoverTrigger>
         <PopoverContent maxW="60px" color="white" borderColor="black" backgroundColor="black">
           <PopoverBody fontSize={"10px"}>

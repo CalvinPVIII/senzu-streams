@@ -16,6 +16,7 @@ export default function PlayPauseButton(props: PlayPauseButtonProps) {
       <Popover trigger="hover" placement="bottom">
         <PopoverTrigger>
           <IconButton
+            className="control-icon"
             size="s"
             variant="ghost"
             colorScheme="white"
