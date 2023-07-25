@@ -85,7 +85,7 @@ export default function Player(props: VideoPlayerProps) {
     // setting default source
     let source;
     let sourceName;
-    if (props.files.dub["Gogoapi"]) {
+    if (props.files.dub["Gogoapi"] && props.files.dub["Gogoapi"].length > 0) {
       sourceName = "Gogoapi";
       source = props.files.dub["Gogoapi"];
     } else {
@@ -106,7 +106,7 @@ export default function Player(props: VideoPlayerProps) {
   useEffect(() => {
     let source;
     let sourceName;
-    if (props.files.sub["Gogoapi"]) {
+    if (props.files.sub["Gogoapi"] && props.files.sub["Gogoapi"].length > 0) {
       sourceName = "Gogoapi";
       source = props.files.sub["Gogoapi"];
     } else {
