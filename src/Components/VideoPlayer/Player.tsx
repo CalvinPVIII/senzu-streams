@@ -125,16 +125,20 @@ export default function Player(props: VideoPlayerProps) {
   }, [props.files]);
 
   useEffect(() => {
-    document.getElementById("players")?.addEventListener("fullscreenchange", () => {
-      if (document.fullscreenElement) {
-        setIsFullScreen(true);
-        console.log("enter");
-      } else {
-        setIsFullScreen(false);
-        console.log("exit");
-      }
-    });
-  }, []);
+    const players = document.getElementById("players");
+    // attach event listener first so state will update
+    if (players && !players.onfullscreenchange) {
+      players.onfullscreenchange = () => {
+        if (document.fullscreenElement) {
+          setIsFullScreen(true);
+          console.log("enter");
+        } else {
+          setIsFullScreen(false);
+          console.log("exit");
+        }
+      };
+    }
+  });
 
   const updateVideo = (file: file, sourceName: string) => {
     if (currentLanguage === "english") {
@@ -254,9 +258,10 @@ export default function Player(props: VideoPlayerProps) {
   };
 
   const handleFullScreen = (): void => {
-    const player = document.getElementById("players");
+    const players = document.getElementById("players");
+
     if (!document.fullscreenElement) {
-      player?.requestFullscreen();
+      players?.requestFullscreen();
     } else {
       document.exitFullscreen();
     }
