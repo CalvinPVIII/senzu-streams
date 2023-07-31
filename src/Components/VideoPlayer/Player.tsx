@@ -333,7 +333,7 @@ export default function Player(props: VideoPlayerProps) {
           </div>
         </div>
 
-        <div className="controls">
+        <div className={fullScreen ? "fullscreen-controls controls" : "controls"}>
           <ProgressBar
             currentPlayerTimePercent={playerProgressPercent}
             handleSeek={handleSeek}
