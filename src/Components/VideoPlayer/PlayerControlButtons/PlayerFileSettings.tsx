@@ -2,10 +2,11 @@ import { LuSettings } from "react-icons/lu";
 import { Popover, PopoverContent, PopoverBody, IconButton, PopoverTrigger, PopoverCloseButton, PopoverHeader } from "@chakra-ui/react";
 import { useState, Fragment } from "react";
 import { file, sourceFiles } from "../../../../types";
+import { offsets } from "../Player";
 
 interface PlayerFileSettingsProps {
   currentSource: string;
-  changeVideoFiles: (file: file, sourceName: string) => void;
+  changeVideoFiles: (file: file, sourceName: string, offsets: offsets) => void;
   videoFiles: { [key: string]: sourceFiles };
   currentQuality: string;
 }
@@ -14,7 +15,8 @@ export default function PlayerFileSettings(props: PlayerFileSettingsProps) {
   const [currentFocusedSource, setCurrentFocusedSource] = useState(props.currentSource);
 
   const handleChangeVideoFile = (sourceName: string, source: file) => {
-    props.changeVideoFiles(source, sourceName);
+    const offset: offsets = { intro: props.videoFiles[sourceName].introOffset, outro: props.videoFiles[sourceName].outroOffset };
+    props.changeVideoFiles(source, sourceName, offset);
   };
 
   return (

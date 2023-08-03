@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import SeriesEpisodes from "./SeriesEpisodes";
 import allSeries from "../ts/allSeries";
-import Player from "./VideoPlayer/Player";
+import Player, { offsets } from "./VideoPlayer/Player";
 import "../css/WatchEpisode.css";
 import SERIES from "../ts/seriesEnum";
 import { useEffect, useState } from "react";
@@ -41,13 +41,23 @@ export default function WatchEpisode() {
 
   console.log(episodeInfo);
 
-  const setVideoToPrevTime = (language: "dub" | "sub", player: React.RefObject<ReactPlayer>, syncCallback: (syncFrom: "dub" | "sub") => void) => {
+  const setVideoToPrevTime = (
+    language: "dub" | "sub",
+    dubPlayer: React.RefObject<ReactPlayer>,
+    subPlayer: React.RefObject<ReactPlayer>,
+    syncCallback: (syncFrom: "dub" | "sub") => void,
+    dubOffsets: offsets,
+    subOffsets: offsets
+  ) => {
     if (series && episode) {
       const vodEpisode = localStorage.getItem("vodEpisodeInfo");
       if (vodEpisode === series + episode) {
-        const playerTime = localStorage.getItem(`${language}Time`);
-        if (playerTime && player.current) {
-          player.current.seekTo(parseInt(playerTime));
+        console.log(language);
+        const subPlayerTime = localStorage.getItem(`subTime`);
+        const dubPlayerTime = localStorage.getItem(`subTime`);
+        if (subPlayerTime && dubPlayerTime && dubPlayer.current && subPlayer.current) {
+          subPlayer.current.seekTo(parseInt(subPlayerTime) + subOffsets.intro);
+          dubPlayer.current.seekTo(parseInt(dubPlayerTime) + dubOffsets.intro);
           syncCallback(language);
         }
       } else {

@@ -3,6 +3,8 @@ import "../css/Livestream.css";
 import { useEffect, useState } from "react";
 import ReactPlayer from "react-player";
 import Loading from "./Loading";
+import { offsets } from "./VideoPlayer/Player";
+
 export default function LiveStream() {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState(false);
@@ -40,15 +42,21 @@ export default function LiveStream() {
     fetchStreamInfo();
   }, []);
 
-  const syncToStream = (dubPlayer: React.RefObject<ReactPlayer>, subPlayer: React.RefObject<ReactPlayer>, playerTime: number) => {
+  const syncToStream = (
+    dubPlayer: React.RefObject<ReactPlayer>,
+    subPlayer: React.RefObject<ReactPlayer>,
+    playerTime: number,
+    dubOffsets: offsets,
+    subOffsets: offsets
+  ) => {
     fetch(`${import.meta.env.VITE_API_URL}/stream`).then((response) =>
       response.json().then((result) => {
         if (playerTime > result.currentTime) {
           fetchStreamInfo();
         } else {
           if (dubPlayer.current && subPlayer.current) {
-            dubPlayer.current.seekTo(result.currentTime);
-            subPlayer.current.seekTo(result.currentTime);
+            dubPlayer.current.seekTo(result.currentTime + dubOffsets.intro);
+            subPlayer.current.seekTo(result.currentTime + subOffsets.intro);
           }
         }
       })

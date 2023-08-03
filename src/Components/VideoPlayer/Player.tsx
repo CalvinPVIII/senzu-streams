@@ -12,9 +12,23 @@ import { OnProgressProps } from "react-player/base";
 // might also want to look into lazy loading dub/sub for performance reasons
 // with lazy loading, I would need to store the current time of the previous player before switching to the next player, potentially need to update the syncPlayers function to have another optional parameter of time to sync to.
 
-type watchVodStartCallback = (language: "dub" | "sub", player: React.RefObject<ReactPlayer>, syncCallback: (syncFrom: "dub" | "sub") => void) => void;
+type watchVodStartCallback = (
+  language: "dub" | "sub",
+  player: React.RefObject<ReactPlayer>,
+  syncCallback: (syncFrom: "dub" | "sub") => void,
+  dubOffsets: offsets,
+  subOffsets: offsets
+) => void;
 
-export type watchStreamStartCallback = (dubPlayer: React.RefObject<ReactPlayer>, subPlayer: React.RefObject<ReactPlayer>, playerTime: number) => void;
+export type offsets = { intro: number; outro: number };
+
+export type watchStreamStartCallback = (
+  dubPlayer: React.RefObject<ReactPlayer>,
+  subPlayer: React.RefObject<ReactPlayer>,
+  playerTime: number,
+  dubOffsets: offsets,
+  subOffsets: offsets
+) => void;
 
 interface VideoPlayerProps {
   files: StructuredFileInfo;
@@ -66,6 +80,9 @@ export default function Player(props: VideoPlayerProps) {
   const [isDubFinished, setIsDubFinished] = useState(false);
   const [isSubFinished, setIsSubFinished] = useState(false);
 
+  const [dubOffsets, setDubOffsets] = useState<offsets>({ intro: 0, outro: 0 });
+  const [subOffsets, setSubOffsets] = useState<offsets>({ intro: 0, outro: 0 });
+
   const [fullScreen, setIsFullScreen] = useState(false);
 
   const dubPlayer = useRef<ReactPlayer>(null);
@@ -101,6 +118,7 @@ export default function Player(props: VideoPlayerProps) {
     setCurrentDubLink(source.files.find((file) => file.label === selectedQuality) || source.files[0]);
     setCurrentDubSource(sourceName);
     setCurrentDubQuality(selectedQuality || source.files[0].label);
+    setDubOffsets({ intro: source.introOffset, outro: source.outroOffset });
   }, [props.files]);
 
   useEffect(() => {
@@ -122,6 +140,7 @@ export default function Player(props: VideoPlayerProps) {
     setCurrentSubLink(source.files.find((file) => file.label === selectedQuality) || source.files[0]);
     setCurrentSubSource(sourceName);
     setCurrentSubQuality(selectedQuality || source.files[0].label);
+    setSubOffsets({ intro: source.introOffset, outro: source.outroOffset });
   }, [props.files]);
 
   useEffect(() => {
@@ -140,7 +159,7 @@ export default function Player(props: VideoPlayerProps) {
     }
   });
 
-  const updateVideo = (file: file, sourceName: string) => {
+  const updateVideo = (file: file, sourceName: string, offsets: offsets) => {
     if (currentLanguage === "english") {
       setCurrentDubLink(file);
       setCurrentDubQuality(file.label);
@@ -155,11 +174,34 @@ export default function Player(props: VideoPlayerProps) {
 
   const syncPlayers = (syncFrom: "dub" | "sub") => {
     if (dubPlayer.current && subPlayer.current) {
-      if (syncFrom === "dub") {
-        subPlayer.current.seekTo(dubPlayer.current.getCurrentTime());
-      }
-      if (syncFrom === "sub") {
-        dubPlayer.current.seekTo(subPlayer.current.getCurrentTime());
+      // need some way to check which offset actually matters
+      if (subOffsets.intro > 0 && dubOffsets.intro === 0) {
+        if (syncFrom === "dub") {
+          console.log(subOffsets);
+
+          subPlayer.current.seekTo(dubPlayer.current.getCurrentTime() + subOffsets.intro);
+        }
+        if (syncFrom === "sub") {
+          dubPlayer.current.seekTo(subPlayer.current.getCurrentTime() - subOffsets.intro);
+        }
+      } else if (dubOffsets.intro > 0 && subOffsets.intro === 0) {
+        if (syncFrom === "dub") {
+          console.log(subOffsets);
+
+          subPlayer.current.seekTo(dubPlayer.current.getCurrentTime() - dubOffsets.intro);
+        }
+        if (syncFrom === "sub") {
+          dubPlayer.current.seekTo(subPlayer.current.getCurrentTime() + dubOffsets.intro);
+        }
+      } else {
+        if (syncFrom === "dub") {
+          console.log(subOffsets);
+
+          subPlayer.current.seekTo(dubPlayer.current.getCurrentTime());
+        }
+        if (syncFrom === "sub") {
+          dubPlayer.current.seekTo(subPlayer.current.getCurrentTime());
+        }
       }
     }
   };
@@ -237,11 +279,12 @@ export default function Player(props: VideoPlayerProps) {
     if (props.playerType === "vod" && props.onVodStart) {
       const language = currentLanguage === "english" ? "dub" : "sub";
       const player = language === "dub" ? dubPlayer : subPlayer;
-      props.onVodStart(language, player, syncPlayers);
+      props.onVodStart(language, dubPlayer, subPlayer, subOffsets, dubOffsets);
+      // props.onVodStart(language, player, syncPlayers, dubOffsets, subOffsets);
     } else if (props.playerType === "stream" && props.onStreamStart) {
       const player = dubPlayer.current ? dubPlayer.current : subPlayer.current;
       if (player) {
-        props.onStreamStart(dubPlayer, subPlayer, player.getCurrentTime());
+        props.onStreamStart(dubPlayer, subPlayer, player.getCurrentTime(), dubOffsets, subOffsets);
       }
     }
     setIsDubFinished(false);
@@ -252,7 +295,7 @@ export default function Player(props: VideoPlayerProps) {
     if (props.onStreamStart && props.playerType === "stream") {
       const player = dubPlayer.current ? dubPlayer.current : subPlayer.current;
       if (player) {
-        props.onStreamStart(dubPlayer, subPlayer, player.getCurrentTime());
+        props.onStreamStart(dubPlayer, subPlayer, player.getCurrentTime(), dubOffsets, subOffsets);
       }
     }
   };

@@ -7,6 +7,7 @@ import PlayerFileSettings from "./PlayerControlButtons/PlayerFileSettings";
 import TheaterModeButton from "./PlayerControlButtons/TheaterModeButton";
 import { EpisodeNavigationButton } from "./PlayerControlButtons/EpisodeNavigationButton";
 import FullScreenButton from "./PlayerControlButtons/FullScreenButton";
+import { offsets } from "./Player";
 
 interface PlayerControlsProps {
   handlePlayerVolume: React.Dispatch<React.SetStateAction<number>>;
@@ -17,7 +18,7 @@ interface PlayerControlsProps {
   videoFiles: { [key: string]: sourceFiles };
   currentSource: string;
   currentQuality: string;
-  changeVideoFiles: (file: file, sourceName: string) => void;
+  changeVideoFiles: (file: file, sourceName: string, offsets: offsets) => void;
   controlsType: "vod" | "stream";
   handleFullScreen: () => void;
   syncToStream?: (() => void) | null;
