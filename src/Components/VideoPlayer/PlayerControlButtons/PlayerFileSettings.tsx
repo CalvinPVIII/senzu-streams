@@ -1,12 +1,12 @@
 import { LuSettings } from "react-icons/lu";
 import { Popover, PopoverContent, PopoverBody, IconButton, PopoverTrigger, PopoverCloseButton, PopoverHeader } from "@chakra-ui/react";
 import { useState, Fragment } from "react";
-import { file } from "../../../../types";
+import { file, sourceFiles } from "../../../../types";
 
 interface PlayerFileSettingsProps {
   currentSource: string;
   changeVideoFiles: (file: file, sourceName: string) => void;
-  videoFiles: { [key: string]: file[] };
+  videoFiles: { [key: string]: sourceFiles };
   currentQuality: string;
 }
 
@@ -40,7 +40,7 @@ export default function PlayerFileSettings(props: PlayerFileSettingsProps) {
             ))}
           </PopoverHeader>
           <PopoverBody fontSize={"small"}>
-            {props.videoFiles[currentFocusedSource].map((source, index) => (
+            {props.videoFiles[currentFocusedSource].files.map((source, index) => (
               <Fragment key={index}>
                 {currentFocusedSource === props.currentSource && source.label === props.currentQuality ? (
                   <p style={{ fontWeight: "bold" }} onClick={() => handleChangeVideoFile(currentFocusedSource, source)}>

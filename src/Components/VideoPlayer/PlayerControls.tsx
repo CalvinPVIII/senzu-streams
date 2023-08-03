@@ -1,5 +1,5 @@
 import "../../css/PlayerControls.css";
-import { file } from "../../../types";
+import { file, sourceFiles } from "../../../types";
 import PlayPauseButton from "./PlayerControlButtons/PlayPauseButton";
 import LanguageControlButton from "./PlayerControlButtons/LanguageControlButton";
 import VolumeControl from "./PlayerControlButtons/VolumeControl";
@@ -14,7 +14,7 @@ interface PlayerControlsProps {
   playerPlaying: boolean;
   currentPlayerLanguage: "english" | "japanese";
   handlePlayerCurrentLanguage: (language: "english" | "japanese") => void;
-  videoFiles: { [key: string]: file[] };
+  videoFiles: { [key: string]: sourceFiles };
   currentSource: string;
   currentQuality: string;
   changeVideoFiles: (file: file, sourceName: string) => void;

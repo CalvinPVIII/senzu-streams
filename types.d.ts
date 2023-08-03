@@ -35,9 +35,15 @@ interface file {
   type: string;
 }
 
-interface StructuredFileInfo {
-  dub: { [key: string]: Array<file> };
-  sub: { [key: string]: Array<file> };
+export interface sourceFiles {
+  files: Array<file>;
+  introOffset: number;
+  outroOffset: number;
+}
+
+export interface StructuredFileInfo {
+  dub: { [key: string]: sourceFiles };
+  sub: { [key: string]: sourceFiles };
   episodeInfo: string;
   dubLength: number;
   subLength: number;

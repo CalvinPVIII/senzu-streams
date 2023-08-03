@@ -85,7 +85,7 @@ export default function Player(props: VideoPlayerProps) {
     // setting default source
     let source;
     let sourceName;
-    if (props.files.dub["Gogoapi"] && props.files.dub["Gogoapi"].length > 0) {
+    if (props.files.dub["Gogoapi"] && props.files.dub["Gogoapi"].files.length > 0) {
       sourceName = "Gogoapi";
       source = props.files.dub["Gogoapi"];
     } else {
@@ -98,15 +98,15 @@ export default function Player(props: VideoPlayerProps) {
       source = props.files.dub[selectedSource];
     }
     const selectedQuality = localStorage.getItem("selectedDubQuality");
-    setCurrentDubLink(source.find((file) => file.label === selectedQuality) || source[0]);
+    setCurrentDubLink(source.files.find((file) => file.label === selectedQuality) || source.files[0]);
     setCurrentDubSource(sourceName);
-    setCurrentDubQuality(selectedQuality || source[0].label);
+    setCurrentDubQuality(selectedQuality || source.files[0].label);
   }, [props.files]);
 
   useEffect(() => {
     let source;
     let sourceName;
-    if (props.files.sub["Gogoapi"] && props.files.sub["Gogoapi"].length > 0) {
+    if (props.files.sub["Gogoapi"] && props.files.sub["Gogoapi"].files.length > 0) {
       sourceName = "Gogoapi";
       source = props.files.sub["Gogoapi"];
     } else {
@@ -119,9 +119,9 @@ export default function Player(props: VideoPlayerProps) {
       source = props.files.sub[selectedSource];
     }
     const selectedQuality = localStorage.getItem("selectedSubQuality");
-    setCurrentSubLink(source.find((file) => file.label === selectedQuality) || source[0]);
+    setCurrentSubLink(source.files.find((file) => file.label === selectedQuality) || source.files[0]);
     setCurrentSubSource(sourceName);
-    setCurrentSubQuality(selectedQuality || source[0].label);
+    setCurrentSubQuality(selectedQuality || source.files[0].label);
   }, [props.files]);
 
   useEffect(() => {
