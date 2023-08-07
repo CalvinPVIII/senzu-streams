@@ -14,7 +14,8 @@ import { OnProgressProps } from "react-player/base";
 
 type watchVodStartCallback = (
   language: "dub" | "sub",
-  player: React.RefObject<ReactPlayer>,
+  dubPlayer: React.RefObject<ReactPlayer>,
+  subPlayer: React.RefObject<ReactPlayer>,
   syncCallback: (syncFrom: "dub" | "sub") => void,
   dubOffsets: offsets,
   subOffsets: offsets
@@ -174,34 +175,20 @@ export default function Player(props: VideoPlayerProps) {
 
   const syncPlayers = (syncFrom: "dub" | "sub") => {
     if (dubPlayer.current && subPlayer.current) {
-      // need some way to check which offset actually matters
+      let subOffset = 0;
+      let dubOffset = 0;
+
       if (subOffsets.intro > 0 && dubOffsets.intro === 0) {
-        if (syncFrom === "dub") {
-          console.log(subOffsets);
-
-          subPlayer.current.seekTo(dubPlayer.current.getCurrentTime() + subOffsets.intro);
-        }
-        if (syncFrom === "sub") {
-          dubPlayer.current.seekTo(subPlayer.current.getCurrentTime() - subOffsets.intro);
-        }
+        subOffset = subOffsets.intro;
+        dubOffset = -1 * subOffsets.intro;
       } else if (dubOffsets.intro > 0 && subOffsets.intro === 0) {
-        if (syncFrom === "dub") {
-          console.log(subOffsets);
-
-          subPlayer.current.seekTo(dubPlayer.current.getCurrentTime() - dubOffsets.intro);
-        }
-        if (syncFrom === "sub") {
-          dubPlayer.current.seekTo(subPlayer.current.getCurrentTime() + dubOffsets.intro);
-        }
-      } else {
-        if (syncFrom === "dub") {
-          console.log(subOffsets);
-
-          subPlayer.current.seekTo(dubPlayer.current.getCurrentTime());
-        }
-        if (syncFrom === "sub") {
-          dubPlayer.current.seekTo(subPlayer.current.getCurrentTime());
-        }
+        subOffset = -1 * dubOffsets.intro;
+        dubOffset = dubOffsets.intro;
+      }
+      if (syncFrom === "dub") {
+        subPlayer.current.seekTo(dubPlayer.current.getCurrentTime() + subOffset);
+      } else if (syncFrom === "sub") {
+        dubPlayer.current.seekTo(subPlayer.current.getCurrentTime() + dubOffset);
       }
     }
   };
@@ -278,9 +265,7 @@ export default function Player(props: VideoPlayerProps) {
   const handleStart = () => {
     if (props.playerType === "vod" && props.onVodStart) {
       const language = currentLanguage === "english" ? "dub" : "sub";
-      const player = language === "dub" ? dubPlayer : subPlayer;
-      props.onVodStart(language, dubPlayer, subPlayer, subOffsets, dubOffsets);
-      // props.onVodStart(language, player, syncPlayers, dubOffsets, subOffsets);
+      props.onVodStart(language, dubPlayer, subPlayer, syncPlayers, subOffsets, dubOffsets);
     } else if (props.playerType === "stream" && props.onStreamStart) {
       const player = dubPlayer.current ? dubPlayer.current : subPlayer.current;
       if (player) {
