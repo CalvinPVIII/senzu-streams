@@ -161,15 +161,18 @@ export default function Player(props: VideoPlayerProps) {
   });
 
   const updateVideo = (file: file, sourceName: string, offsets: offsets) => {
+    console.log(offsets);
     if (currentLanguage === "english") {
       setCurrentDubLink(file);
       setCurrentDubQuality(file.label);
       setCurrentDubSource(sourceName);
+      setDubOffsets(offsets);
     }
     if (currentLanguage === "japanese") {
       setCurrentSubLink(file);
       setCurrentSubQuality(file.label);
       setCurrentSubSource(sourceName);
+      setSubOffsets(offsets);
     }
   };
 
