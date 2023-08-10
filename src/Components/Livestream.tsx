@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import ReactPlayer from "react-player";
 import Loading from "./Loading";
 import { offsets } from "./VideoPlayer/Player";
+import AllSeries from "./AllSeries";
 
 export default function LiveStream() {
   const [loading, setLoading] = useState<boolean>(true);
@@ -92,7 +93,12 @@ export default function LiveStream() {
       </div>
     );
   } else if (noStream) {
-    return <h1 style={{ textAlign: "center" }}>There currently is no livestream</h1>;
+    return (
+      <>
+        <h1 style={{ textAlign: "center" }}>Senzu Streams is currently not live. Please enjoy our catalogue of on demand content:</h1>
+        <AllSeries />
+      </>
+    );
   } else if (loading) {
     return <Loading />;
   } else if (error) {

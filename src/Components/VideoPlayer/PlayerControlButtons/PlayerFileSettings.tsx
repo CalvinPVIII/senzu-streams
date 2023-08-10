@@ -19,6 +19,16 @@ export default function PlayerFileSettings(props: PlayerFileSettingsProps) {
     props.changeVideoFiles(source, sourceName, offset);
   };
 
+  const sourceArray = () => {
+    if (!props.videoFiles[currentFocusedSource]) {
+      const defaultSource = Object.keys(props.videoFiles)[0];
+      setCurrentFocusedSource(defaultSource);
+      return props.videoFiles[defaultSource];
+    } else {
+      return props.videoFiles[currentFocusedSource];
+    }
+  };
+
   return (
     <div id="settings" className="clickable">
       <Popover trigger="click" placement="top">
@@ -42,7 +52,7 @@ export default function PlayerFileSettings(props: PlayerFileSettingsProps) {
             ))}
           </PopoverHeader>
           <PopoverBody fontSize={"small"}>
-            {props.videoFiles[currentFocusedSource].files.map((source, index) => (
+            {sourceArray().files.map((source, index) => (
               <Fragment key={index}>
                 {currentFocusedSource === props.currentSource && source.label === props.currentQuality ? (
                   <p style={{ fontWeight: "bold" }} onClick={() => handleChangeVideoFile(currentFocusedSource, source)}>
