@@ -30,13 +30,13 @@ export default function ProgressBar(props: ProgressBarProps) {
   };
 
   const onHover = (e: React.MouseEvent<HTMLInputElement>) => {
-    if (props.playerType === "vod") {
-      const target = e.target as HTMLInputElement;
-      const hoverTime = (e.clientX / target.clientWidth) * 100;
-      // console.log(hoverTime);
-    } else if (props.playerType === "stream") {
-      setToolTipValue(formatTime(props.currentPlayerTime));
-    }
+    // if (props.playerType === "vod") {
+    //   const target = e.target as HTMLInputElement;
+    //   const hoverTime = (e.clientX / target.clientWidth) * 100;
+    //   // console.log(hoverTime);
+    // } else if (props.playerType === "stream") {
+    setToolTipValue(formatTime(props.currentPlayerTime));
+    // }
   };
 
   const handleChange = (e: any) => {
@@ -47,9 +47,9 @@ export default function ProgressBar(props: ProgressBarProps) {
 
   return (
     <div id="player-progress-slider">
-      {/* <Tooltip label={toolTipValue} color="#92c407" bg="black">
-        
-      </Tooltip> */}
+      <Tooltip label={toolTipValue} color="#92c407" bg="black">
+        {toolTipValue}
+      </Tooltip>
       <div id="progress-background" onMouseMove={onHover}>
         <div id="progress-filled" style={{ width: `${props.currentPlayerTimePercent}%` }}>
           <input

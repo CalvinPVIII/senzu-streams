@@ -141,13 +141,13 @@ export default function Player(props: VideoPlayerProps) {
     setCurrentSubLink(source.files.find((file) => file.label === selectedQuality) || source.files[0]);
     setCurrentSubSource(sourceName);
     setCurrentSubQuality(selectedQuality || source.files[0].label);
-    if (props.files.sub[sourceName].introOffset === props.files.dub[sourceName]?.introOffset) {
-      console.log("yes");
-      setSubOffsets({ intro: 0, outro: 0 });
-      setDubOffsets({ intro: 0, outro: 0 });
-    } else {
-      setSubOffsets({ intro: source.introOffset, outro: source.outroOffset });
-    }
+    // if (props.files.sub[sourceName].introOffset === props.files.dub[sourceName]?.introOffset) {
+    //   console.log("yes");
+    //   setSubOffsets({ intro: 0, outro: 0 });
+    //   setDubOffsets({ intro: 0, outro: 0 });
+    // } else {
+    setSubOffsets({ intro: source.introOffset, outro: source.outroOffset });
+    // }
   }, [props.files]);
 
   useEffect(() => {
@@ -167,6 +167,7 @@ export default function Player(props: VideoPlayerProps) {
   });
 
   const updateVideo = (file: file, sourceName: string, offsets: offsets) => {
+    console.log(offsets);
     if (currentLanguage === "english") {
       setCurrentDubLink(file);
       setCurrentDubQuality(file.label);
@@ -182,6 +183,8 @@ export default function Player(props: VideoPlayerProps) {
   };
 
   const syncPlayers = (syncFrom: "dub" | "sub") => {
+    console.log(subOffsets);
+    console.log(dubOffsets);
     if (dubPlayer.current && subPlayer.current) {
       let subOffset = 0;
       let dubOffset = 0;
@@ -194,6 +197,10 @@ export default function Player(props: VideoPlayerProps) {
         console.log("dubOffset");
         subOffset = -1 * dubOffsets.intro;
         dubOffset = dubOffsets.intro;
+      } else if (subOffsets.intro === dubOffsets.intro) {
+        console.log("same");
+        subOffset = 0;
+        dubOffset = 0;
       }
 
       // could I pause the other player here? would that do anything?

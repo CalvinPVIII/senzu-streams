@@ -15,6 +15,7 @@ export default function PlayerFileSettings(props: PlayerFileSettingsProps) {
   const [currentFocusedSource, setCurrentFocusedSource] = useState(props.currentSource);
 
   const handleChangeVideoFile = (sourceName: string, source: file) => {
+    console.log(props.videoFiles[sourceName]);
     const offset: offsets = { intro: props.videoFiles[sourceName].introOffset, outro: props.videoFiles[sourceName].outroOffset };
     props.changeVideoFiles(source, sourceName, offset);
   };
