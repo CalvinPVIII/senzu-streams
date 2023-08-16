@@ -141,13 +141,7 @@ export default function Player(props: VideoPlayerProps) {
     setCurrentSubLink(source.files.find((file) => file.label === selectedQuality) || source.files[0]);
     setCurrentSubSource(sourceName);
     setCurrentSubQuality(selectedQuality || source.files[0].label);
-    // if (props.files.sub[sourceName].introOffset === props.files.dub[sourceName]?.introOffset) {
-    //   console.log("yes");
-    //   setSubOffsets({ intro: 0, outro: 0 });
-    //   setDubOffsets({ intro: 0, outro: 0 });
-    // } else {
     setSubOffsets({ intro: source.introOffset, outro: source.outroOffset });
-    // }
   }, [props.files]);
 
   useEffect(() => {
@@ -167,7 +161,6 @@ export default function Player(props: VideoPlayerProps) {
   });
 
   const updateVideo = (file: file, sourceName: string, offsets: offsets) => {
-    console.log(offsets);
     if (currentLanguage === "english") {
       setCurrentDubLink(file);
       setCurrentDubQuality(file.label);
@@ -207,6 +200,7 @@ export default function Player(props: VideoPlayerProps) {
       if (syncFrom === "dub") {
         subPlayer.current.seekTo(dubPlayer.current.getCurrentTime() + subOffset);
       } else if (syncFrom === "sub") {
+        console.log(subPlayer.current.getCurrentTime() + dubOffset);
         dubPlayer.current.seekTo(subPlayer.current.getCurrentTime() + dubOffset);
       }
     }

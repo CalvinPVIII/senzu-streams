@@ -48,22 +48,21 @@ export default function ProgressBar(props: ProgressBarProps) {
   return (
     <div id="player-progress-slider">
       <Tooltip label={toolTipValue} color="#92c407" bg="black">
-        {toolTipValue}
-      </Tooltip>
-      <div id="progress-background" onMouseMove={onHover}>
-        <div id="progress-filled" style={{ width: `${props.currentPlayerTimePercent}%` }}>
-          <input
-            className={props.playerType === "vod" ? "hoverable" : ""}
-            type="range"
-            value={props.currentPlayerTimePercent}
-            max="100"
-            min="0"
-            step="0.01"
-            onInput={handleChange}
-            id="video-progress-input"
-          />
+        <div id="progress-background" onMouseMove={onHover}>
+          <div id="progress-filled" style={{ width: `${props.currentPlayerTimePercent}%` }}>
+            <input
+              className={props.playerType === "vod" ? "hoverable" : ""}
+              type="range"
+              value={props.currentPlayerTimePercent}
+              max="100"
+              min="0"
+              step="0.01"
+              onInput={handleChange}
+              id="video-progress-input"
+            />
+          </div>
         </div>
-      </div>
+      </Tooltip>
     </div>
   );
 }

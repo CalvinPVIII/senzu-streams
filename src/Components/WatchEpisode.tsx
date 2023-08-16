@@ -56,9 +56,9 @@ export default function WatchEpisode() {
         const subPlayerTime = localStorage.getItem(`subTime`);
         const dubPlayerTime = localStorage.getItem(`subTime`);
         if (subPlayerTime && dubPlayerTime && dubPlayer.current && subPlayer.current) {
-          subPlayer.current.seekTo(parseInt(subPlayerTime) + subOffsets.intro);
-          dubPlayer.current.seekTo(parseInt(dubPlayerTime) + dubOffsets.intro);
-          syncCallback(language);
+          subPlayer.current.seekTo(parseInt(subPlayerTime) - subOffsets.intro);
+          dubPlayer.current.seekTo(parseInt(dubPlayerTime) - dubOffsets.intro);
+          // syncCallback(language);
         }
       } else {
         localStorage.setItem("vodEpisodeInfo", series + episode);
