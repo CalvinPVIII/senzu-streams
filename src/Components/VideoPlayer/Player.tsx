@@ -75,7 +75,9 @@ export default function Player(props: VideoPlayerProps) {
   const [dubPlayerVisibility, setDubPlayerVisibility] = useState<"block" | "none">(defaultDubPlayerVisibility);
   const [subPlayerVisibility, setSubPlayerVisibility] = useState<"block" | "none">(defaultSubPlayerVisibility);
 
-  const [playerProgressPercent, setPlayerProgressPercent] = useState<number>(0);
+  const [dubPlayerProgressPercent, setDubPlayerProgressPercent] = useState<number>(0);
+  const [subPlayerProgressPercent, setSubPlayerProgressPercent] = useState<number>(0);
+
   const [currentPlayerTime, setCurrentPlayerTime] = useState<number>(0);
 
   const [isDubFinished, setIsDubFinished] = useState(false);
@@ -241,9 +243,14 @@ export default function Player(props: VideoPlayerProps) {
       localStorage.setItem(`${playerLanguage}Time`, `${e.playedSeconds}`);
     }
     const videoDuration = getVideoDuration();
-    const percentage = (e.playedSeconds / videoDuration) * 100;
 
-    setPlayerProgressPercent(percentage);
+    if (playerLanguage === "dub" && currentLanguage === "english") {
+      const percentage = (e.playedSeconds / videoDuration) * 100;
+      setDubPlayerProgressPercent(percentage);
+    } else if (playerLanguage === "sub" && currentLanguage === "japanese") {
+      const percentage = (e.playedSeconds / videoDuration) * 100;
+      setSubPlayerProgressPercent(percentage);
+    }
     setCurrentPlayerTime(e.playedSeconds);
   };
 
@@ -381,7 +388,7 @@ export default function Player(props: VideoPlayerProps) {
 
         <div className={fullScreen ? "fullscreen-controls controls" : "controls"}>
           <ProgressBar
-            currentPlayerTimePercent={playerProgressPercent}
+            currentPlayerTimePercent={currentLanguage === "english" ? dubPlayerProgressPercent : subPlayerProgressPercent}
             handleSeek={handleSeek}
             getDuration={getVideoDuration}
             playerType={props.playerType}

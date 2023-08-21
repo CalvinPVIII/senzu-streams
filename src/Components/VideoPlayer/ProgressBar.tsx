@@ -1,6 +1,6 @@
 import { Tooltip } from "@chakra-ui/react";
 import "../../css/ProgressBar.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface ProgressBarProps {
   currentPlayerTimePercent: number;
@@ -11,9 +11,8 @@ interface ProgressBarProps {
 }
 
 export default function ProgressBar(props: ProgressBarProps) {
-  const [toolTipValue, setToolTipValue] = useState<string>("0:00:00");
-
   const [hoverValue, setHoverValue] = useState(0);
+  const [toolTipValue, setToolTipValue] = useState<string>("0:00:00");
 
   const formatTime = (timeInSeconds: number) => {
     const hours = Math.floor(timeInSeconds / 3600)
@@ -29,13 +28,18 @@ export default function ProgressBar(props: ProgressBarProps) {
     return hours + ":" + minutes + ":" + seconds;
   };
 
+  useEffect(() => {
+    setToolTipValue(formatTime(props.currentPlayerTime));
+  }, [props.currentPlayerTime]);
+
+  console.log(props.currentPlayerTimePercent);
   const onHover = (e: React.MouseEvent<HTMLInputElement>) => {
     // if (props.playerType === "vod") {
     //   const target = e.target as HTMLInputElement;
     //   const hoverTime = (e.clientX / target.clientWidth) * 100;
     //   // console.log(hoverTime);
     // } else if (props.playerType === "stream") {
-    setToolTipValue(formatTime(props.currentPlayerTime));
+    // setToolTipValue(formatTime(props.currentPlayerTime));
     // }
   };
 
