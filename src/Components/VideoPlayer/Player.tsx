@@ -12,7 +12,7 @@ import { OnProgressProps } from "react-player/base";
 // might also want to look into lazy loading dub/sub for performance reasons
 // with lazy loading, I would need to store the current time of the previous player before switching to the next player, potentially need to update the syncPlayers function to have another optional parameter of time to sync to.
 
-type watchVodStartCallback = (
+export type watchVodStartCallback = (
   language: "dub" | "sub",
   dubPlayer: React.RefObject<ReactPlayer>,
   subPlayer: React.RefObject<ReactPlayer>,

@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import allMovies from "../ts/allMovies";
-import Player from "./VideoPlayer/Player";
+import Player, { offsets } from "./VideoPlayer/Player";
 import "../css/WatchMovie.css";
 import SeriesCards from "./SeriesCards";
 import { useEffect, useState } from "react";
@@ -38,14 +38,24 @@ export default function WatchMovie() {
     }
   }, [series, movieNumber]);
 
-  const setVideoToPrevTime = (language: "dub" | "sub", player: React.RefObject<ReactPlayer>, syncCallback: (syncFrom: "dub" | "sub") => void) => {
+  const setVideoToPrevTime = (
+    language: "dub" | "sub",
+    dubPlayer: React.RefObject<ReactPlayer>,
+    subPlayer: React.RefObject<ReactPlayer>,
+    syncCallback: (syncFrom: "dub" | "sub") => void,
+    dubOffsets: offsets,
+    subOffsets: offsets
+  ) => {
     if (series && movieNumber) {
       const vodEpisode = localStorage.getItem("vodEpisodeInfo");
       if (vodEpisode === series + movieNumber) {
-        const playerTime = localStorage.getItem(`${language}Time`);
-        if (playerTime && player.current) {
-          player.current.seekTo(parseInt(playerTime));
-          syncCallback(language);
+        console.log(language);
+        const subPlayerTime = localStorage.getItem(`subTime`);
+        const dubPlayerTime = localStorage.getItem(`subTime`);
+        if (subPlayerTime && dubPlayerTime && dubPlayer.current && subPlayer.current) {
+          subPlayer.current.seekTo(parseInt(subPlayerTime) - subOffsets.intro);
+          dubPlayer.current.seekTo(parseInt(dubPlayerTime) - dubOffsets.intro);
+          // syncCallback(language);
         }
       } else {
         localStorage.setItem("vodEpisodeInfo", series + movieNumber);
@@ -54,7 +64,6 @@ export default function WatchMovie() {
       }
     }
   };
-
   const episodeFinishedMessage = { dub: "The English Episode Has Finished", sub: "The Japanese Episode Has Finished" };
 
   if (series && movieNumber && !fetchError) {

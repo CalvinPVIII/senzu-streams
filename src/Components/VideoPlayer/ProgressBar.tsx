@@ -32,7 +32,6 @@ export default function ProgressBar(props: ProgressBarProps) {
     setToolTipValue(formatTime(props.currentPlayerTime));
   }, [props.currentPlayerTime]);
 
-  console.log(props.currentPlayerTimePercent);
   const onHover = (e: React.MouseEvent<HTMLInputElement>) => {
     // if (props.playerType === "vod") {
     //   const target = e.target as HTMLInputElement;
