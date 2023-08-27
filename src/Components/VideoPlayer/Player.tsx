@@ -16,7 +16,6 @@ export type watchVodStartCallback = (
   language: "dub" | "sub",
   dubPlayer: React.RefObject<ReactPlayer>,
   subPlayer: React.RefObject<ReactPlayer>,
-  syncCallback: (syncFrom: "dub" | "sub") => void,
   dubOffsets: offsets,
   subOffsets: offsets
 ) => void;
@@ -285,7 +284,7 @@ export default function Player(props: VideoPlayerProps) {
   const handleStart = () => {
     if (props.playerType === "vod" && props.onVodStart) {
       const language = currentLanguage === "english" ? "dub" : "sub";
-      props.onVodStart(language, dubPlayer, subPlayer, syncPlayers, subOffsets, dubOffsets);
+      props.onVodStart(language, dubPlayer, subPlayer, subOffsets, dubOffsets);
     } else if (props.playerType === "stream" && props.onStreamStart) {
       const player = dubPlayer.current ? dubPlayer.current : subPlayer.current;
       if (player) {

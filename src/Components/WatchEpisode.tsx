@@ -45,7 +45,6 @@ export default function WatchEpisode() {
     language: "dub" | "sub",
     dubPlayer: React.RefObject<ReactPlayer>,
     subPlayer: React.RefObject<ReactPlayer>,
-    syncCallback: (syncFrom: "dub" | "sub") => void,
     dubOffsets: offsets,
     subOffsets: offsets
   ) => {

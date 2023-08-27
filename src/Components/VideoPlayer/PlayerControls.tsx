@@ -4,7 +4,6 @@ import PlayPauseButton from "./PlayerControlButtons/PlayPauseButton";
 import LanguageControlButton from "./PlayerControlButtons/LanguageControlButton";
 import VolumeControl from "./PlayerControlButtons/VolumeControl";
 import PlayerFileSettings from "./PlayerControlButtons/PlayerFileSettings";
-import TheaterModeButton from "./PlayerControlButtons/TheaterModeButton";
 import { EpisodeNavigationButton } from "./PlayerControlButtons/EpisodeNavigationButton";
 import FullScreenButton from "./PlayerControlButtons/FullScreenButton";
 import { offsets } from "./Player";
