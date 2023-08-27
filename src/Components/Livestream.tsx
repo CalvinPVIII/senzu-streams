@@ -21,7 +21,13 @@ export default function LiveStream() {
             .json()
             .then((result) => {
               if (result.isActive) {
-                setStreamFiles(result.currentFiles);
+                if (result.isEpisodeInitialized) {
+                  setStreamFiles(result.currentFiles);
+                } else {
+                  setTimeout(() => {
+                    fetchStreamInfo();
+                  }, 3000);
+                }
               } else if (!result.isActive) {
                 setNoStream(true);
               }
