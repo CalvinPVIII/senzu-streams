@@ -63,7 +63,7 @@ export default function Player(props: VideoPlayerProps) {
     playerLanguage === "english" || playerLanguage === "japanese" ? playerLanguage : "english"
   );
 
-  const [availableLanguages, setAvaiableLanguages] = useState<Array<string>>([]);
+  const [availableLanguages, setAvailableLanguages] = useState<Array<string>>([]);
 
   const [currentDubLink, setCurrentDubLink] = useState<file>();
   const [currentDubSource, setCurrentDubSource] = useState("");
@@ -126,9 +126,6 @@ export default function Player(props: VideoPlayerProps) {
       setCurrentDubSource(sourceName);
       setCurrentDubQuality(selectedQuality || source.files[0].label);
       setDubOffsets({ intro: source.introOffset, outro: source.outroOffset });
-      if (!availableLanguages.includes("english")) {
-        setAvaiableLanguages([...availableLanguages, "english"]);
-      }
     }
   }, [props.files]);
 
@@ -155,9 +152,6 @@ export default function Player(props: VideoPlayerProps) {
       setCurrentSubSource(sourceName);
       setCurrentSubQuality(selectedQuality || source.files[0].label);
       setSubOffsets({ intro: source.introOffset, outro: source.outroOffset });
-      if (!availableLanguages.includes("japanese")) {
-        setAvaiableLanguages([...availableLanguages, "japanese"]);
-      }
     }
   }, [props.files]);
 
@@ -176,6 +170,14 @@ export default function Player(props: VideoPlayerProps) {
       setDubPlayerVisibility("block");
       setSubPlayerVisibility("none");
     }
+    const languages = [];
+    if (currentSubLink) {
+      languages.push("japanese");
+    }
+    if (currentDubLink) {
+      languages.push("english");
+    }
+    setAvailableLanguages(languages);
     setLoading(false);
   }, [currentDubLink, currentSubLink]);
 
