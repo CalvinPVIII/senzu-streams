@@ -8,6 +8,7 @@ interface LanguageControlButtonProps {
   currentPlayerLanguage: "english" | "japanese";
   handlePlayerCurrentLanguage: (language: "english" | "japanese") => void;
   currentSource: string;
+  availableLanguages: Array<string>;
 }
 
 export default function LanguageControlButton(props: LanguageControlButtonProps) {
@@ -25,41 +26,55 @@ export default function LanguageControlButton(props: LanguageControlButtonProps)
 
   return (
     <div id="language-control-buttons" className="clickable">
-      <Popover trigger="hover" placement="bottom">
-        <PopoverTrigger>
-          {language === "japanese" ? (
-            <span style={{ opacity: "0.5" }} onClick={handleChangeLanguage}>
-              <img className="control-icon flag-icon" src={usFlag} />
-            </span>
-          ) : (
-            <span>
-              <img className="control-icon flag-icon" src={usFlag} />
-            </span>
-          )}
-        </PopoverTrigger>
-        <PopoverContent maxW="90px" color="white" borderColor="black" backgroundColor="black">
-          <PopoverBody fontSize={"10px"}>Set language to English</PopoverBody>
-        </PopoverContent>
-      </Popover>
-      <span id="language-separator" className="control-icon">
-        /
-      </span>
-      <Popover trigger="hover" placement="bottom">
-        <PopoverTrigger>
-          {language === "english" ? (
-            <span style={{ opacity: "0.5" }} onClick={handleChangeLanguage}>
-              <img className="control-icon flag-icon" src={jpFlag} />
-            </span>
-          ) : (
-            <span>
-              <img className="control-icon flag-icon" src={jpFlag} />
-            </span>
-          )}
-        </PopoverTrigger>
-        <PopoverContent maxW="90px" color="white" borderColor="black" backgroundColor="black">
-          <PopoverBody fontSize={"10px"}>Set language to Japanese</PopoverBody>
-        </PopoverContent>
-      </Popover>
+      {props.availableLanguages.includes("english") ? (
+        <Popover trigger="hover" placement="bottom">
+          <PopoverTrigger>
+            {language === "japanese" ? (
+              <span style={{ opacity: "0.5" }} onClick={handleChangeLanguage}>
+                <img className="control-icon flag-icon" src={usFlag} />
+              </span>
+            ) : (
+              <span>
+                <img className="control-icon flag-icon" src={usFlag} />
+              </span>
+            )}
+          </PopoverTrigger>
+
+          <PopoverContent maxW="90px" color="white" borderColor="black" backgroundColor="black">
+            <PopoverBody fontSize={"10px"}>Set language to English</PopoverBody>
+          </PopoverContent>
+        </Popover>
+      ) : (
+        <></>
+      )}
+      {props.availableLanguages.length > 1 ? (
+        <span id="language-separator" className="control-icon">
+          /
+        </span>
+      ) : (
+        <></>
+      )}
+
+      {props.availableLanguages.includes("japanese") ? (
+        <Popover trigger="hover" placement="bottom">
+          <PopoverTrigger>
+            {language === "english" ? (
+              <span style={{ opacity: "0.5" }} onClick={handleChangeLanguage}>
+                <img className="control-icon flag-icon" src={jpFlag} />
+              </span>
+            ) : (
+              <span>
+                <img className="control-icon flag-icon" src={jpFlag} />
+              </span>
+            )}
+          </PopoverTrigger>
+          <PopoverContent maxW="90px" color="white" borderColor="black" backgroundColor="black">
+            <PopoverBody fontSize={"10px"}>Set language to Japanese</PopoverBody>
+          </PopoverContent>
+        </Popover>
+      ) : (
+        <></>
+      )}
     </div>
   );
 }

@@ -53,6 +53,7 @@ interface VideoPlayerProps {
 }
 
 export default function Player(props: VideoPlayerProps) {
+  const [loading, setLoading] = useState<boolean>(true);
   const [playing, setPlaying] = useState(props.playing || false);
   const [dubPlayerVolume, setDubPlayerVolume] = useState(0);
   const [subPlayerVolume, setSubPlayerVolume] = useState(0);
@@ -62,6 +63,8 @@ export default function Player(props: VideoPlayerProps) {
     playerLanguage === "english" || playerLanguage === "japanese" ? playerLanguage : "english"
   );
 
+  const [availableLanguages, setAvaiableLanguages] = useState<Array<string>>([]);
+
   const [currentDubLink, setCurrentDubLink] = useState<file>();
   const [currentDubSource, setCurrentDubSource] = useState("");
   const [currentDubQuality, setCurrentDubQuality] = useState("");
@@ -69,10 +72,10 @@ export default function Player(props: VideoPlayerProps) {
   const [currentSubSource, setCurrentSubSource] = useState("");
   const [currentSubQuality, setCurrentSubQuality] = useState("");
 
-  const defaultDubPlayerVisibility = playerLanguage === "english" ? "block" : playerLanguage === null ? "block" : "none";
-  const defaultSubPlayerVisibility = playerLanguage === "japanese" ? "block" : "none";
-  const [dubPlayerVisibility, setDubPlayerVisibility] = useState<"block" | "none">(defaultDubPlayerVisibility);
-  const [subPlayerVisibility, setSubPlayerVisibility] = useState<"block" | "none">(defaultSubPlayerVisibility);
+  // const defaultDubPlayerVisibility = playerLanguage === "english" ? "block" : playerLanguage === null ? "block" : "none";
+  // const defaultSubPlayerVisibility = playerLanguage === "japanese" ? "block" : "none";
+  const [dubPlayerVisibility, setDubPlayerVisibility] = useState<"block" | "none">();
+  const [subPlayerVisibility, setSubPlayerVisibility] = useState<"block" | "none">();
 
   const [dubPlayerProgressPercent, setDubPlayerProgressPercent] = useState<number>(0);
   const [subPlayerProgressPercent, setSubPlayerProgressPercent] = useState<number>(0);
@@ -101,49 +104,80 @@ export default function Player(props: VideoPlayerProps) {
   }, [props.files]);
 
   useEffect(() => {
+    setLoading(true);
     // setting default source
-    let source;
-    let sourceName;
-    if (props.files.dub["Gogoapi"] && props.files.dub["Gogoapi"].files.length > 0) {
-      sourceName = "Gogoapi";
-      source = props.files.dub["Gogoapi"];
-    } else {
-      source = Object.values(props.files.dub)[0];
-      sourceName = Object.keys(props.files.dub)[0];
-    }
+    if (Object.keys(props.files.dub).length > 0) {
+      let source;
+      let sourceName;
+      if (props.files.dub["Gogoapi"] && props.files.dub["Gogoapi"].files.length > 0) {
+        sourceName = "Gogoapi";
+        source = props.files.dub["Gogoapi"];
+      } else {
+        source = Object.values(props.files.dub)[0];
+        sourceName = Object.keys(props.files.dub)[0];
+      }
 
-    const selectedSource = localStorage.getItem("selectedDubSource");
-    if (selectedSource && props.files.dub[selectedSource]) {
-      source = props.files.dub[selectedSource];
+      const selectedSource = localStorage.getItem("selectedDubSource");
+      if (selectedSource && props.files.dub[selectedSource]) {
+        source = props.files.dub[selectedSource];
+      }
+      const selectedQuality = localStorage.getItem("selectedDubQuality");
+      setCurrentDubLink(source.files.find((file) => file.label === selectedQuality) || source.files[0]);
+      setCurrentDubSource(sourceName);
+      setCurrentDubQuality(selectedQuality || source.files[0].label);
+      setDubOffsets({ intro: source.introOffset, outro: source.outroOffset });
+      if (!availableLanguages.includes("english")) {
+        setAvaiableLanguages([...availableLanguages, "english"]);
+      }
     }
-    const selectedQuality = localStorage.getItem("selectedDubQuality");
-    setCurrentDubLink(source.files.find((file) => file.label === selectedQuality) || source.files[0]);
-    setCurrentDubSource(sourceName);
-    setCurrentDubQuality(selectedQuality || source.files[0].label);
-    setDubOffsets({ intro: source.introOffset, outro: source.outroOffset });
   }, [props.files]);
 
   useEffect(() => {
-    let source;
-    let sourceName;
-    if (props.files.sub["Gogoapi"] && props.files.sub["Gogoapi"].files.length > 0) {
-      sourceName = "Gogoapi";
-      source = props.files.sub["Gogoapi"];
-    } else {
-      source = Object.values(props.files.sub)[0];
-      sourceName = Object.keys(props.files.sub)[0];
-    }
+    setLoading(true);
+    if (Object.values(props.files.sub).length > 0) {
+      let source;
+      let sourceName;
 
-    const selectedSource = localStorage.getItem("selectedSubSource");
-    if (selectedSource && props.files.sub[selectedSource]) {
-      source = props.files.sub[selectedSource];
+      if (props.files.sub["Gogoapi"] && props.files.sub["Gogoapi"].files.length > 0) {
+        sourceName = "Gogoapi";
+        source = props.files.sub["Gogoapi"];
+      } else {
+        source = Object.values(props.files.sub)[0];
+        sourceName = Object.keys(props.files.sub)[0];
+      }
+
+      const selectedSource = localStorage.getItem("selectedSubSource");
+      if (selectedSource && props.files.sub[selectedSource]) {
+        source = props.files.sub[selectedSource];
+      }
+      const selectedQuality = localStorage.getItem("selectedSubQuality");
+      setCurrentSubLink(source.files.find((file) => file.label === selectedQuality) || source.files[0]);
+      setCurrentSubSource(sourceName);
+      setCurrentSubQuality(selectedQuality || source.files[0].label);
+      setSubOffsets({ intro: source.introOffset, outro: source.outroOffset });
+      if (!availableLanguages.includes("japanese")) {
+        setAvaiableLanguages([...availableLanguages, "japanese"]);
+      }
     }
-    const selectedQuality = localStorage.getItem("selectedSubQuality");
-    setCurrentSubLink(source.files.find((file) => file.label === selectedQuality) || source.files[0]);
-    setCurrentSubSource(sourceName);
-    setCurrentSubQuality(selectedQuality || source.files[0].label);
-    setSubOffsets({ intro: source.introOffset, outro: source.outroOffset });
   }, [props.files]);
+
+  useEffect(() => {
+    const playerLanguage = localStorage.getItem("playerLanguage");
+    if ((playerLanguage === "english" && currentDubLink) || !currentSubLink) {
+      setCurrentLanguage("english");
+      setDubPlayerVisibility("block");
+      setSubPlayerVisibility("none");
+    } else if ((playerLanguage === "japanese" && currentSubLink) || !currentDubLink) {
+      setCurrentLanguage("japanese");
+      setDubPlayerVisibility("none");
+      setSubPlayerVisibility("block");
+    } else {
+      setCurrentLanguage("english");
+      setDubPlayerVisibility("block");
+      setSubPlayerVisibility("none");
+    }
+    setLoading(false);
+  }, [currentDubLink, currentSubLink]);
 
   useEffect(() => {
     const players = document.getElementById("players");
@@ -254,11 +288,13 @@ export default function Player(props: VideoPlayerProps) {
   };
 
   const handleSeek = (value: number) => {
-    if (dubPlayer.current && subPlayer.current) {
-      dubPlayer.current.seekTo(value);
+    if (subPlayer.current) {
       subPlayer.current.seekTo(value);
-      setIsDubFinished(false);
       setIsSubFinished(false);
+    }
+    if (dubPlayer.current) {
+      dubPlayer.current.seekTo(value);
+      setIsDubFinished(false);
     }
   };
 
@@ -328,62 +364,73 @@ export default function Player(props: VideoPlayerProps) {
     boxShadow: "3px 3px 3px black",
   };
 
-  return currentDubLink && currentSubLink ? (
+  return loading ? (
+    <></>
+  ) : (
     <>
       <h1 id="player-header">{props.files.episodeInfo}</h1>
       <div id="players">
-        <div id="dub-player">
-          <div style={{ display: dubPlayerVisibility }} className="player">
-            {isDubFinished ? (
-              <div className="player-finished">
-                <h1 className="player-finished-message">{props.episodeFinishedMessage.dub}</h1>
-              </div>
-            ) : (
-              <></>
-            )}
-            <ReactPlayer
-              ref={dubPlayer}
-              url={currentDubLink.file}
-              playing={playing}
-              volume={dubPlayerVolume}
-              width="100%"
-              height="100%"
-              onBuffer={props.onBuffer}
-              onProgress={props.onProgress ? props.onProgress : (e) => handleProgress(e, "dub")}
-              onDuration={props.onDuration}
-              onEnded={() => handleEnd("dub")}
-              onStart={handleStart}
-              style={styles}
-              className="main-video-player"
-            />
+        {currentDubLink ? (
+          <div id="dub-player">
+            <div style={{ display: dubPlayerVisibility }} className="player">
+              {isDubFinished ? (
+                <div className="player-finished">
+                  <h1 className="player-finished-message">{props.episodeFinishedMessage.dub}</h1>
+                </div>
+              ) : (
+                <></>
+              )}
+              <ReactPlayer
+                ref={dubPlayer}
+                url={currentDubLink.file}
+                playing={playing}
+                volume={dubPlayerVolume}
+                width="100%"
+                height="100%"
+                onBuffer={props.onBuffer}
+                onProgress={props.onProgress ? props.onProgress : (e) => handleProgress(e, "dub")}
+                onDuration={props.onDuration}
+                onEnded={() => handleEnd("dub")}
+                onStart={handleStart}
+                style={styles}
+                className="main-video-player"
+              />
+            </div>
           </div>
-        </div>
-        <div id="sub-player">
-          <div style={{ display: subPlayerVisibility }} className="player">
-            {isSubFinished ? (
-              <div className="player-finished">
-                <h1 className="player-finished-message">{props.episodeFinishedMessage.sub}</h1>
-              </div>
-            ) : (
-              <></>
-            )}
-            <ReactPlayer
-              ref={subPlayer}
-              url={currentSubLink.file}
-              playing={playing}
-              volume={subPlayerVolume}
-              width="100%"
-              height="100%"
-              onBuffer={props.onBuffer}
-              onProgress={props.onProgress ? props.onProgress : (e) => handleProgress(e, "sub")}
-              onDuration={props.onDuration}
-              onEnded={() => handleEnd("sub")}
-              onStart={handleStart}
-              style={styles}
-              className="main-video-player"
-            />
+        ) : (
+          <></>
+        )}
+
+        {currentSubLink ? (
+          <div id="sub-player">
+            <div style={{ display: subPlayerVisibility }} className="player">
+              {isSubFinished ? (
+                <div className="player-finished">
+                  <h1 className="player-finished-message">{props.episodeFinishedMessage.sub}</h1>
+                </div>
+              ) : (
+                <></>
+              )}
+              <ReactPlayer
+                ref={subPlayer}
+                url={currentSubLink.file}
+                playing={playing}
+                volume={subPlayerVolume}
+                width="100%"
+                height="100%"
+                onBuffer={props.onBuffer}
+                onProgress={props.onProgress ? props.onProgress : (e) => handleProgress(e, "sub")}
+                onDuration={props.onDuration}
+                onEnded={() => handleEnd("sub")}
+                onStart={handleStart}
+                style={styles}
+                className="main-video-player"
+              />
+            </div>
           </div>
-        </div>
+        ) : (
+          <></>
+        )}
 
         <div className={fullScreen ? "fullscreen-controls controls" : "controls"}>
           <ProgressBar
@@ -406,15 +453,10 @@ export default function Player(props: VideoPlayerProps) {
             changeVideoFiles={updateVideo}
             controlsType={props.playerType}
             handleFullScreen={handleFullScreen}
-            // maxWidth={props.maxWidth}
-            // currentMaxWidth={currentMaxWidth}
-            // theaterModeMaxWidth={props.theaterModeMaxWidth}
-            // setMaxWidth={setCurrentMaxWidth}
+            availableLanguages={availableLanguages}
           />
         </div>
       </div>
     </>
-  ) : (
-    <p>Loading</p>
   );
 }

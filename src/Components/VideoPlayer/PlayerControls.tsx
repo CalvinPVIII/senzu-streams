@@ -21,6 +21,7 @@ interface PlayerControlsProps {
   controlsType: "vod" | "stream";
   handleFullScreen: () => void;
   syncToStream?: (() => void) | null;
+  availableLanguages: Array<string>;
 }
 
 export default function PlayerControls(props: PlayerControlsProps) {
@@ -47,6 +48,7 @@ export default function PlayerControls(props: PlayerControlsProps) {
           currentPlayerLanguage={props.currentPlayerLanguage}
           handlePlayerCurrentLanguage={props.handlePlayerCurrentLanguage}
           currentSource={props.currentSource}
+          availableLanguages={props.availableLanguages}
         />
 
         <VolumeControl handlePlayerVolume={props.handlePlayerVolume} />
