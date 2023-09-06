@@ -19,7 +19,6 @@ export default function LanguageControlButton(props: LanguageControlButtonProps)
       props.handlePlayerCurrentLanguage("english");
     }
   };
-console.log(props.currentPlayerLanguage)
   return (
     <div id="language-control-buttons" className="clickable">
       {props.availableLanguages.includes("english") ? (

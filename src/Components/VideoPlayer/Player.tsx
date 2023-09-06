@@ -160,7 +160,6 @@ export default function Player(props: VideoPlayerProps) {
   // setting first visible player based on local storage
   useEffect(() => {
     const playerLanguage = localStorage.getItem("playerLanguage");
-    console.log(playerLanguage)
     if ((playerLanguage === "english" && currentDubLink) || !currentSubLink) {
       setCurrentLanguage("english");
       setDubPlayerVisibility("block");
