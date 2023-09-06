@@ -1,5 +1,4 @@
 import { Popover, PopoverContent, PopoverBody, PopoverTrigger } from "@chakra-ui/react";
-import { useState } from "react";
 
 import usFlag from "../../../assets/images/usa.svg";
 import jpFlag from "../../../assets/images/jp.svg";
@@ -12,24 +11,21 @@ interface LanguageControlButtonProps {
 }
 
 export default function LanguageControlButton(props: LanguageControlButtonProps) {
-  const [language, setLanguage] = useState<"english" | "japanese">(props.currentPlayerLanguage);
 
   const handleChangeLanguage = () => {
-    if (language === "english") {
-      setLanguage("japanese");
+    if (props.currentPlayerLanguage === "english") {
       props.handlePlayerCurrentLanguage("japanese");
-    } else if (language === "japanese") {
-      setLanguage("english");
+    } else if (props.currentPlayerLanguage === "japanese") {
       props.handlePlayerCurrentLanguage("english");
     }
   };
-
+console.log(props.currentPlayerLanguage)
   return (
     <div id="language-control-buttons" className="clickable">
       {props.availableLanguages.includes("english") ? (
         <Popover trigger="hover" placement="bottom">
           <PopoverTrigger>
-            {language === "japanese" ? (
+            {props.currentPlayerLanguage === "japanese" ? (
               <span style={{ opacity: "0.5" }} onClick={handleChangeLanguage}>
                 <img className="control-icon flag-icon" src={usFlag} />
               </span>
@@ -58,7 +54,7 @@ export default function LanguageControlButton(props: LanguageControlButtonProps)
       {props.availableLanguages.includes("japanese") ? (
         <Popover trigger="hover" placement="bottom">
           <PopoverTrigger>
-            {language === "english" ? (
+            {props.currentPlayerLanguage === "english" ? (
               <span style={{ opacity: "0.5" }} onClick={handleChangeLanguage}>
                 <img className="control-icon flag-icon" src={jpFlag} />
               </span>

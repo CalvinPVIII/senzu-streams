@@ -103,6 +103,7 @@ export default function Player(props: VideoPlayerProps) {
     resetPlayer();
   }, [props.files]);
 
+  // setting dub source
   useEffect(() => {
     setLoading(true);
     // setting default source
@@ -129,6 +130,7 @@ export default function Player(props: VideoPlayerProps) {
     }
   }, [props.files]);
 
+  // setting sub source
   useEffect(() => {
     setLoading(true);
     if (Object.values(props.files.sub).length > 0) {
@@ -155,8 +157,10 @@ export default function Player(props: VideoPlayerProps) {
     }
   }, [props.files]);
 
+  // setting first visible player based on local storage
   useEffect(() => {
     const playerLanguage = localStorage.getItem("playerLanguage");
+    console.log(playerLanguage)
     if ((playerLanguage === "english" && currentDubLink) || !currentSubLink) {
       setCurrentLanguage("english");
       setDubPlayerVisibility("block");
@@ -181,9 +185,9 @@ export default function Player(props: VideoPlayerProps) {
     setLoading(false);
   }, [currentDubLink, currentSubLink]);
 
+  // attaching event listeners so state will update on fullscreen
   useEffect(() => {
     const players = document.getElementById("players");
-    // attach event listener first so state will update
     if (players && !players.onfullscreenchange) {
       players.onfullscreenchange = () => {
         if (document.fullscreenElement) {
